@@ -1,0 +1,117 @@
+\documentclass[11pt]{article}
+\usepackage[letterpaper, hmargin={1in,1in}, vmargin={1in,1in}, noheadfoot]{geometry}
+\usepackage{listings} % for including source code
+
+%\usepackage[usenames,dvipsnames]{color}
+
+\usepackage{hyperref, graphicx}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+
+%%%%%%%%%%
+% the following are user defined commands
+
+\newcommand{\pr}[1]{{\mathbb P}\left(#1\right)}        % probability
+\newcommand{\E}[1]{{\mathbb E}\left[#1\right]}        % expectation 
+\newcommand{\1}[1]{{\mathbf 1}\left\{#1\right\}}        % indicator
+\newcommand{\V}[1]{\text{Var}\left(#1\right)}    % variance
+
+\def\lp{\left(}
+\def\rp{\right)}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{example}[theorem]{Example}
+
+%%%%%%%%%%%
+
+
+\title{STAT 215B Final Project, Spring 2012}
+\author{Christine Kuang, Siqi Wu, and Angie Zhu}
+\date{\today} % delete this line to display the current date
+
+%%% BEGIN DOCUMENT
+\begin{document}
+\setlength\footskip{0.5in}
+
+
+%%% the following is for including source code. Don't worry about it for now. --AZ
+\lstset{
+% backgroundcolor=\color{Gray} % requires package color
+%frame=double,
+showspaces=false, 
+language=R, 
+basicstyle=\ttfamily, 
+tabsize=3, 
+showstringspaces=false, 
+columns=flexible%, 
+%numbers=left, 
+%numberstyle=\footnotesize, 
+%stepnumber=5, 
+%numbersep=6pt  % how far the line-numbers are from the code
+}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+
+%%%%%%%%%%%%%%%%%%
+\section{Methods}
+
+%%%%%%%
+\subsection{Sampling}
+
+%%%%%%%
+\subsection{0-1 Classification}
+
+%%%%%%%
+\subsection{Sentiment Analysis}
+
+
+
+%%%%%%%%%%%%%%%%%%
+\section{Results}
+
+%%%%%%%%%%%%%%%%%%
+\section{Analysis and Discussion}
+
+%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+
+
+
+%
+%\begin{center}
+%\begin{figure}[tb]
+%   \centering
+%   \includegraphics[width=\textwidth]{.png} 
+%      \caption{}
+%   \label{fig:}
+%\end{figure}
+%\end{center}
+
+
+%%%%%%%%%%%%%
+% bibliography
+%\bibliographystyle{apalike}
+%\bibliography{215B_FinalProjRef}
+
+
+
+
+%%%%%
+%\appendix
+%The complete source code is as follows:
+%\lstinputlisting{}
+
+
+\end{document}
