@@ -1,4 +1,34 @@
-This is the README file. We are testing right now.
-Allons-y! -A.Z. 
-sdsdsdsdsds
-hellohellohello
+04.12.2012 THU
+==============
+
+As Siqi mentioned in his email, 
+"
+We can now do a topic search in python weibo api. But before that you will need to fix a bug manually. In utils.py under the folder weibopy, replace the parse_search_datetime method by the following code:
+
+def parse_search_datetime(str):
+    return datetime(*(time.strptime(str, '%a %b %d %H:%M:%S +0800 %Y')[0:6]))
+"
+
+sampling.py: takes a sample of searching result using 林书豪, Jeremy Lin's name in simplified Chinese and saves the sample into a file "jlsample.txt" in UTF8 encoding. Recall that the second line of adding sys.path is machine specific. 
+
+pipeline.sh: contains the basic workflow of processing. Don't run it directly since SegMain.java is not in current directory.
+The basic ideas are as follows:
+1. pre-segmentation processing: [python preseg.py jlsample.txt]
+	a) keep only the first reposting. repostings can be identified by "//"
+	b) need to remove URL as well since ICTCLAS doesn't handle it well (need to do this before remove mentioning)
+	c) change mentions to @
+(Note: don't worry about topic "#...#" since we are going to remove punctuation marks later)
+
+2. ICTCLAS
+with user dictionary "userdict.txt"
+
+3. post-segmentation processing: [python postseg.py seg_result.txt]
+remove punctuation marks
+
+There are more to be done in term of processing. Please take a look at the TXT files:
+jlsample.txt has the samples
+preseg.txt is the result of pre-segmentation processing
+seg_result.txt is the result of ICTCLAS
+postseg.txt is the result of post-segmentation processing
+
+See you on Friday! -- AZ
