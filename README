@@ -1,4 +1,4 @@
-04.12.2012 THU
+04.12.2012 THU (AZ)
 ==============
 
 As Siqi mentioned in his email, 
@@ -11,24 +11,37 @@ def parse_search_datetime(str):
 
 sampling.py: takes a sample of searching result using 林书豪, Jeremy Lin's name in simplified Chinese and saves the sample into a file "jlsample.txt" in UTF8 encoding. Recall that the second line of adding sys.path is machine specific. 
 
+
+04.17.2012 TUE (AZ)
+===========
+Updated processing procedure:
+
 pipeline.sh: contains the basic workflow of processing. Don't run it directly since SegMain.java is not in current directory.
+
 The basic ideas are as follows:
 1. pre-segmentation processing: [python preseg.py jlsample.txt]
-	a) keep only the first reposting. repostings can be identified by "//"
-	b) need to remove URL as well since ICTCLAS doesn't handle it well (need to do this before remove mentioning)
-	c) change mentions to @
+	* take out the user ID# and time stamp and save them into info.txt
+	* keep only the first reposting. repostings can be identified by "//" (note: there are a lot of empty repostings on Weibo)
+	* need to remove URL as well since ICTCLAS doesn't handle it well (need to do this before remove mentioning)
+	* change mentions to @, which will be removed eventually
+	* substitute emotional symbols to "[words]" using pre-defined "emotionSymbols.txt"
 (Note: don't worry about topic "#...#" since we are going to remove punctuation marks later)
-
-2. ICTCLAS
-with user dictionary "userdict.txt"
+	
+2. ICTCLAS:
+using the second level lexical tags (see ICTCLAS lexical tagging documentation)
+with user dictionary "userdict.txt" (still have issues to identity HanHan's name)
 
 3. post-segmentation processing: [python postseg.py seg_result.txt]
-remove punctuation marks
+	* handle the incorrect tagging of HanHan's name
+	* conjunction rules: see Lee and Renganathan 2011
+	* remove prepositions (labeled as "p"), punctuation marks (labeled as "w"), English character strings (labeled as "x"), interjection (labeled as "e"), Modal Particles (labeled as "y"), onomatopoeia (labeled as "o"), and auxiliary words （labeled as "u"). See ICTCLAS lexical taggingx documentation for details.
+	* remove stopping words and number strings (note: the negation words are not in the stopping word list)
 
-There are more to be done in term of processing. Please take a look at the TXT files:
-jlsample.txt has the samples
+TXT files:
+Hanhan.txt has the samples
 preseg.txt is the result of pre-segmentation processing
 seg_result.txt is the result of ICTCLAS
 postseg.txt is the result of post-segmentation processing
 
-See you on Friday! -- AZ
+Assign sentiment scores: (tentative)
+keeps 3 words before the current word, check if there is a negation word 
