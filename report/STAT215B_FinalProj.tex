@@ -1,0 +1,195 @@
+%% STAT 215B, Spring 2012
+%% Final Project
+%% Note: need to use XeLaTeX to compile
+
+\documentclass[11pt]{article}
+\usepackage[letterpaper, hmargin={1in,1in}, vmargin={1in,1in}, noheadfoot]{geometry}
+\usepackage{listings} % for including source code
+
+%\usepackage[usenames,dvipsnames]{color}
+
+\usepackage{hyperref, graphicx}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+%%% for displaying Chinese
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage[slantfont,boldfont]{xeCJK}
+
+% 设置中文字体
+% ==========================================================
+\setCJKmainfont[BoldFont=STHeiti,ItalicFont=STKaiti]{STSong}
+\setCJKsansfont{STHeiti}
+\setCJKmonofont{STFangsong}
+ 
+\setCJKfamilyfont{zhsong}{STSong}
+\setCJKfamilyfont{zhhei}{STHeiti}
+\setCJKfamilyfont{zhfs}{STFangsong}
+\setCJKfamilyfont{zhkai}{STKaiti}
+ 
+\newcommand*{\songti}{\CJKfamily{zhsong}} % 宋体
+\newcommand*{\heiti}{\CJKfamily{zhhei}}   % 黑体
+\newcommand*{\kaishu}{\CJKfamily{zhkai}}  % 楷书
+\newcommand*{\fangsong}{\CJKfamily{zhfs}} % 仿宋
+% ==========================================================
+
+%%%%%%%%%%
+% the following are user defined commands
+
+\newcommand{\pr}[1]{{\mathbb P}\left(#1\right)}        % probability
+\newcommand{\E}[1]{{\mathbb E}\left[#1\right]}        % expectation 
+\newcommand{\1}[1]{{\mathbf 1}\left\{#1\right\}}        % indicator
+\newcommand{\V}[1]{\text{Var}\left(#1\right)}    % variance
+
+\def\lp{\left(}
+\def\rp{\right)}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{example}[theorem]{Example}
+
+%%%%%%%%%%%
+
+
+\title{\scshape STAT 215B Final Project, Spring 2012}
+\author{Christine Kuang, Siqi Wu, and Angie Zhu}
+\date{\today} % delete this line to display the current date
+
+%%% BEGIN DOCUMENT
+\begin{document}
+\setlength\footskip{0.5in}
+
+
+%%% the following is for including source code. Don't worry about it for now. --AZ
+\lstset{
+% backgroundcolor=\color{Gray} % requires package color
+%frame=double,
+showspaces=false, 
+language=R, 
+basicstyle=\ttfamily, 
+tabsize=3, 
+showstringspaces=false, 
+columns=flexible%, 
+%numbers=left, 
+%numberstyle=\footnotesize, 
+%stepnumber=5, 
+%numbersep=6pt  % how far the line-numbers are from the code
+}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+
+%%%%%%%%%%%%%%%%%%
+\section{Methods}
+
+%%%%%%%
+\subsection{Sampling}
+
+%%%%%%%
+\subsection{Processing}
+
+Sample format:
+\begin{verbatim}
+1165303315 2012-04-16 09:55:40  《韩寒收到网友死亡威胁》 (来自 @新浪娱乐) http://t.cn/zOprKap
+\end{verbatim}
+
+UTF-8 encoding, GBK, Unicode, Big5
+
+%%
+\subsubsection{Characteristics of Chinese Language}
+No explicit delimiter between words in Chinese texts.
+OOV
+
+ambiguity 
+
+%%
+\subsubsection{Characteristics of Sina Weibo Messages}
+
+
+%%
+\subsubsection{Pre--segmentation Processing}
+
+	* take out the user ID\# and time stamp and save them into info.txt
+	* keep only the first reposting. repostings can be identified by "//" (note: there are a lot of empty repostings on Weibo)
+	* need to remove URL as well since ICTCLAS doesn't handle it well (need to do this before remove mentioning)
+	* for topic-related Weibo usernames, change "@xyz" to the corresponding person name
+	* change mentions to @, which will be removed eventually
+	* substitute emotional symbols to "[words]" using pre-defined "emotionSymbols.txt"
+(Note: don't worry about topic "\#...\#" since we are going to remove punctuation marks later)
+
+\subsubsection{Segmentation}
+using the second level lexical tags (see ICTCLAS lexical tagging documentation)
+with user dictionary "userdict.txt" (still have issues to identity HanHan's name)
+
+
+\subsubsection{Post--segmentation Processing}
+	* handle the incorrect tagging of HanHan's name
+	* conjunction rules: see Lee and Renganathan 2011
+	* remove prepositions (labeled as "p"), punctuation marks (labeled as "w"), English character strings (labeled as "x"), interjection (labeled as "e"), Modal Particles (labeled as "y"), onomatopoeia (labeled as "o"), and auxiliary words （labeled as "u"). See ICTCLAS lexical taggingx documentation for details.
+	* remove stopping words and number strings (note: the negation words are not in the stopping word list)
+	
+\subsubsection{Conjunction Rules}
+
+\subsubsection{Stop Words and Punctuation Elimination}
+
+\subsubsection{Sentiment Score Assignment}
+
+
+\subsubsection{Limitation}
+
+simplified Chinese and traditional Chinese: no simple one-to-one correspondence; word segmentation and then substitute words
+
+%%%%%%%
+\subsection{Sentiment Analysis}
+
+
+
+%%%%%%%%%%%%%%%%%%
+\section{Results}
+
+%%%%%%%%%%%%%%%%%%
+\section{Discussion}
+
+ROC curve
+precision and recall curve
+
+%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+
+
+
+%
+%\begin{center}
+%\begin{figure}[tb]
+%   \centering
+%   \includegraphics[width=\textwidth]{.png} 
+%      \caption{}
+%   \label{fig:}
+%\end{figure}
+%\end{center}
+
+
+%%%%%%%%%%%%%
+% bibliography
+%\bibliographystyle{apalike}
+%\bibliography{215B_FinalProjRef}
+
+
+
+
+%%%%%
+%\appendix
+%The complete source code is as follows:
+%\lstinputlisting{}
+
+
+\end{document}

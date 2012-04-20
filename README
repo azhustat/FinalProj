@@ -12,7 +12,7 @@ def parse_search_datetime(str):
 sampling.py: takes a sample of searching result using 林书豪, Jeremy Lin's name in simplified Chinese and saves the sample into a file "jlsample.txt" in UTF8 encoding. Recall that the second line of adding sys.path is machine specific. 
 
 
-04.17.2012 TUE (AZ)
+04.18.2012 WED (AZ)
 ===========
 Updated processing procedure:
 
@@ -23,6 +23,7 @@ The basic ideas are as follows:
 	* take out the user ID# and time stamp and save them into info.txt
 	* keep only the first reposting. repostings can be identified by "//" (note: there are a lot of empty repostings on Weibo)
 	* need to remove URL as well since ICTCLAS doesn't handle it well (need to do this before remove mentioning)
+	* for topic-related Weibo usernames, change "@xyz" to the corresponding person name
 	* change mentions to @, which will be removed eventually
 	* substitute emotional symbols to "[words]" using pre-defined "emotionSymbols.txt"
 (Note: don't worry about topic "#...#" since we are going to remove punctuation marks later)
