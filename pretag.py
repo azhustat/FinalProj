@@ -50,9 +50,11 @@ for part in lines:
 	# removes URLS		
 	out = urlpat.sub(' ', out)
 	
-	if (out != ' '):
-		# removes leading and trailing whitespace
-		messages.add(out.strip())
+	# removes leading and trailing whitespace
+	out = out.strip()
+	
+	if (len(out) > 0):
+		messages.add(out)
 		
 ###		
 for out in messages:	

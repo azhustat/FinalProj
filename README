@@ -12,7 +12,7 @@ def parse_search_datetime(str):
 sampling.py: takes a sample of searching result using 林书豪, Jeremy Lin's name in simplified Chinese and saves the sample into a file "jlsample.txt" in UTF8 encoding. Recall that the second line of adding sys.path is machine specific. 
 
 
-04.20.2012 FRI (AZ)
+04.21.2012 SAT (AZ)
 ===========
 Updated processing procedure:
 
@@ -22,8 +22,8 @@ The basic ideas are as follows:
 1. pre-manual-tagging processing: [python pretag.py Han.txt]
 	* remove the user ID# and time stamp 
 	* keep only the first reposting. repostings can be identified by "//" (note: there are a lot of empty repostings on Weibo). if the result is empty string, it will be removed from analysis
-	* remove duplicates using data structure set
 	* remove URL as well since ICTCLAS doesn't handle it well (need to do this before remove mentioning). also spams may have the same message, but different url
+	* remove duplicates using data structure set
 	* write out
 
 Note: 
@@ -33,7 +33,7 @@ Note:
 - line #4081 in the original file (the line right above the one starting with 2029021581 2012-04-16 13:55:13) does not have UID# and time stamp and hence is removed from further analysis
 
 After this, [wc -l hanhanweibo.txt]:
-13071
+13070
 
 
 
