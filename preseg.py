@@ -16,12 +16,6 @@ try:
 except IOError:
 	print "preseg.txt could not be opened"
 	sys.exit(1)
-
-try:
-	finfo = codecs.open("info.txt", "w", "utf-8")
-except IOError:
-	print "info.txt could not be opened"
-	sys.exit(1)
 	
 # emotion symbols
 fes = codecs.open("./data/emotionSymbols.txt", "r", "utf-8")	
@@ -56,29 +50,14 @@ mend = fme.readlines()[0].strip()
 lines = fp.readlines()
 
 # defines the regular expression patterns used in the for-loop
-infopat = re.compile('^([0-9]+[\s][-0-9]+[\s][:0-9]+)[\s]', re.UNICODE)
-urlpat = re.compile('(http://t.cn/[\w]+)', re.UNICODE)
 # [\s] includes '\n'
 # uses mention ending symbols (read in from file)
 menpat = re.compile('(@.+?)[' + mend + ':\s\)]', re.UNICODE) 
 
-
 # for-loop to process each line
 for part in lines:
 	out = part
-	# saves user ID and time stamp into info.txt
-	outinfo = infopat.findall(out)[0]
-	print >> finfo, outinfo
-	out = infopat.sub('$', out)
-	
-	# multiple reposting
-	reposting = re.findall("(.*?[^:])//@", out)
-	if (len(reposting) > 0 ):
-		out = reposting[0]
-		
-	# removes URLS		
-	out = urlpat.sub(' ', out)	
-	
+				
 	# substitute emotional symbols to words
 	for emotion in eskeys:
 		epat = re.compile(emotion, re.UNICODE)
@@ -97,7 +76,6 @@ for part in lines:
 	print >> fout, out
 
 fout.close()
-finfo.close()
 fes.close()
 ftu.close()
 fme.close()

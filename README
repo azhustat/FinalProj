@@ -12,27 +12,43 @@ def parse_search_datetime(str):
 sampling.py: takes a sample of searching result using 林书豪, Jeremy Lin's name in simplified Chinese and saves the sample into a file "jlsample.txt" in UTF8 encoding. Recall that the second line of adding sys.path is machine specific. 
 
 
-04.18.2012 WED (AZ)
+04.20.2012 FRI (AZ)
 ===========
 Updated processing procedure:
 
 pipeline.sh: contains the basic workflow of processing. Don't run it directly since SegMain.java is not in current directory.
 
 The basic ideas are as follows:
-1. pre-segmentation processing: [python preseg.py jlsample.txt]
-	* take out the user ID# and time stamp and save them into info.txt
-	* keep only the first reposting. repostings can be identified by "//" (note: there are a lot of empty repostings on Weibo)
-	* need to remove URL as well since ICTCLAS doesn't handle it well (need to do this before remove mentioning)
+1. pre-manual-tagging processing: [python pretag.py Han.txt]
+	* remove the user ID# and time stamp 
+	* keep only the first reposting. repostings can be identified by "//" (note: there are a lot of empty repostings on Weibo). if the result is empty string, it will be removed from analysis
+	* remove duplicates using data structure set
+	* remove URL as well since ICTCLAS doesn't handle it well (need to do this before remove mentioning). also spams may have the same message, but different url
+	* write out
+
+Note: 
+- line #912 in the original file (the line right above the one starting with 1908842243 ) does not have UID# and time stamp and hence is removed from further analysis
+- line #178 in the original files starting with 2377801910 2012-04-16 10:03:15 ends with strange symbol and also no new line symbol at the end. This line results in input error and hence is removed from further analysis
+- line #2383 in the original files starting with 2708200891 2012-04-16 12:25:38 ends with strange symbol and also no new line symbol at the end. This line results in input error and hence is removed from further analysis
+- line #4081 in the original file (the line right above the one starting with 2029021581 2012-04-16 13:55:13) does not have UID# and time stamp and hence is removed from further analysis
+
+After this, [wc -l hanhanweibo.txt]:
+13071
+
+
+
+
+2. pre-segmentation processing: [python preseg.py hhsample.txt]	
 	* for topic-related Weibo usernames, change "@xyz" to the corresponding person name
 	* change mentions to @, which will be removed eventually
 	* substitute emotional symbols to "[words]" using pre-defined "emotionSymbols.txt"
 (Note: don't worry about topic "#...#" since we are going to remove punctuation marks later)
 	
-2. ICTCLAS:
+3. ICTCLAS:
 using the second level lexical tags (see ICTCLAS lexical tagging documentation)
 with user dictionary "userdict.txt" (still have issues to identity HanHan's name)
 
-3. post-segmentation processing: [python postseg.py seg_result.txt]
+4. post-segmentation processing: [python postseg.py seg_result.txt]
 	* handle the incorrect tagging of HanHan's name
 	* conjunction rules: see Lee and Renganathan 2011
 	* remove prepositions (labeled as "p"), punctuation marks (labeled as "w"), English character strings (labeled as "x"), interjection (labeled as "e"), Modal Particles (labeled as "y"), onomatopoeia (labeled as "o"), and auxiliary words （labeled as "u"). See ICTCLAS lexical taggingx documentation for details.

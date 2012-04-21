@@ -1,4 +1,7 @@
 #!/bin/sh
+
+python pretag.py Han.txt
+
 python preseg.py Hanhan.txt
 
 javac SegMain.java
