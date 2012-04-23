@@ -1,0 +1,44 @@
+\begin{thebibliography}{1}
+
+\bibitem{boyd2004fastest}
+{\sc Boyd, S., Diaconis, P., and Xiao, L.}
+\newblock Fastest mixing markov chain on a graph.
+\newblock {\em SIAM review\/} (2004), 667--689.
+
+\bibitem{HowNet}
+{\sc Dong, Z., and Dong, Q.}
+\newblock {知网 HowNet}.
+\newblock \url{http://www.keenage.com//}.
+
+\bibitem{ICTCLAS}
+{\sc {Institute of Computing Technology, Chinese Academy of Sciences}}.
+\newblock {汉语词法分析系统ICTCLAS (Institute of Computing Technology,
+  Chinese Lexical Analysis System)}.
+\newblock \url{http://ictclas.org/}, 2011.
+
+\bibitem{lee2011chinese}
+{\sc Lee, H., and Renganathan, H.}
+\newblock Chinese sentiment analysis using maximum entropy.
+\newblock {\em Sentiment Analysis where AI meets Psychology (SAAIP)\/} (2011),
+  89.
+
+\bibitem{leskovec2006sampling}
+{\sc Leskovec, J., and Faloutsos, C.}
+\newblock Sampling from large graphs.
+\newblock In {\em Proceedings of the 12th ACM SIGKDD international conference
+  on Knowledge discovery and data mining\/} (2006), ACM, pp.~631--636.
+
+\bibitem{wang2011understanding}
+{\sc Wang, T., Chen, Y., Zhang, Z., Xu, T., Jin, L., Hui, P., Deng, B., and Li,
+  X.}
+\newblock Understanding graph sampling algorithms for social network analysis.
+\newblock In {\em Distributed Computing Systems Workshops (ICDCSW), 2011 31st
+  International Conference on\/} (2011), IEEE, pp.~123--128.
+
+\bibitem{wong2009introduction}
+{\sc Wong, K., Li, W., Xu, R., and Zhang, Z.}
+\newblock Introduction to chinese natural language processing.
+\newblock {\em Synthesis Lectures on Human Language Technologies 2}, 1 (2009),
+  1--148.
+
+\end{thebibliography}

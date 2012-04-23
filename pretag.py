@@ -33,7 +33,7 @@ lines = fp.readlines()
 infopat = re.compile('^([0-9]+[\s][-0-9]+[\s][:0-9]+)[\s]', re.UNICODE)
 urlpat = re.compile('(http://t.cn/[\w]+)', re.UNICODE)
 
-# data structure set to eliminate duplicates
+# uses data structure set to eliminate duplicates
 messages = set([])
 
 # for-loop to process each line
