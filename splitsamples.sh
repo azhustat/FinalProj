@@ -15,3 +15,6 @@ split -l 100 SWsamples.txt SW
 cd ../Angie
 split -l 100 AZsamples.txt AZ
 
+
+
+
