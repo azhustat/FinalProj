@@ -33,3 +33,9 @@ table(tags)
 condmat <- data.matrix(read.table("condmat.txt", header=FALSE))
 dim(condmat) # 795 4
 summary(rowSums(condmat))
+
+# examines the frequency matrix
+freqmat <- data.matrix(read.table("freqmat.txt", header=FALSE))
+dim(freqmat) # 795 3000
+summary(rowSums(freqmat))
+
