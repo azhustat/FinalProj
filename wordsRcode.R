@@ -59,6 +59,7 @@ colnames(condmat) <- c("negative","neutral","positive","spam")
 dim(condmat) # 795 4
 summary(rowSums(condmat))
 
+<<<<<<< HEAD
 cor(condmat) # approximately the same words appear in different categories
 
 S = cov(t(condmat));
@@ -98,3 +99,10 @@ tkplot(guassianGraph,
       edge.color = edgeColor, 
      edge.width=abs(w)*100, vertex.size=15, 
      vertex.label.cex=1, vertex.label.color="black")
+=======
+# examines the frequency matrix
+freqmat <- data.matrix(read.table("freqmat.txt", header=FALSE))
+dim(freqmat) # 795 3000
+summary(rowSums(freqmat))
+
+>>>>>>> bcf00e32b9f85e75fefcdc7fe90f146875028fb6
