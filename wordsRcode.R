@@ -28,7 +28,7 @@ rownames(coocmat) <- wordLabel$V1
 colnames(coocmat) <- wordLabel$V1
 
 # plot the matrix
-matrixPlot(coocmat[1:20,1:20],zlim=c(0,100))
+matrixPlot(coocmat[1:50,1:50],zlim=c(0,100))
 
 # now plot the occurence network
 library(igraph)
@@ -38,7 +38,7 @@ s[s<10] = 0
 wordCoGraph <- graph.adjacency(s, weighted=T,mode="undirected")
 w = E(wordCoGraph)$weight
 
-plot(wordCoGraph, 
+tkplot(wordCoGraph, 
      layout=layout.fruchterman.reingold,#layout.circle, 
      vertex.label=colnames(coocmat)[1:n],     
      #vertex.color=c(rep("red",4),rep("blue",6)), 
@@ -104,5 +104,62 @@ tkplot(guassianGraph,
 freqmat <- data.matrix(read.table("freqmat.txt", header=FALSE))
 dim(freqmat) # 795 3000
 summary(rowSums(freqmat))
+rownames(freqmat) <- wordLabel$V1
+matrixPlot(freqmat[1:100,1:100]);
+# singular value decompositoin
+svdresult = svd(freqmat)
 
->>>>>>> bcf00e32b9f85e75fefcdc7fe90f146875028fb6
+library(elasticnet)
+deleteWordIndex = -c(2,3,4,9,12,18,19);
+seleWord = (1:100)[deleteWordIndex]  
+out1<-spca(t(freqmat[seleWord,]),K=4,type="predictor",
+           sparse="penalty",trace=TRUE,para=c(1,1,1,1))
+sort(abs(out1$loadings[,1]),decreasing=T)[1:20]
+sort(abs(out1$loadings[,2]),decreasing=T)[1:20]
+sort(abs(out1$loadings[,3]),decreasing=T)[1:10]
+sort(abs(out1$loadings[,4]),decreasing=T)[1:10]
+
+# LASSO and SVM
+
+# GLasso
+S = cov(t(freqmat));
+matrixPlot(S[1:50,1:50],zlim=c(-.04,.04))
+gLassoResult = glasso(S,.01);
+G = gLassoResult$wi
+G2 = G - diag(diag(G));
+G1 = (G2+t(G2))/2
+
+# first of all, a matrix image plot
+matrixPlot(G2[1:50,1:50],zlim=c(-4,4))
+# divide into positve and negative relations:
+Gp = matrix(0,nrow = dim(G2)[1],ncol=dim(G2)[2]);
+Gp[G2>0] = G2[G2>0]
+Gp = (Gp+t(Gp))/2
+
+Gn = matrix(0,nrow = dim(G2)[1],ncol=dim(G2)[2]);
+Gn[G2<0] = G2[G2<0]
+Gn = (Gn+t(Gn))/2
+
+
+n = 80 # top 50 mostly used words
+guassianGraph <- graph.adjacency(G1[1:n,1:n], weighted=T,mode="undirected")
+w = E(guassianGraph)$weight
+
+edgeColor = rep("red",length(w));
+edgeColor[w>0] = "black"
+
+w[abs(w)>2] =2
+plot(guassianGraph, 
+     layout=layout.fruchterman.reingold, 
+     vertex.label=colnames(coocmat)[1:n],     
+     #vertex.color=c(rep("red",4),rep("blue",6)),
+      edge.color = edgeColor, 
+     edge.width=abs(w)*5,, vertex.size=7, 
+     vertex.label.cex=.7, vertex.label.color="black")
+tkplot(guassianGraph, 
+     layout=layout.circle, 
+     vertex.label=colnames(coocmat)[1:n],     
+     #vertex.color=c(rep("red",4),rep("blue",6)),
+      edge.color = edgeColor, 
+     edge.width=abs(w)*100, vertex.size=15, 
+     vertex.label.cex=1, vertex.label.color="black")
