@@ -121,7 +121,7 @@ sort(abs(out1$loadings[,4]),decreasing=T)[1:10]
 
 # LASSO and SVM
 
-# GLasso
+# GLasso: Gaussian Graphical Model
 S = cov(t(freqmat));
 matrixPlot(S[1:50,1:50],zlim=c(-.04,.04))
 gLassoResult = glasso(S,.01);
@@ -163,3 +163,85 @@ tkplot(guassianGraph,
       edge.color = edgeColor, 
      edge.width=abs(w)*100, vertex.size=15, 
      vertex.label.cex=1, vertex.label.color="black")
+
+# LASSO 
+tags = read.table("sampletags.txt")$V1
+# 1. LASSO word image for the positive class:
+# create the new tag vector: +1 for positive class; -1 for all other classes
+y = tags;
+y[y==0] = -1;
+y[y==9] = -1;
+library(lars)       
+lassoPathResultPos = lars(t(freqmat),y)
+# runs like 30 sec; real fast
+# the path plot; dont run it, real slow...
+plot(lassoPathResultPos,breaks=F)
+# the beta matrix, of size 876*795; each row for a lambda value
+dim(lassoPathResultPos$beta);
+beta = lassoPathResultPos$beta[500,] # just pick one lambda
+beta = matrix(beta);
+colnames(beta)<-wordLabel;
+# top absolute coefficient values:
+sort(abs(beta),decreasing=T)[1:50]
+# top positive coefficient values:
+sort(beta,decreasing=T)[1:50]
+# top negative coefficient values:
+sort(-beta,decreasing=T)[1:50]
+       
+# 2. LASSO word image for the negative class:
+# create the new tag vector: +1 for negative class; -1 for all other classes
+y = tags;
+y[tags==-1] = 1;
+y[tags==0 | tags ==1|tags==9] = -1;
+lassoPathResultNeg = lars(t(freqmat),y)
+# the path plot; dont run it, real slow...
+plot(lassoPathResultNeg,breaks=F)
+# the beta matrix, of size 846*795; each row for a lambda value
+dim(lassoPathResultNeg$beta);
+beta = lassoPathResultNeg$beta[500,] # just pick one lambda
+hist(beta)
+beta = matrix(beta);
+colnames(beta)<-wordLabel;
+# top absolute coefficient values:
+sort(abs(beta),decreasing=T)[1:50]
+# top positive coefficient values:
+sort(beta,decreasing=T)[1:50]
+# top negative coefficient values:
+sort(-beta,decreasing=T)[1:50]
+
+# 3. LASSO word image for the unidentifiable class:
+# create the new tag vector: +1 for unidentifiable class; -1 for all other classes
+y = tags;
+y[tags==0] = 1;
+y[tags==-1 | tags ==1|tags==9] = -1;
+lassoPathResultNeu= lars(t(freqmat),y)
+plot(lassoPathResultNeu,breaks=F)
+# the beta matrix, of size 860*795; each row for a lambda value
+dim(lassoPathResultNeu$beta);
+beta = lassoPathResultNeu$beta[500,] # just pick one lambda
+hist(beta)
+# top absolute coefficient values:
+sort(abs(beta),decreasing=T)[1:50]
+# top positive coefficient values:
+sort(beta,decreasing=T)[1:50]
+# top negative coefficient values:
+sort(-beta,decreasing=T)[1:50]
+
+# 4. LASSO word image for the spam class:
+# create the new tag vector: +1 for unidentifiable class; -1 for all other classes
+y = tags;
+y[tags==-9] = 1;
+y[tags==-1 | tags ==1|tags==0] = -1;
+lassoPathResultSpam= lars(t(freqmat),y)
+# the path plot; dont run it, real slow...
+plot(lassoPathResultSpam,breaks=F)
+# the beta matrix, of size 836*795; each row for a lambda value
+dim(lassoPathResultSpam$beta);
+beta = lassoPathResultSpam$beta[500,] # just pick one lambda
+hist(beta)
+# top absolute coefficient values:
+sort(abs(beta),decreasing=T)[1:50]
+# top positive coefficient values:
+sort(beta,decreasing=T)[1:50]
+# top negative coefficient values:
+sort(-beta,decreasing=T)[1:50]
