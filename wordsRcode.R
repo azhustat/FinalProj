@@ -6,20 +6,20 @@ dat <- read.table("words.txt", header=FALSE)
 dat <- dat[ order(dat[ , 2], decreasing=TRUE), ]
 rownames(dat) <- 1:(dim(dat)[1])
 names(dat) <- c("word", "counts")
-dim(dat) # 7862    2
+dim(dat) # 7776    2
 summary(dat$counts)
 head(dat, 20)
 
 # examines the words with frequency >= 10
-sum(dat$counts >= 10) # 795
+sum(dat$counts >= 10) # 756
 mat <- subset(dat, counts >= 10)
-dim(mat) # 795 2
+dim(mat) # 756 2
 # write.table(mat$word, file="selectedwords.txt", row.names=FALSE, col.names=FALSE, fileEncoding="UTF-8", quote=FALSE)
 
 
 # examines the co-occurrence  matrix
 coocmat <- data.matrix(read.table("coocmat.txt", header=FALSE))
-dim(coocmat) # 795 795
+dim(coocmat) # 756 756
 sum(coocmat - t(coocmat)) # 0, matrix is symmetric
 coocmat[1:10, 1:10]
 
@@ -102,7 +102,7 @@ tkplot(guassianGraph,
 =======
 # examines the frequency matrix
 freqmat <- data.matrix(read.table("freqmat.txt", header=FALSE))
-dim(freqmat) # 795 3000
+dim(freqmat) # 756 3000
 summary(rowSums(freqmat))
 rownames(freqmat) <- wordLabel$V1
 matrixPlot(freqmat[1:100,1:100]);
@@ -176,7 +176,7 @@ lassoPathResultPos = lars(t(freqmat),y)
 # runs like 30 sec; real fast
 # the path plot; dont run it, real slow...
 plot(lassoPathResultPos,breaks=F)
-# the beta matrix, of size 876*795; each row for a lambda value
+# the beta matrix, of size 876*756; each row for a lambda value
 dim(lassoPathResultPos$beta);
 beta = lassoPathResultPos$beta[500,] # just pick one lambda
 beta = matrix(beta);
@@ -196,7 +196,7 @@ y[tags==0 | tags ==1|tags==9] = -1;
 lassoPathResultNeg = lars(t(freqmat),y)
 # the path plot; dont run it, real slow...
 plot(lassoPathResultNeg,breaks=F)
-# the beta matrix, of size 846*795; each row for a lambda value
+# the beta matrix, of size 846*756; each row for a lambda value
 dim(lassoPathResultNeg$beta);
 beta = lassoPathResultNeg$beta[500,] # just pick one lambda
 hist(beta)
@@ -216,7 +216,7 @@ y[tags==0] = 1;
 y[tags==-1 | tags ==1|tags==9] = -1;
 lassoPathResultNeu= lars(t(freqmat),y)
 plot(lassoPathResultNeu,breaks=F)
-# the beta matrix, of size 860*795; each row for a lambda value
+# the beta matrix, of size 860*756; each row for a lambda value
 dim(lassoPathResultNeu$beta);
 beta = lassoPathResultNeu$beta[500,] # just pick one lambda
 hist(beta)
@@ -235,7 +235,7 @@ y[tags==-1 | tags ==1|tags==0] = -1;
 lassoPathResultSpam= lars(t(freqmat),y)
 # the path plot; dont run it, real slow...
 plot(lassoPathResultSpam,breaks=F)
-# the beta matrix, of size 836*795; each row for a lambda value
+# the beta matrix, of size 836*756; each row for a lambda value
 dim(lassoPathResultSpam$beta);
 beta = lassoPathResultSpam$beta[500,] # just pick one lambda
 hist(beta)
