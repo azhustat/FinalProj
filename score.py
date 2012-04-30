@@ -82,9 +82,6 @@ def checkPN(record, who):
 hanhan = u'\u97e9\u5bd2'
 fang = u'\u65b9\u821f\u5b50'
 
-# for word counts dictionary
-worddict = {}
-
 ###
 
 # reads in input file
@@ -106,9 +103,6 @@ for part in lines:
 		match = wordpat.findall(out[j].strip())
 		if (len(match) > 0): # there are empty lines due to reposting
 			word = match[0]
-		
-			# constructs word counts dictionary
-			worddict[word] = worddict.get(word, 0) + 1
 		
 			# sentiment scores
 			delta = 0
@@ -154,21 +148,12 @@ for part in lines:
 			
 	print >> fout, s
 
-# writes word counts into a file
-try:
-	fwc = codecs.open("words.txt", "w", "utf-8")
-except IOError:
-	print "words.txt could not be opened"
-	sys.exit(1)
 
-for word in worddict.keys():
-	print >> fwc, word + ' ' + str(worddict[word])
 		
 
 ###
 fp.close()
 fout.close()
-fwc.close()
 fpem.close()
 fpev.close()
 fnem.close()

@@ -6,20 +6,20 @@ dat <- read.table("words.txt", header=FALSE)
 dat <- dat[ order(dat[ , 2], decreasing=TRUE), ]
 rownames(dat) <- 1:(dim(dat)[1])
 names(dat) <- c("word", "counts")
-dim(dat) # 7862    2
+dim(dat) # 7776    2
 summary(dat$counts)
 head(dat, 20)
 
 # examines the words with frequency >= 10
-sum(dat$counts >= 10) # 795
+sum(dat$counts >= 10) # 756
 mat <- subset(dat, counts >= 10)
-dim(mat) # 795 2
+dim(mat) # 756 2
 # write.table(mat$word, file="selectedwords.txt", row.names=FALSE, col.names=FALSE, fileEncoding="UTF-8", quote=FALSE)
 
 
 # examines the co-occurrence  matrix
 coocmat <- data.matrix(read.table("coocmat.txt", header=FALSE))
-dim(coocmat) # 795 795
+dim(coocmat) # 756 756
 sum(coocmat - t(coocmat)) # 0, matrix is symmetric
 coocmat[1:10, 1:10]
 
@@ -102,7 +102,7 @@ tkplot(guassianGraph,
 =======
 # examines the frequency matrix
 freqmat <- data.matrix(read.table("freqmat.txt", header=FALSE))
-dim(freqmat) # 795 3000
+dim(freqmat) # 756 3000
 summary(rowSums(freqmat))
 rownames(freqmat) <- wordLabel$V1
 matrixPlot(freqmat[1:100,1:100]);
@@ -184,8 +184,13 @@ cvPos = cv.lars(t(freqmat),y);
 cvPlot(cvPos)
 # runs like 30 sec; real fast
 # the path plot; dont run it, real slow...
+<<<<<<< HEAD
 #plot(lassoPathResultPos,breaks=F)
 # the beta matrix, of size 876*795; each row for a lambda value
+=======
+plot(lassoPathResultPos,breaks=F)
+# the beta matrix, of size 876*756; each row for a lambda value
+>>>>>>> 5e4219b10d526503441f4a3c39249117e88dc7ef
 dim(lassoPathResultPos$beta);
 beta = lassoPathResultPos$beta[bestIndex,] 
        # just pick the best lambda with the lowest cv error
@@ -204,6 +209,7 @@ y[tags==0 | tags ==1|tags==9] = -1;
 lassoPathResultNeg = lars(t(freqmat),y)
 # the path plot; dont run it, real slow...
 plot(lassoPathResultNeg,breaks=F)
+<<<<<<< HEAD
 cvNeg = cv.lars(t(freqmat),y);
       betaL1Norm = rowSums(abs(lassoPathResultNeg$beta))
       bestFrac = cvNeg$index[which(cvNeg$cv==min(cvNeg$cv))];
@@ -211,6 +217,9 @@ cvNeg = cv.lars(t(freqmat),y);
       bestIndex = which(betaL1Frac>bestFrac)[1]
 cvPlot(cvNeg)
 # the beta matrix, of size 846*795; each row for a lambda value
+=======
+# the beta matrix, of size 846*756; each row for a lambda value
+>>>>>>> 5e4219b10d526503441f4a3c39249117e88dc7ef
 dim(lassoPathResultNeg$beta);
 beta = lassoPathResultNeg$beta[bestIndex,] # just pick one lambda
 hist(beta)
@@ -228,6 +237,7 @@ y[tags==0] = 1;
 y[tags==-1 | tags ==1|tags==9] = -1;
 lassoPathResultNeu= lars(t(freqmat),y)
 plot(lassoPathResultNeu,breaks=F)
+<<<<<<< HEAD
 cvNeu = cv.lars(t(freqmat),y);
       bestFrac = cvNeu$index[which(cvNeu$cv==min(cvNeu$cv))];
       betaL1Norm = rowSums(abs(lassoPathResultNeu$beta))
@@ -235,6 +245,9 @@ cvNeu = cv.lars(t(freqmat),y);
       bestIndex = which(betaL1Frac>bestFrac)[1]
 cvPlot(cvNeu)
        # the beta matrix, of size 860*795; each row for a lambda value
+=======
+# the beta matrix, of size 860*756; each row for a lambda value
+>>>>>>> 5e4219b10d526503441f4a3c39249117e88dc7ef
 dim(lassoPathResultNeu$beta);
 beta = lassoPathResultNeu$beta[bestIndex,] # just pick one lambda
 hist(beta)
@@ -253,6 +266,7 @@ y[tags==-1 | tags ==1|tags==0] = -1;
 lassoPathResultSpam= lars(t(freqmat),y)
 # the path plot; dont run it, real slow...
 plot(lassoPathResultSpam,breaks=F)
+<<<<<<< HEAD
 cvSpam = cv.lars(t(freqmat),y);
       bestFrac = cvSpam$index[which(cvSpam$cv==min(cvSpam$cv))];
       betaL1Norm = rowSums(abs(lassoPathResultSpam$beta))
@@ -260,6 +274,9 @@ cvSpam = cv.lars(t(freqmat),y);
       bestIndex = which(betaL1Frac>bestFrac)[1]
 cvPlot(cvSpam)
 # the beta matrix, of size 836*795; each row for a lambda value
+=======
+# the beta matrix, of size 836*756; each row for a lambda value
+>>>>>>> 5e4219b10d526503441f4a3c39249117e88dc7ef
 dim(lassoPathResultSpam$beta);
 beta = lassoPathResultSpam$beta[bestIndex,] # just pick one lambda
 hist(beta)

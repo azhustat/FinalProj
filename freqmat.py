@@ -28,7 +28,7 @@ nwl = len(wlist)
 
 
 # list to store the frequency matrix (stacked by columns)
-freqmat = [0] * (len(wlist) * 3000)
+freqmat = [0] * ( nwl * 3000)
 
 	
 ###

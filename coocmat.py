@@ -28,8 +28,8 @@ for word in fwl.readlines():
 nwl = len(wlist)	
 
 # list to store the co-occurrence matrix (stacked by columns)
-coocmat = [0] * (len(wlist) * len(wlist))
-# length: 795^2 = 632025	
+coocmat = [0] * (nwl * nwl)
+# length: 756^2 = 571536	
 	
 ###
 
