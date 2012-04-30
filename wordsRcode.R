@@ -120,7 +120,7 @@ sort(abs(out1$loadings[,3]),decreasing=T)[1:10]
 sort(abs(out1$loadings[,4]),decreasing=T)[1:10]
 
 # LASSO and SVM
-
+library(glasso)
 # GLasso: Gaussian Graphical Model
 S = cov(t(freqmat));
 matrixPlot(S[1:50,1:50],zlim=c(-.04,.04))
@@ -151,7 +151,7 @@ edgeColor[w>0] = "black"
 w[abs(w)>2] =2
 plot(guassianGraph, 
      layout=layout.fruchterman.reingold, 
-     vertex.label=colnames(coocmat)[1:n],     
+     vertex.label=wordLabel$V1[1:n],     
      #vertex.color=c(rep("red",4),rep("blue",6)),
       edge.color = edgeColor, 
      edge.width=abs(w)*5,, vertex.size=7, 
@@ -172,15 +172,23 @@ y = tags;
 y[y==0] = -1;
 y[y==9] = -1;
 library(lars)       
-lassoPathResultPos = lars(t(freqmat),y)
+lassoPathResultPos = lars(t(freqmat),y);
+# How do we choose lambda the regularization parameter? do a
+# 10-fold cross validation...
+# takes minutes to run...
+cvPos = cv.lars(t(freqmat),y);
+      bestFrac = cvPos$index[which(cvPos$cv==min(cvPos$cv))];
+      betaL1Norm = rowSums(abs(lassoPathResultPos$beta))
+      betaL1Frac = betaL1Norm/max(betaL1Norm)
+      bestIndex = which(betaL1Frac>bestFrac)[1]
+cvPlot(cvPos)
 # runs like 30 sec; real fast
 # the path plot; dont run it, real slow...
-plot(lassoPathResultPos,breaks=F)
+#plot(lassoPathResultPos,breaks=F)
 # the beta matrix, of size 876*795; each row for a lambda value
 dim(lassoPathResultPos$beta);
-beta = lassoPathResultPos$beta[500,] # just pick one lambda
-beta = matrix(beta);
-colnames(beta)<-wordLabel;
+beta = lassoPathResultPos$beta[bestIndex,] 
+       # just pick the best lambda with the lowest cv error
 # top absolute coefficient values:
 sort(abs(beta),decreasing=T)[1:50]
 # top positive coefficient values:
@@ -196,18 +204,22 @@ y[tags==0 | tags ==1|tags==9] = -1;
 lassoPathResultNeg = lars(t(freqmat),y)
 # the path plot; dont run it, real slow...
 plot(lassoPathResultNeg,breaks=F)
+cvNeg = cv.lars(t(freqmat),y);
+      betaL1Norm = rowSums(abs(lassoPathResultNeg$beta))
+      bestFrac = cvNeg$index[which(cvNeg$cv==min(cvNeg$cv))];
+      betaL1Frac = betaL1Norm/max(betaL1Norm)
+      bestIndex = which(betaL1Frac>bestFrac)[1]
+cvPlot(cvNeg)
 # the beta matrix, of size 846*795; each row for a lambda value
 dim(lassoPathResultNeg$beta);
-beta = lassoPathResultNeg$beta[500,] # just pick one lambda
+beta = lassoPathResultNeg$beta[bestIndex,] # just pick one lambda
 hist(beta)
-beta = matrix(beta);
-colnames(beta)<-wordLabel;
 # top absolute coefficient values:
 sort(abs(beta),decreasing=T)[1:50]
 # top positive coefficient values:
 sort(beta,decreasing=T)[1:50]
 # top negative coefficient values:
-sort(-beta,decreasing=T)[1:50]
+sort(-beta,decreasing=T)[1:50] #warning: lots of zeros!
 
 # 3. LASSO word image for the unidentifiable class:
 # create the new tag vector: +1 for unidentifiable class; -1 for all other classes
@@ -216,9 +228,15 @@ y[tags==0] = 1;
 y[tags==-1 | tags ==1|tags==9] = -1;
 lassoPathResultNeu= lars(t(freqmat),y)
 plot(lassoPathResultNeu,breaks=F)
-# the beta matrix, of size 860*795; each row for a lambda value
+cvNeu = cv.lars(t(freqmat),y);
+      bestFrac = cvNeu$index[which(cvNeu$cv==min(cvNeu$cv))];
+      betaL1Norm = rowSums(abs(lassoPathResultNeu$beta))
+      betaL1Frac = betaL1Norm/max(betaL1Norm)
+      bestIndex = which(betaL1Frac>bestFrac)[1]
+cvPlot(cvNeu)
+       # the beta matrix, of size 860*795; each row for a lambda value
 dim(lassoPathResultNeu$beta);
-beta = lassoPathResultNeu$beta[500,] # just pick one lambda
+beta = lassoPathResultNeu$beta[bestIndex,] # just pick one lambda
 hist(beta)
 # top absolute coefficient values:
 sort(abs(beta),decreasing=T)[1:50]
@@ -235,9 +253,15 @@ y[tags==-1 | tags ==1|tags==0] = -1;
 lassoPathResultSpam= lars(t(freqmat),y)
 # the path plot; dont run it, real slow...
 plot(lassoPathResultSpam,breaks=F)
+cvSpam = cv.lars(t(freqmat),y);
+      bestFrac = cvSpam$index[which(cvSpam$cv==min(cvSpam$cv))];
+      betaL1Norm = rowSums(abs(lassoPathResultSpam$beta))
+      betaL1Frac = betaL1Norm/max(betaL1Norm)
+      bestIndex = which(betaL1Frac>bestFrac)[1]
+cvPlot(cvSpam)
 # the beta matrix, of size 836*795; each row for a lambda value
 dim(lassoPathResultSpam$beta);
-beta = lassoPathResultSpam$beta[500,] # just pick one lambda
+beta = lassoPathResultSpam$beta[bestIndex,] # just pick one lambda
 hist(beta)
 # top absolute coefficient values:
 sort(abs(beta),decreasing=T)[1:50]
