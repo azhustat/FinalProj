@@ -122,6 +122,21 @@ A post can be text, an image, video, or other multimedia.
 \subsection{Sampling}
 
 
+
+
+%%%%%%%
+\subsection{Tagging}
+
+%Tagging Limitations
+
+In all, we tagged a total of 4000 Weibo posts.  We made a search for the topic we were looking into and did this over time to get a total of 10,000 Weibo posts, from which we picked out 3000 posts as our training set.  We each tagged 1000 posts.  The final 1000 posts were for our test set and we tagged these together. We had a total of four different categories that we tagged the posts as - neutral, positive, negative, and irrelevant (spam).  
+
+As we each tagged the posts, we encountered and realized a few of the limitations involved. One limitation was in the fact that tagging these posts produced subjective responses.  What one of us read as a negative response to the topic we chose, another may have read as a positive response.  For example, the English phrase 'that wasn't too bad' could be taken as positive or negative.  Positive - the experience was better than expected; negative - the experience wasn't great. Hence, it is difficult sometimes to truly know whether the original author of the post had in mind a negative or positive reaction to the topic he was posting about.  
+
+Another limitation was that some posts we were not sure how to tag. Many posts consisted of just a quote by the author we were looking into.  These could have been seen as positive posts since the writer may have liked the quote and so posted it. But at the same time, the author could have been neutral and was just merely using the quote to apply to a specific circumstance in his life at the time. We were not entirely sure of how to tag each of the posts that fell into this category, and so again, the subjectiveness of tagging the posts by hand comes into play as a limitation in the forming of our model.  Another uncertainty that occurred in trying to manually tag the posts was that some of the posts didn't talk about our chosen topic specifically, but a related topic.  With our chosen topic, people who had negative responses towards 韓寒 (Hanhan), were usually on the side of the opposing author who was discrediting him.  Some of the posts did not directly mention 韓寒, but would instead show support for the opposing side. With these posts, we typically labeled as a negative response.  However, an argument could be made for just throwing out those posts since they do not directly say anything about 韓寒, and they could possibly just be supporting the opposing author in his own literary works and not necessarily in his stance against 韓寒.  Another uncertainty in tagging is what to tag posts that have no subject.  There were a few posts that had nothing to do with the chosen topic at all, but there were also posts that had no subject but contained phrases such as "Keep it up!", "always a supporter!", etc. that could very well be taken as positive posts since our search is for our specific topic. But because there is no subject in the posts, this cannot be taken with 100\% certainty. In these instances, where there is no subject in the posts, we marked them as irrelevant to be on the conservative side in our predictions. 
+
+These limitations in tagging will affect our model's accuracy in predicting whether a post contains a positive or negative response to the topic at hand.  These limitations also indicate to us that in general, models for predicting whether or not a post is negative or positive towards a chosen topic is limited greatly by the subjectiveness of the sentence's meaning/interpretation which affects the training set used to form the model. This limitation could present a potential future question to look into on how we can improve tagging - whether we should just remove posts that have too subjective of an interpretation to tag or if by studying these types of ambiguous posts, we can create certain priors to help in the tagging process. 
+
 %%%%%%%
 \subsection{Processing}
 
@@ -139,6 +154,21 @@ ambiguity
 
 
 \cite{wong2009introduction}
+
+
+There has been quite a bit of research done into natural language processing in the English language, but not much on the Chinese language.  This is due to the fact that the Chinese language contains unique characteristics that makes it difficult to do natural language processing well. 
+ 
+First, the Chinese language, unlike the English language, has no explicit delimiter between words. In the English language, spaces separate words and so to segment a sentence into its appropriate components is not too difficult since one could just separate based on spaces.  The Chinese language however has no such delimiter between words.
+ 
+An additional difficulty in segmenting a sentence into its appropriate components and words is that the Chinese languages made of separate characters where each character has a meaning of its own, but if you combine two or more characters together into a phrase, the meaning can be completely different. These types of ambiguities are typically easily resolved by humans reading the sentence and realizing what would make most sense in terms of the context of the
+sentence, but it is not so easy for a computer to preform those types of automatic word/phrase segmentations. For example, 他好吃 - this sentence could be separated in two ways. The first character means 'he'. The other two words can be taken as two different phrases: 'tastes delicious' or 'loves to eat'.  It is obvious that the phrase should be taken as "he loves to eat" because "he tastes delicious" does not make sense but it is difficult to have a computer
+automatically recognize which sentence makes more sense. Some words also have more than one meaning. For example, 打 can be used in different ways with different meanings. It can be used in the contexts of playing a sport, hitting a person or object, or playing a game. 
+
+Second, the Chinese language has many OOV words (out of vocabulary).  These are new phrases that are not in dictionaries.  These phrases typically come out of cultural references, current hot topics, acronyms, abbreviations, names/nicknames, or just plain slang words.  Specifically to the posts that we looked into, out of vocabulary words typically occurred in the case of cultural references, where there are nicknames created for some hot topic issue/person/event of the week just popular slang or informal words and phrases used to 
+convey an emotion.  Especially since social media posts are more popular with the young adult generation, many of the words used in the posts are popular informal phrases that would not normally be found in dictionaries. Knowledge of these types of OOV words comes out of knowing the current trends in Asian countries and being up to date with the typical language used by the younger generation.  
+
+Third, the Chinese language has two forms - traditional and simplified and it is not a 1-1 correspondence between the two languages which makes it difficult to convert between the two languages for translation or natural language processing. 
+
 
 
 %%
@@ -249,6 +279,22 @@ Another interesting quantities are the numbers of positive and negative words in
 %%%%%%%
 \subsection{Sentiment Analysis}
 
+
+%%%%%
+\subsubsection{$L_1$ LASSO}
+Lasso regression is one of the most well known sparse regression methods. Lasso regression uses a L-1 norm penalty to make the regression coefficient vector beta be sparse.  The larger lambda is, the more sparse the optimal beta will be. Our resulting models yield classification rules where we take the sign of the model to indicate whether it is in the category we are predicting (positive sign) or not (negative sign). 
+
+We used the lasso regression method to create three models model for predicting: positive response, negative response, and the unidentifiable response (we combined spam and irrelevant responses into this one category).  We used the R package "lars" to form our models. This package efficiently fits an entire lasso sequence with the least squares loss function.  To find the optimal lambda (the regularization parameter) for our L-1 penalty, we used a 10-fold cross validation on our training set of 3000 posts. 
+
+For each of the three models, we changed all responses that were not the category we were modeling to -1 and responses that fell into the category we were looking into as 1. Our observation matrix is the frequency matrix of dimension 756x3000. The columns represent each post and the rows represent 756 phrases.  These 756 phrases have total occurance of at least 10 times over all 3000 posts and do not include stop words and negation words. Each element of the observation matrix represents the total number of times that particular word (indicated by row) occurrs in that post (indicated by column). Using 10 fold cross validation, we searched for the optimal regularization parameter.  The function we used from the lars package in R does not 
+directly return which lambda gives us the optimal model, but rather returns the fraction of the sum of all the absolute values of the betas for that particular model divided by the maximum of all the sums of absolute values of the betas for each model. We pick as our optimal model the model that minimizes our classification error. 
+
+To look at which words were most relevant to each category we modeled (positive, negative, and unidentifiable), we looked at the top 50 words based on the top 50 highest absolute beta values, the top 50 words based on the top 50 highest positive beta values, and the top 50 words based on the top 50 highest negative beta values.  The top 50 words based on the top 50 highest 
+absolute beta values tells us in general which words were most relevant to predicting that particular category.  The top 50 words based on the top 50 highest positive beta values tells us which words typically were common in posts that fell into the category observed while the top 50 words based on the top 50 highest negative beta values tells us which words typically 
+were not in posts that fell into the category observed but were rather more common in the categories outside of the one
+we were modeling.
+
+Results: top 10 words \& explanation \& possibly interpretation. 
 
 
 
