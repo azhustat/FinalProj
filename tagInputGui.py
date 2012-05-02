@@ -147,6 +147,6 @@ class TagInputGui(Frame):
 
 
 root = Tk()
-app = TagInputGui(filename = './test.txt',master=root)
+app = TagInputGui(filename = './Siqi/SWaj.txt',master=root)
 app.mainloop()
 root.destroy()
