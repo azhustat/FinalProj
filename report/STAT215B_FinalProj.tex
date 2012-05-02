@@ -119,7 +119,7 @@ A post can be text, an image, video, or other multimedia.
 
 
 %%%%%%%
-\subsection{Sampling}
+\subsection{Data Collection}
 
 
 
@@ -133,7 +133,7 @@ In all, we tagged a total of 4000 Weibo posts.  We made a search for the topic w
 
 As we each tagged the posts, we encountered and realized a few of the limitations involved. One limitation was in the fact that tagging these posts produced subjective responses.  What one of us read as a negative response to the topic we chose, another may have read as a positive response.  For example, the English phrase 'that wasn't too bad' could be taken as positive or negative.  Positive - the experience was better than expected; negative - the experience wasn't great. Hence, it is difficult sometimes to truly know whether the original author of the post had in mind a negative or positive reaction to the topic he was posting about.  
 
-Another limitation was that some posts we were not sure how to tag. Many posts consisted of just a quote by the author we were looking into.  These could have been seen as positive posts since the writer may have liked the quote and so posted it. But at the same time, the author could have been neutral and was just merely using the quote to apply to a specific circumstance in his life at the time. We were not entirely sure of how to tag each of the posts that fell into this category, and so again, the subjectiveness of tagging the posts by hand comes into play as a limitation in the forming of our model.  Another uncertainty that occurred in trying to manually tag the posts was that some of the posts didn't talk about our chosen topic specifically, but a related topic.  With our chosen topic, people who had negative responses towards 韓寒 (Hanhan), were usually on the side of the opposing author who was discrediting him.  Some of the posts did not directly mention 韓寒, but would instead show support for the opposing side. With these posts, we typically labeled as a negative response.  However, an argument could be made for just throwing out those posts since they do not directly say anything about 韓寒, and they could possibly just be supporting the opposing author in his own literary works and not necessarily in his stance against 韓寒.  Another uncertainty in tagging is what to tag posts that have no subject.  There were a few posts that had nothing to do with the chosen topic at all, but there were also posts that had no subject but contained phrases such as "Keep it up!", "always a supporter!", etc. that could very well be taken as positive posts since our search is for our specific topic. But because there is no subject in the posts, this cannot be taken with 100\% certainty. In these instances, where there is no subject in the posts, we marked them as irrelevant to be on the conservative side in our predictions. 
+Another limitation was that some posts we were not sure how to tag. Many posts consisted of just a quote by the author we were looking into.  These could have been seen as positive posts since the writer may have liked the quote and so posted it. But at the same time, the author could have been neutral and was just merely using the quote to apply to a specific circumstance in his life at the time. We were not entirely sure of how to tag each of the posts that fell into this category, and so again, the subjectiveness of tagging the posts by hand comes into play as a limitation in the forming of our model.  Another uncertainty that occurred in trying to manually tag the posts was that some of the posts didn't talk about our chosen topic specifically, but a related topic.  With our chosen topic, people who had negative responses towards 韩寒 (Hanhan), were usually on the side of the opposing author who was discrediting him.  Some of the posts did not directly mention 韩寒, but would instead show support for the opposing side. With these posts, we typically labeled as a negative response.  However, an argument could be made for just throwing out those posts since they do not directly say anything about 韩寒, and they could possibly just be supporting the opposing author in his own literary works and not necessarily in his stance against 韩寒.  Another uncertainty in tagging is what to tag posts that have no subject.  There were a few posts that had nothing to do with the chosen topic at all, but there were also posts that had no subject but contained phrases such as "Keep it up!", "always a supporter!", etc. that could very well be taken as positive posts since our search is for our specific topic. But because there is no subject in the posts, this cannot be taken with 100\% certainty. In these instances, where there is no subject in the posts, we marked them as irrelevant to be on the conservative side in our predictions. 
 
 These limitations in tagging will affect our model's accuracy in predicting whether a post contains a positive or negative response to the topic at hand.  These limitations also indicate to us that in general, models for predicting whether or not a post is negative or positive towards a chosen topic is limited greatly by the subjectiveness of the sentence's meaning/interpretation which affects the training set used to form the model. This limitation could present a potential future question to look into on how we can improve tagging - whether we should just remove posts that have too subjective of an interpretation to tag or if by studying these types of ambiguous posts, we can create certain priors to help in the tagging process. 
 
@@ -277,30 +277,180 @@ Another interesting quantities are the numbers of positive and negative words in
 
 
 %%%%%%%
-\subsection{Sentiment Analysis}
+\subsection{Analysis}
 
 
 %%%%%
-\subsubsection{$L_1$ LASSO}
+\subsubsection{LASSO}
 Lasso regression is one of the most well known sparse regression methods. Lasso regression uses a L-1 norm penalty to make the regression coefficient vector beta be sparse.  The larger lambda is, the more sparse the optimal beta will be. Our resulting models yield classification rules where we take the sign of the model to indicate whether it is in the category we are predicting (positive sign) or not (negative sign). 
 
-We used the lasso regression method to create three models model for predicting: positive response, negative response, and the unidentifiable response (we combined spam and irrelevant responses into this one category).  We used the R package "lars" to form our models. This package efficiently fits an entire lasso sequence with the least squares loss function.  To find the optimal lambda (the regularization parameter) for our L-1 penalty, we used a 10-fold cross validation on our training set of 3000 posts. 
+We used the lasso regression method to create four models model for predicting: positive responses, negative responses, the unidentifiable responses, and the spam responses.  We used the R package "lars" to form our models. This package efficiently fits an entire lasso sequence with the least squares loss function.  To find the optimal lambda (the regularization parameter) for our L-1 penalty, we used a 10-fold cross validation on our training 
+set of 3000 posts. 
 
-For each of the three models, we changed all responses that were not the category we were modeling to -1 and responses that fell into the category we were looking into as 1. Our observation matrix is the frequency matrix of dimension 756x3000. The columns represent each post and the rows represent 756 phrases.  These 756 phrases have total occurance of at least 10 times over all 3000 posts and do not include stop words and negation words. Each element of the observation matrix represents the total number of times that particular word (indicated by row) occurrs in that post (indicated by column). Using 10 fold cross validation, we searched for the optimal regularization parameter.  The function we used from the lars package in R does not 
+For each of the four models, we changed all responses that were not the category we were modeling to -1 and responses that fell into the category we were looking into as 1. Our observation matrix is the frequency matrix of dimension 756x3000. The columns represent each post and the rows represent 756 phrases.  These 756 phrases have total occurance of at least 10 times over all 3000 posts and do not include stop words and negation words. Each element of the observation matrix represents the total number of times that particular word (indicated by row) occurrs in that post (indicated by column). Using 10 fold cross validation, we searched for the optimal regularization parameter.  The function we used from the lars package in R does not 
 directly return which lambda gives us the optimal model, but rather returns the fraction of the sum of all the absolute values of the betas for that particular model divided by the maximum of all the sums of absolute values of the betas for each model. We pick as our optimal model the model that minimizes our classification error. 
 
 To look at which words were most relevant to each category we modeled (positive, negative, and unidentifiable), we looked at the top 50 words based on the top 50 highest absolute beta values, the top 50 words based on the top 50 highest positive beta values, and the top 50 words based on the top 50 highest negative beta values.  The top 50 words based on the top 50 highest 
 absolute beta values tells us in general which words were most relevant to predicting that particular category.  The top 50 words based on the top 50 highest positive beta values tells us which words typically were common in posts that fell into the category observed while the top 50 words based on the top 50 highest negative beta values tells us which words typically 
-were not in posts that fell into the category observed but were rather more common in the categories outside of the one
-we were modeling.
-
-Results: top 10 words \& explanation \& possibly interpretation. 
-
-
+were not in posts that fell into the category observed but were rather more common in the categories outside of the one we were modeling.
 
 
 %%%%%%%%%%%%%%%%%%
 \section{Results}
+
+%%%%%
+\subsubsection{LASSO}
+
+For the positive responses, the top 20 most relevant words (based on taking the absolute values of the betas) returned by our model are shown in the table. As can be seen, the top 20 relevant words have an assortment of fairly neutral or positive words. The top 20 most relevant words for just the positive betas resulted in words that were very positive in nature. For example, words such as 'mature', 'support', and 'keep up the good work' are very positive in nature and would certainly indicate a positive reaction to 韓寒. The top 20 most relevant words for just the negative betas resulted in words that showed a great dislike for 韓寒.  Words such as 'liar' indicate a negative response to the author. 
+
+For the negative responses, the top 20 most relevant words (based on taking the absolute values of the betas) returned by our model are shown in the table. As can be seen, the words are typically negative or neutral.  The top 20 most relevant words for just the positive betas are very telling in the posts sentiment towards 韓寒. Words such as 'disgusting, 'hate', 'liar' and 'annoying' demonstrates easily that the post has a negative sentiment towards the author. The top 20 most relevant words for just the negative betas are hence typically more positive towards the author. With words such as 'support', 'good', and 'like', the posts would not have a negative sentiment. What is interesting to note with these betas is the fact that these betas are all close to
+zero except the highest phrase. 
+
+For the neutral responses, the top 20 most relevant words (based on taking the absolute values of the betas) as well as the top 20 most relevant words based on the positive betas are all neutral words. The top 20 most relevant words based on the negative betas consist mainly of phrases that have some clear emotion attached to them, such as "support", "hate", "agree", and "ghostwriter". For the spam posts, the top 20 most relevant words (based on taking the absolute values of the betas) as well as the top most relevant words based on the positive betas are words/phrases that have no relation whatsoever with the author we picked to look into.  As expected, the top 20 most relevant words based on the negative betas are words/phrases that do have to do with the topic, such as the author's name. 
+
+\begin{table}
+\caption{Positive category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \hline
+加油 & 0.820 & 加油 & 0.820 & 样子 & -0.396\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+韩少 & 0.644 & 韩少 & 0.644 & 恋 & -0.344\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+成熟 & 0.546 & 成熟 & 0.546 & 发表 & -0.336\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+顶 & 0.533 & 顶 & 0.533 & 道理 & -0.336\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+宽容 & 0.518 & 宽容 & 0.518 & 利益 & -0.335\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+支持 & 0.477 & 支持 & 0.477 & 称 & -0.323\\ \hline
+家人 & 0.467 & 家人 & 0.467 & 遭受 & -0.323\\ \hline
+样子 & 0.396 & 尤其 & 0.395 & 媒体 & -0.319\\ \hline
+尤其 & 0.395 & 欣赏 & 0.383 & 翻 & -0.314\\ \hline
+欣赏 & 0.383 & 感动 & 0.381 & 铁证 & -0.289\\ \hline
+感动 & 0.381 & 影响力 & 0.370 & 骗子 & -0.248\\ \hline
+影响力 & 0.370 & 新书 & 0.327 & 上调 & -0.248\\ \hline
+恋 & 0.344 & 铁 & 0.316 & 投票 & -0.234\\ \hline
+发表 & 0.336 & 不错 & 0.309 & 女 & -0.230\\ \hline
+道理 & 0.336 & 终于 & 0.274 & 四娘 & -0.226\\ \hline
+利益 & 0.335 & 每个 & 0.274 & 关系 & -0.215\\ \hline
+新书 & 0.327 & 咬 & 0.261 & 广告 & -0.210\\ \hline
+称 & 0.323 & 文字 & 0.260 & 接受 & -0.208\\ \hline
+遭受 & 0.323 & 蛋 & 0.244 & 网 & -0.204\\ \hline
+媒体 & 0.319 & 纠缠 & 0.244 & 底 & -0.196\\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+\begin{table}
+\caption{Negative category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \hline
+讨厌 & 0.481 & 讨厌 & 0.481 & 支持 & -0.008\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+无耻 & 0.412 & 无耻 & 0.412 & 不 & 0.000\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+恶心 & 0.395 & 恶心 & 0.395 & 人 & 0.000\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+骗子 & 0.380 & 骗子 & 0.380 & 说 & 0.000\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+扁 & 0.353 & 扁 & 0.353 & 方舟子 & 0.000\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+装 & 0.321 & 装 & 0.321 & 韩少 & 0.000\\ \hline
+选项 & 0.292 & 选项 & 0.292 & 真 & 0.000\\ \hline
+苦肉计 & 0.290 & 苦肉计 & 0.290 & 好 & 0.000\\ \hline
+利益 & 0.283 & 利益 & 0.283 & 没 & 0.000\\ \hline
+全 & 0.261 & 全 & 0.261 & 一个 & 0.000\\ \hline
+国家 & 0.247 & 国家 & 0.247 & 微博 & 0.000\\ \hline
+智商 & 0.216 & 智商 & 0.216 & 写 & 0.000\\ \hline
+告 & 0.198 & 告 & 0.198 & 喜欢 & 0.000\\ \hline
+虚伪 & 0.192 & 虚伪 & 0.192 & 想 & 0.000\\ \hline
+演 & 0.191 & 演 & 0.191 & 威胁 & 0.000\\ \hline
+语 & 0.186 & 语 & 0.186 & 只 & 0.000\\ \hline
+烦 & 0.178 & 烦 & 0.178 & 太 & 0.000\\ \hline
+掉 & 0.142 & 掉 & 0.142 & 事 & 0.000\\ \hline
+下去 & 0.141 & 下去 & 0.141 & 没有 & 0.000\\ \hline
+公开 & 0.141 & 公开 & 0.141 & 看到 & 0.000\\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\begin{table}
+\caption{Neutral category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline
+上调 & 0.586 & 上调 & 0.586 & 加油 & -0.491\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+道理 & 0.566 & 道理 & 0.566 & 韩少 & -0.358\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+账号 & 0.534 & 账号 & 0.534 & 苦肉计 & -0.327\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+加油 & 0.491 & 铁证 & 0.459 & 支持 & -0.290\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+铁证 & 0.459 & 称 & 0.453 & 善良 & -0.268\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+称 & 0.453 & 想起 & 0.353 & 成熟 & -0.263\\ \hline
+韩少 & 0.358 & 杀 & 0.331 & 终于 & -0.239\\ \hline
+想起 & 0.353 & 最终 & 0.329 & 家人 & -0.233\\ \hline
+杀 & 0.331 & 意思 & 0.323 & 同意 & -0.228\\ \hline
+最终 & 0.329 & 遭遇 & 0.319 & 越来越 & -0.220\\ \hline
+苦肉计 & 0.327 & 金 & 0.308 & 欢乐 & -0.217\\ \hline
+意思 & 0.323 & 片 & 0.287 & 崇拜 & -0.213\\ \hline
+遭遇 & 0.319 & 应 & 0.278 & 讨厌 & -0.202\\ \hline
+金 & 0.308 & 变成 & 0.265 & 顶 & -0.197\\ \hline
+支持 & 0.290 & 有点 & 0.262 & 代笔 & -0.194\\ \hline
+片 & 0.287 & 之间 & 0.254 & 跳 & -0.191\\ \hline
+应 & 0.278 & 右边 & 0.250 & 真善美 & -0.186\\ \hline
+善良 & 0.268 & 民主 & 0.238 & 真正 & -0.185\\ \hline
+变成 & 0.265 & 郭敬明 & 0.237 & 欣赏 & -0.181\\ \hline
+成熟 & 0.263 & 久 & 0.226 & 无耻 & -0.180\\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\begin{table}
+\caption{Spam category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline
+查看 & 3.777 & 查看 & 3.777 & 韩少 & -1.033\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+抽 & 1.998 & 抽 & 1.998 & 韩寒 & -0.716\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+每天 & 1.251 & 每天 & 1.251 & 别 & -0.232\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+往往 & 1.208 & 往往 & 1.208 & 支持 & -0.217\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+外 & 1.043 & 外 & 1.043 & 这种 & -0.202\\
+(asdf) & & (asdf) & & (asdf) & \\\hline
+韩少 & 1.033 & 征集 & 0.948 & 感 & -0.196\\ \hline
+征集 & 0.948 & 容 & 0.849 & 韓 & -0.191\\ \hline
+容 & 0.849 & 风 & 0.649 & 没有 & -0.179\\ \hline
+韩寒 & 0.716 & 票子 & 0.570 & 上调 & -0.174\\ \hline
+风 & 0.649 & 考 & 0.540 & 方舟子 & -0.160\\ \hline
+票子 & 0.570 & 主 & 0.438 & 光明 & -0.141\\ \hline
+考 & 0.540 & 性 & 0.430 & 一定 & -0.137\\ \hline
+主 & 0.438 & 总是 & 0.416 & 照妖镜 & -0.132\\ \hline
+性 & 0.430 & 儿 & 0.416 & 写 & -0.132\\ \hline
+总是 & 0.416 & 结论 & 0.405 & 觉得 & -0.119\\ \hline
+儿 & 0.416 & 后面 & 0.397 & 甚 & -0.110\\ \hline
+结论 & 0.405 & 法律 & 0.388 & 韩 & -0.092\\ \hline
+后面 & 0.397 & 机会 & 0.376 & 真相 & -0.084\\ \hline
+法律 & 0.388 & 公知 & 0.357 & 挺 & -0.072\\ \hline
+机会 & 0.376 & 中 & 0.357 & 不 & -0.068\\ \hline
+\end{tabular}
+\end{center}
+\end{table}
 
 %%%%%%%%%%%%%%%%%%
 \section{Discussion}
