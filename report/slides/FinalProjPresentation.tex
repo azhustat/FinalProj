@@ -437,8 +437,8 @@ For each case, only part B will be kept.
 \begin{frame}{Word Frequency}
 \begin{itemize}[<+->]
 \item Extract the word frequency vector $x_i$ from the $i$-th post
-\item Focus on words with overall frequency $\geq$ 10
-\item Construct the word frequency matrix $X=(x_1,...,x_n)^T$. This will be our design matrix.
+\item Focus on words with overall frequency $\geq$ 10, resulting in $p=795$ words
+\item Construct the word frequency matrix $X=(x_1,...,x_n)^T$, where $n=3000$. This will be our design matrix.
 \end{itemize}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%
@@ -450,7 +450,7 @@ For each case, only part B will be kept.
   \centering
   \includegraphics[height=0.9\textheight]{./../../wordFreqMat.png} 
 \end{figure}
-
+\center matrix plot of word frequency $X^T$
 
 \end{frame}
 
@@ -479,13 +479,14 @@ For each case, only part B will be kept.
 \begin{frame}[fragile]{Sparse Graphical Models}
 
 \begin{itemize}[<+->]
+\item Goal: study the relation between words by graphical models
 \item Fact: if $x\in R^p$ follows $N(\mu,\Sigma)$, then for $i\ne j$
 \begin{align*}
 (x_i  \upmodels % mnsymbol
 x_j )\mid \{x_{\text{all but $(i,j)$}}\} \textbf{ iff } (\Sigma^{-1})_{ij}=0
 \end{align*}
 \item This motivates us to estimate $\Sigma^{-1}$.
-\item Let $x_1,x_2,...x_n$ be IID $N(\nu,\Sigma)$ data. The joint likelihood of the data is
+\item Let $x_1,x_2,...x_n$ be IID $N(\mu,\Sigma)$ data. The joint likelihood of the data is
 \begin{align*}
 & f(x_1, \dots, x_n|\mu,\Sigma) 
 \\&= \frac{1}{(2\pi \det\lp \Sigma\rp)^{n/2}}\exp\left\{ -\frac{1}{2} \sum_{i=1}^n(x_i-\mu)^T\Sigma^{-1}(x_i-\mu) \right\}.
@@ -520,15 +521,14 @@ l(\mu,\Sigma^{-1}) = -\frac{n}{2}\log \det \lp \Sigma \rp  -\frac{1}{2} \sum_{i=
 \begin{frame}[fragile]{Sparse Graphical Models (Cont'd)}
 
 \begin{itemize}[<+->]
-\item  Here comes the trace trick $\sum_{i=1}^n(x_i-\mu)^T S (x_i-\mu) = \textbf{Tr} (\sum_{i=1}^n (x_i-\mu)(x_i-\mu)^TS) = n\textbf{Tr}(\hat{\Sigma}S)$. We end up with the optimization problem for fitting a Gaussian graphical model:
-
+\item  Trace trick $\sum_{i=1}^n(x_i-\bar{x})^T S (x_i-\bar{x}) = \textbf{Tr} (\sum_{i=1}^n (x_i-\bar{x})(x_i-\bar{x})^TS) = n\textbf{Tr}(\hat{\Sigma}S)$. We end up with:
 \begin{align*}
-\max_S \left\{  \log \det \lp S\rp - \textbf{Tr}\lp \hat{\Sigma}S \rp  \right\}
+\max_S \left\{  \log \det \lp S\rp - \textbf{Tr}(\hat{\Sigma}S )  \right\}
 \end{align*}
 
 \item  Fitting a sparse Gaussian graphical model:
 \begin{align*}
-\max_S \left\{ \log \det S - \textbf{Tr} \lp \hat{\Sigma}S \rp - \lambda ||S||_1 \right\}
+\max_S \left\{ \log \det S - \textbf{Tr} ( \hat{\Sigma}S ) - \lambda ||S||_1 \right\}
 \end{align*}
 where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Friedman et al. (2007). 
 
@@ -543,7 +543,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
   \centering
   \includegraphics[height=0.9\textheight]{./../../gLassoResults/glasso1.png} 
 \end{figure}
-
+\center Top 50 words usage network
 \end{frame}
 
 %%%%%%%%%%%%%%%
@@ -553,6 +553,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
   \centering
   \includegraphics[height=0.9\textheight]{./../../gLassoResults/glasso2.png} 
 \end{figure}
+\center Top 50 words usage network
 
 \end{frame}
 %%%%%%%%%%%%%%%
@@ -562,6 +563,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
   \centering
   \includegraphics[height=0.9\textheight]{./../../gLassoResults/glasso3.png} 
 \end{figure}
+\center Top 50 words usage network
 
 \end{frame}
 %%%%%%%%%%%%%%%
@@ -571,6 +573,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
   \centering
   \includegraphics[height=0.9\textheight]{./../../gLassoResults/glasso4.png} 
 \end{figure}
+\center Top 50 words usage network
 
 \end{frame}
 %%%%%%%%%%%%%%%
@@ -580,6 +583,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
   \centering
   \includegraphics[height=0.9\textheight]{./../../gLassoResults/glasso5.png} 
 \end{figure}
+\center Top 50 words usage network
 
 \end{frame}
 %%%%%%%%%%%%%%%
@@ -589,6 +593,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
   \centering
   \includegraphics[height=0.9\textheight]{./../../gLassoResults/glasso6.png} 
 \end{figure}
+\center Top 50 words usage network
 
 \end{frame}
 
@@ -614,11 +619,11 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 \begin{itemize}[<+->]
 
 
-\item $x_i\in R^{p}$ be the $i$-th row of $X\in R^{3000\times795}$
-\item $y_i$ the corresponding category. Assume $y_i\in\{-1,+1\}$, where the $+1$ can have the following meanings:
+\item $x_i\in R^{p}$ be the $i$-th row of $X\in R^{n\times p}$, where $n=3000$ and $p=395$
+\item $y_i$: the corresponding category. Assume $y_i\in\{-1,+1\}$, where the $+1$ can have one (and only one) of the following meanings (at a time):
   \begin{itemize}[<+->]
-    \item positive opinion towards Han Han
-    \item negative opinion towards Han Han 
+    \item positive feeling about Han Han
+    \item negative feeling Han Han 
     \item netural or unidentifiable opinion 
     \item spam
 \end{itemize}
@@ -647,7 +652,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 	\begin{itemize}
 	\item for 4 categories
 	\item 10 fold CV
-	\item Frequency matrix is $3000 \times 795$
+	%\item Frequency matrix is $3000 \times 795$
 	\item classification error
 	\end{itemize}
 	
@@ -667,18 +672,19 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 
 
 %%%
-\begin{frame}{LASSO Results} 
+\begin{frame}{LASSO Coefficient interpretation} 
 
 \begin{itemize}[<+->]
-\item Three different ways to look at coefficients
-\item Why: can look at the classifier:
+\item The classifier:
 \[
 \text{class}(x) = \textbf{sign}(\beta_0+x^T\beta)\in\{-1,+1\}
 \]
+\item We can look at coefficients $\beta$
+
 	\begin{itemize}
 	\item Absolute value: most relevant/predictive words
-	\item Positive: more likely to classify the post in +1 category (all other covariates being fixed)
-	\item Negative: less likely to be in -1 category	
+	\item Positive: more likely to classify the post in $+1$ category (all other covariates being fixed)
+	\item Negative: less likely to be in $-1$ category	
 	\end{itemize}
 	
 \end{itemize}
@@ -691,8 +697,9 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 \begin{frame}{Positive v.s. Nonpositive Classification Result}
 
 \begin{itemize}[<+->]
-\item +1: positive opinion;
-\item -1: non-positive opinion, including negative, neutral and spam.
+\item $y_i\in\{-1,+1\}$;
+\item $+1$: positive opinion (about Han Han);
+\item $-1$: non-positive opinion, including negative, neutral and spam.
 \end{itemize}
 
 \tiny
@@ -725,8 +732,8 @@ LASSO word images for the positive v.s. nonpositive classification.
 (To Christine: remember to talk about why there are four empty entries; this is probably due to the size of nega sample is too small)
 }
 \begin{itemize}[<+->]
-\item +1: negative opinion;
-\item -1: non-negative opinion, including positive, neutral and spam.
+\item $+1$: negative opinion;
+\item $-1$: non-negative opinion, including positive, neutral and spam.
 \end{itemize}
 
 \tiny
@@ -736,14 +743,14 @@ LASSO word images for the positive v.s. nonpositive classification.
 Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \hline
 讨厌 & 0.481 & 讨厌 & 0.481 & 支持 & -0.008\\
 (hate) & & (hate) & & (support) & \\\hline
-无耻 & 0.412 & 无耻 & 0.412 & 不 & 0.000\\
-(shameless) & & (shameless) & & (no) & \\\hline
-恶心 & 0.395 & 恶心 & 0.395 & 人 & 0.000\\
-(disgusting) & & (disgusting) & & (people/person) & \\\hline
-骗子 & 0.380 & 骗子 & 0.380 & 说 & 0.000\\
-(liar) & & (liar) & & (say) & \\\hline
-扁 & 0.353 & 扁 & 0.353 & 方舟子 & 0.000\\
-(beat up) & & (beat up) & & (FangZhouZi) & \\\hline
+无耻 & 0.412 & 无耻 & 0.412 &  & -\\
+(shameless) & & (shameless) & & - & \\\hline
+恶心 & 0.395 & 恶心 & 0.395 &  & -\\
+(disgusting) & & (disgusting) & & - & \\\hline
+骗子 & 0.380 & 骗子 & 0.380 &  & -\\
+(liar) & & (liar) & & - & \\\hline
+扁 & 0.353 & 扁 & 0.353 & - & -\\
+(beat up) & & (beat up) &- & - & \\\hline
 \end{tabular}
 LASSO word images for the negative v.s. nonnegative classification.
 \end{center}
@@ -789,10 +796,10 @@ LASSO word images for the negative v.s. nonnegative classification.
 
 \begin{itemize}[<+->]
 \item Again, linear decision function $f(x) = \beta_0 + \beta x$;
-\item The classifier $Class(x) = \textbf{sign} (f(x))$. 
+\item The classifier $\text{class}(x) = \textbf{sign} (f(x))$. 
 \item  The support vector machine (SVM) (see, e.g. Hastie et al 2001): 
 \begin{align*}
-\min_{\beta_0,\beta} \sum_{i=1}^n(1-y_if(x_i))_+ + \frac{\lambda}{2} ||\beta||_2,
+\min_{\beta_0,\beta} \sum_{i=1}^n(1-y_if(x_i))_+ + \frac{\lambda}{2} ||\beta||_2^2,
 \end{align*}
 where $z_+ = \max(0,z)$. 
 \end{itemize}
@@ -806,8 +813,9 @@ where $z_+ = \max(0,z)$.
 \begin{itemize}[<+->]  
 \item Replacing the $l_2$-norm by $l_1$-norm yields the sparse SVM (Zhu et al 2003):
 \begin{align*}
-\min_{\beta_0,\beta} \left\{ \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \lambda ||\beta||_1\right\}. 
+\min_{\beta_0,\beta} \left\{ \sum_{i=1}^n(1-y_if(x_i))_+ + \lambda ||\beta||_1\right\}. 
 \end{align*}
+\item Computation: use the matlab \textbf{lpsvm} package by Fung and Mangasarian (2002)
 \end{itemize}
 
 \end{frame}
@@ -818,8 +826,8 @@ where $z_+ = \max(0,z)$.
 \begin{frame}{Positive v.s. Nonpositive Classification Result}
 
 \begin{itemize}[<+->]
-\item +1: positive opinion;
-\item -1: non-positive opinion, including negative, neutral and spam.
+\item $+1$: positive opinion;
+\item $-1$: non-positive opinion, including negative, neutral and spam.
 \item Cross validation result: 
   \begin{itemize}[<+->]
   \item training sample misclassification rate: 16.9\%
@@ -847,6 +855,7 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 韩少 & 1.969 & 顶 & 1.803 & 四娘 & 1.762\\
 (Master Han) & & (support) & & (GUO Jingming) & \\\hline
 \end{tabular}
+$l_1$-SVM word images for the positive v.s. positive classification.
 
 \end{frame}
 
@@ -854,8 +863,8 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 %%%%%%%%%%%%%%%
 \begin{frame}{Negative v.s. Nonnegative Classification Result}
 \begin{itemize}[<+->]
-\item +1: negative opinion;
-\item -1: non-negative opinion, including positive, neutral and spam.
+\item $+1$: negative opinion;
+\item $-1$: non-negative opinion, including positive, neutral and spam.
 \item Cross validation result: 
   \begin{itemize}[<+->]
   \item training sample misclassification rate: 6.4\%
@@ -883,6 +892,7 @@ somebody's & & somebody's  &  & &  \\
 骗子 & 1.301 & 公开 & 1.220 & 热点 & 1.101\\
 (liar) & & (open) & & (hot interest) & \\\hline
 \end{tabular}
+$l_1$-SVM word images for the negative v.s. nonnegative classification.
 
 \end{frame}
 
