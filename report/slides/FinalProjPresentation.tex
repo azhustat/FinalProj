@@ -33,6 +33,7 @@
 \setbeamertemplate{navigation symbols}{}
 
 
+\usepackage{MnSymbol}
 
 %%% Page Number
 \setbeamertemplate{footline}[page number] 
@@ -43,7 +44,7 @@
 \usepackage[english]{babel}
 % or whatever
 
-\usepackage[latin1]{inputenc}
+%\usepackage[latin1]{inputenc}
 
 \def\name{Christine Kuang, Siqi Wu, and Angie Zhu}
 \hypersetup{
@@ -110,6 +111,8 @@
 %\logo{\pgfuseimage{logo}}
 
 \begin{document}
+
+
 
 \frame{\titlepage}
 
@@ -184,26 +187,28 @@ Due to the restrictions on API we will discuss in a few slides, ``hot'' topics a
 
 \note{
 %\footnote{ {\em Han Han: China's Literary Bad Boy} by Simon Elegant Monday, Nov. 02, 2009, Time Magazine, \url{http://www.time.com/time/magazine/article/0,9171,1931619,00.html}. }
-
 }
 
  \begin{columns}[t]
  \begin{column}{0.6\textwidth}
 
-\begin{itemize}[<+->]
-\item  HAN Han 韩寒 (born 23 September 1982) is a Chinese best-selling author, professional rally driver, and  wildly  popular blogger
-\item Published his first novel {\em Triple Gate 三重门} at age of 17
-\item High school dropout
-\end{itemize}
+	\begin{itemize}[<+->]
+	\item  HAN Han 韩寒 (born 23 September 1982) is a Chinese best-selling author, professional rally driver, and  wildly  popular blogger
+	\item Published his first novel {\em Triple Gate 三重门} at age of 17
+	\item High school dropout
+	\end{itemize}
 
  \end{column}
+ 
  \begin{column}{0.45\textwidth}
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.4]{han_han.jpg} 
-\end{figure}
+	\begin{figure}
+	  \centering
+	  \includegraphics[scale=0.4]{han_han.jpg} 
+	\end{figure}
+
 {\tiny Photograph by Tony Law / Redux. Source: \url{http://www.time.com/time/magazine/article/0,9171,1931619,00.html}}
  \end{column}
+ 
  \end{columns}
 
 \end{frame}
@@ -223,8 +228,8 @@ Due to the restrictions on API we will discuss in a few slides, ``hot'' topics a
 \end{frame}
 
 
-%%%%%%%%%%%%%%%
-%\section{Data}
+%%%%%%%%%%%%%%%%
+%%\section{Data}
 
 \begin{frame}{Data Collection}
 \note{
@@ -236,6 +241,7 @@ Sina Weipo provides an application programming interface (API) to access their p
 Some technical issues: how do we access data from those website? We now have implemented a python crawler, but i believe there is a upperbound for the data you can collect within a fixed amount of time due to the weibo restriction. 
 How do we design our sampling scheme? we want a way to sample data such that they can represent the whole user group of weibo. we need to know the behavior of the weibo users as some of them simply have nothing to do and posting junks all days. stratified sampling based on province? 
 }
+
 \begin{itemize}[<+->]
 \item Topic searching via API: \\only the latest results are returned\\up to 30 each time
 \item Collected on April 16 and 17, 2012
@@ -245,8 +251,8 @@ How do we design our sampling scheme? we want a way to sample data such that the
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Processing}
 %%%%%%
@@ -267,7 +273,7 @@ How do we design our sampling scheme? we want a way to sample data such that the
 \end{frame}
 
 
-%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
 \begin{frame}{Characteristics of Sina Weibo Posts}
 
 \note{
@@ -291,7 +297,7 @@ A post can be text, an image, video, or other multimedia.
 \end{frame}
 
 
-%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
 \begin{frame}{Tagging}
 
 \begin{itemize}[<+->]
@@ -330,7 +336,7 @@ A post can be text, an image, video, or other multimedia.
 \end{frame}
 
 
-%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
 \begin{frame}{Segmentation}
 
 \begin{itemize}[<+->]
@@ -359,8 +365,8 @@ A post can be text, an image, video, or other multimedia.
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{EDA}
 
 %%%%%%%%%%%%%%%
@@ -379,9 +385,9 @@ A post can be text, an image, video, or other multimedia.
 \begin{itemize}[<+->]
 \item Extract the word frequency vector $x_i$ from the $i$-th post
 \item Construct the word frequency matrix $X=(x_1,...,x_n)^T$. This will be our design matrix.
-
+\end{itemize}
 \end{frame}
-%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
 
 
 \begin{frame}{Word frequency visualization: matrix plot}
@@ -421,8 +427,8 @@ A post can be text, an image, video, or other multimedia.
 \begin{itemize}[<+->]
 \item Fact: if $x\in R^p$ follows $N(\mu,\Sigma)$, then for $i\ne j$
 \begin{align*}
-\label{eq: condIndpt}
-(x_i \prep x_j )| \{x_{\text{all but $(i,j)$}}\} \textbf{iff} (\Sigma^{-1})_{ij}=0
+(x_i  \upmodels % mnsymbol
+x_j )\mid \{x_{\text{all but $(i,j)$}}\} \textbf{ iff } (\Sigma^{-1})_{ij}=0
 \end{align*}
 \item This motivates us to estimate $\Sigma^{-1}$.
 \item Let $x_1,x_2,...x_n$ be IID $N(\nu,\Sigma)$ data. The joint likelihood of the data is
@@ -436,7 +442,7 @@ A post can be text, an image, video, or other multimedia.
 \end{frame}
 
 
-%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
 \begin{frame}[fragile]{Sparse graphical models (cont'd)}
 
 \begin{itemize}[<+->]
@@ -476,16 +482,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 
 \end{frame}
 
-%%%%%%%%%%%%%%%
-\begin{frame}{}
-
-\begin{itemize}[<+->]
-\item .
-\end{itemize}
-
-\end{frame}
-
-%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
 \begin{frame}{Sparse graphical models: results}
 
 \begin{figure}
@@ -541,7 +538,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 
 \end{frame}
 
-%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
 \begin{frame}{Sparse graphical models v.s. co-occurence}
 
  \begin{columns}[t]
@@ -569,9 +566,13 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Classification}
-\begin{frame}
-\begin{itemize}[<+->]
+
+\begin{frame}{Classification}
+
 \note{ I will talk about this slide and Christine continues the next}
+
+\begin{itemize}[<+->]
+
 
 \item $x_i\in R^{p}$ be the $i$-th row of $X\in R^{3000\times795}$
 \item $y_i$ the corresponding category. Assume $y_i\in\{-1,+1\}$, where the $+1$ can have the following meanings:
@@ -614,7 +615,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 
 \end{frame}
 
-%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
 \begin{frame}{Choosing $\lambda$: cross-validation}
 
 \begin{figure}
@@ -677,7 +678,7 @@ LASSO word images for the positive v.s. nonpositive classification.
 \end{frame}
 
 
-%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%
 \begin{frame}{Negative v.s. Nonnegative classification result}
 \note{
 (To Angie: please delete the zero entries)
@@ -710,37 +711,37 @@ LASSO word images for the negative v.s. negative classification.
 \end{frame}
 
 
-%%%%%%%%%%%%%%%
-%\begin{frame}{LASSO: Negative}
-%
-%\begin{figure}
-%  \centering
-%  \includegraphics[height=0.9\textheight]{./../../lassoResults/CVNegErr.pdf} 
-%\end{figure}
-%
-%\end{frame}
-%
 %%%%%%%%%%%%%%%%
-%\begin{frame}{LASSO: Neutral}
-%
-%\begin{figure}
-%  \centering
-%  \includegraphics[height=0.9\textheight]{./../../lassoResults/CVNeuErr.pdf} 
-%\end{figure}
-%
-%\end{frame}
-%
+%%\begin{frame}{LASSO: Negative}
+%%
+%%\begin{figure}
+%%  \centering
+%%  \includegraphics[height=0.9\textheight]{./../../lassoResults/CVNegErr.pdf} 
+%%\end{figure}
+%%
+%%\end{frame}
+%%
+%%%%%%%%%%%%%%%%%
+%%\begin{frame}{LASSO: Neutral}
+%%
+%%\begin{figure}
+%%  \centering
+%%  \includegraphics[height=0.9\textheight]{./../../lassoResults/CVNeuErr.pdf} 
+%%\end{figure}
+%%
+%%\end{frame}
+%%
+%%%%%%%%%%%%%%%%%
+%%\begin{frame}{LASSO: Spam}
+%%
+%%\begin{figure}
+%%  \centering
+%%  \includegraphics[height=0.9\textheight]{./../../lassoResults/CVSpamErr.pdf} 
+%%\end{figure}
+%%
+%%\end{frame}
+%%
 %%%%%%%%%%%%%%%%
-%\begin{frame}{LASSO: Spam}
-%
-%\begin{figure}
-%  \centering
-%  \includegraphics[height=0.9\textheight]{./../../lassoResults/CVSpamErr.pdf} 
-%\end{figure}
-%
-%\end{frame}
-%
-%%%%%%%%%%%%%%%
 
 \subsection{$l_1$-Norm Support Vector Machine}
 %%%%%%%%%%%%%%%
@@ -897,7 +898,6 @@ where $z_+ = \max(0,z)$.
 \end{itemize}
 
 \end{frame}
-
 
 
 

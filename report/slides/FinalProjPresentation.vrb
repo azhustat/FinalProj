@@ -1,9 +1,8 @@
-\frametitle {$l_1$-Norm Support Vector Machine}\par \begin{itemize}[<+->]
-\item Similarly, the sparse version of SVM simply replaces the $l_2$-norm by $l_1$-norm (which is just another measure of the wideness of the margin):
+\frametitle{$l_1$-Norm Support Vector Machine}
+\par\begin{itemize}[<+->]
+\item Replacing the $l_2$-norm by $l_1$-norm yields the sparse SVM (Zhu et al 2003):
 \begin{align*}
 \min_{\beta_0,\beta} \left\{ \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \lambda ||\beta||_1\right\}.
 \end{align*}
-We repeat the same data analysis as we did for the LASSO method. The results are summaried in table XX. For efficiently fitting the sparse svm, we use the matlab package by Fung and Mangasarian (2004). Again, 10-fold cross validations are performed in order to select the ``best'' $\lambda$.
-
 \end{itemize}
 

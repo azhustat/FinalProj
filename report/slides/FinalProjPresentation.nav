@@ -1,4 +1,4 @@
-\beamer@endinputifotherversion {3.10pt}
+\beamer@endinputifotherversion {3.12pt}
 \headcommand {\slideentry {0}{0}{1}{1/1}{}{0}}
 \headcommand {\beamer@framepages {1}{1}}
 \headcommand {\slideentry {0}{0}{2}{2/2}{}{0}}
@@ -68,46 +68,54 @@
 \headcommand {\beamer@framepages {29}{29}}
 \headcommand {\slideentry {3}{0}{30}{30/30}{}{0}}
 \headcommand {\beamer@framepages {30}{30}}
-\headcommand {\sectionentry {4}{Analysis}{31}{Analysis}{0}}
+\headcommand {\sectionentry {4}{Classification}{31}{Classification}{0}}
 \headcommand {\beamer@sectionpages {16}{30}}
 \headcommand {\beamer@subsectionpages {16}{30}}
-\headcommand {\beamer@subsectionentry {0}{4}{1}{31}{LASSO}}\headcommand {\beamer@subsectionpages {31}{30}}
-\headcommand {\slideentry {4}{1}{1}{31/31}{LASSO}{0}}
+\headcommand {\slideentry {4}{0}{31}{31/31}{}{0}}
 \headcommand {\beamer@framepages {31}{31}}
-\headcommand {\slideentry {4}{1}{2}{32/32}{LASSO}{0}}
+\headcommand {\beamer@subsectionentry {0}{4}{1}{32}{LASSO}}\headcommand {\beamer@subsectionpages {31}{31}}
+\headcommand {\slideentry {4}{1}{1}{32/32}{LASSO}{0}}
 \headcommand {\beamer@framepages {32}{32}}
-\headcommand {\slideentry {4}{1}{3}{33/33}{LASSO}{0}}
+\headcommand {\slideentry {4}{1}{2}{33/33}{LASSO}{0}}
 \headcommand {\beamer@framepages {33}{33}}
-\headcommand {\slideentry {4}{1}{4}{34/34}{LASSO}{0}}
+\headcommand {\slideentry {4}{1}{3}{34/34}{LASSO}{0}}
 \headcommand {\beamer@framepages {34}{34}}
-\headcommand {\slideentry {4}{1}{5}{35/35}{LASSO}{0}}
+\headcommand {\slideentry {4}{1}{4}{35/35}{LASSO}{0}}
 \headcommand {\beamer@framepages {35}{35}}
-\headcommand {\beamer@subsectionentry {0}{4}{2}{36}{$l_1$-Norm Support Vector Machine}}\headcommand {\beamer@subsectionpages {31}{35}}
-\headcommand {\slideentry {4}{2}{1}{36/36}{$l_1$-Norm Support Vector Machine}{0}}
+\headcommand {\slideentry {4}{1}{5}{36/36}{LASSO}{0}}
 \headcommand {\beamer@framepages {36}{36}}
-\headcommand {\slideentry {4}{2}{2}{37/37}{$l_1$-Norm Support Vector Machine}{0}}
+\headcommand {\beamer@subsectionentry {0}{4}{2}{37}{$l_1$-Norm Support Vector Machine}}\headcommand {\beamer@subsectionpages {32}{36}}
+\headcommand {\slideentry {4}{2}{1}{37/37}{$l_1$-Norm Support Vector Machine}{0}}
 \headcommand {\beamer@framepages {37}{37}}
-\headcommand {\sectionentry {5}{Further Work}{38}{Further Work}{0}}
-\headcommand {\beamer@sectionpages {31}{37}}
-\headcommand {\beamer@subsectionpages {36}{37}}
-\headcommand {\slideentry {5}{0}{3}{38/38}{}{0}}
+\headcommand {\slideentry {4}{2}{2}{38/38}{$l_1$-Norm Support Vector Machine}{0}}
 \headcommand {\beamer@framepages {38}{38}}
-\headcommand {\slideentry {5}{0}{4}{39/39}{}{0}}
+\headcommand {\slideentry {4}{2}{3}{39/39}{$l_1$-Norm Support Vector Machine}{0}}
 \headcommand {\beamer@framepages {39}{39}}
-\headcommand {\slideentry {5}{0}{5}{40/40}{}{0}}
+\headcommand {\slideentry {4}{2}{4}{40/40}{$l_1$-Norm Support Vector Machine}{0}}
 \headcommand {\beamer@framepages {40}{40}}
-\headcommand {\slideentry {5}{0}{6}{41/41}{}{0}}
+\headcommand {\slideentry {4}{2}{5}{41/41}{$l_1$-Norm Support Vector Machine}{0}}
 \headcommand {\beamer@framepages {41}{41}}
-\headcommand {\slideentry {5}{0}{7}{42/42}{}{0}}
+\headcommand {\sectionentry {5}{Further Work}{42}{Further Work}{0}}
+\headcommand {\beamer@sectionpages {31}{41}}
+\headcommand {\beamer@subsectionpages {37}{41}}
+\headcommand {\slideentry {5}{0}{6}{42/42}{}{0}}
 \headcommand {\beamer@framepages {42}{42}}
-\headcommand {\slideentry {5}{0}{8}{43/43}{}{0}}
+\headcommand {\slideentry {5}{0}{7}{43/43}{}{0}}
 \headcommand {\beamer@framepages {43}{43}}
-\headcommand {\slideentry {5}{0}{9}{44/44}{}{0}}
+\headcommand {\slideentry {5}{0}{8}{44/44}{}{0}}
 \headcommand {\beamer@framepages {44}{44}}
-\headcommand {\slideentry {5}{0}{10}{45/45}{}{0}}
+\headcommand {\slideentry {5}{0}{9}{45/45}{}{0}}
 \headcommand {\beamer@framepages {45}{45}}
-\headcommand {\beamer@partpages {1}{45}}
-\headcommand {\beamer@subsectionpages {38}{45}}
-\headcommand {\beamer@sectionpages {38}{45}}
-\headcommand {\beamer@documentpages {45}}
-\headcommand {\def \inserttotalframenumber {45}}
+\headcommand {\slideentry {5}{0}{10}{46/46}{}{0}}
+\headcommand {\beamer@framepages {46}{46}}
+\headcommand {\slideentry {5}{0}{11}{47/47}{}{0}}
+\headcommand {\beamer@framepages {47}{47}}
+\headcommand {\slideentry {5}{0}{12}{48/48}{}{0}}
+\headcommand {\beamer@framepages {48}{48}}
+\headcommand {\slideentry {5}{0}{13}{49/49}{}{0}}
+\headcommand {\beamer@framepages {49}{49}}
+\headcommand {\beamer@partpages {1}{49}}
+\headcommand {\beamer@subsectionpages {42}{49}}
+\headcommand {\beamer@sectionpages {42}{49}}
+\headcommand {\beamer@documentpages {49}}
+\headcommand {\def \inserttotalframenumber {49}}
