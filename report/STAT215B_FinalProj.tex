@@ -278,7 +278,7 @@ Another interesting quantities are the numbers of positive and negative words in
 
 %%%%%%%
 \subsection{Feature analysis}
-It is of interest to study the relation between features, i.e. in our case, the relation between words in tweets. We shall base our study on the frequency matrix $X\in R^{n\time p}$, where the entry of the matrix $x_{ij}$ stores the times of occurence of the $j$-th word in the $i$-th post. Analyzing the feature matrix $X$ can help us understand the word usage better and identify possible cluster in feature space. 
+It is of interest to study the relation between features, i.e. in our case, the relation between words in tweets. We shall base our study on the frequency matrix $X\in R^{n\times p}$, where the entry of the matrix $x_{ij}$ stores the times of occurence of the $j$-th word in the $i$-th post. Analyzing the feature matrix $X$ can help us understand the word usage better and identify possible cluster in feature space. 
 
 Our observation matrix is the frequency matrix of dimension 756x3000. The columns represent each post and the rows represent 756 phrases.  These 756 phrases have total occurance of at least 10 times over all 3000 posts and do not include stop words and negation words. Each element of the observation matrix represents the total number of times that particular word (indicated by row) occurrs in that post (indicated by column). Using 10 fold cross validation, we searched for the optimal regularization parameter. 
 
@@ -294,8 +294,8 @@ include plots of the co matrix, both matrixplot and the network plot
 \subsubsection{Sparse principal component analysis (SPCA)}
 Following Zou et al (2006):
 \begin{align}
-(A,B) & = \arg \min_{A,B} \sum_{i=1}^n||x_i-AB^Tx_i||_2^2 + \lambda \sum_{j=1}^k||\beta_j||^2 + \sum_{j=1}^k\lambda_{1,j}||\beta_j||_1 \\ 
-\text{subject to} & A^TA = I_{k}. \nonumber
+(A,B) & = \arg \min_{A,B} \left \{ \sum_{i=1}^n||x_i-AB^Tx_i||_2^2 + \lambda \sum_{j=1}^k||\beta_j||^2 + \sum_{j=1}^k\lambda_{1,j}||\beta_j||_1 \right\} \\ 
+\text{subject to } & A^TA = I_{k}. \nonumber
 \end{align}
 
 table here. Some explanations here as well.
@@ -306,42 +306,41 @@ Some review on a Gaussian graphical model. maximum likelihood estimate of the in
 Suppose the random vector $x\in R^p$ has a multivariate normal distribution with mean $\mu$ and covariance matrix $\Sigma$. The density function of $x$ is
 \begin{align}
 \label{eq: normalPDF}
-f(x|\mu,\Sigma) = \frac{1}{\sqrt{2\pi \det \Sigma}}\exp{-\frac{(x-\mu)^T\Sigma^{-1}(x-\mu)}{2}}.
+f(x|\mu,\Sigma) = \frac{1}{\sqrt{2\pi \det\lp \Sigma\rp}}\exp \left\{ -\frac{1}{2} (x-\mu)^T \Sigma^{-1}(x-\mu) \right\}.
 \end{align}
 Suppose we have IID $N(\nu,\Sigma)$ data $x_1,x_2,...x_n$ and we want to estimate the inverse covariance matrix $\Sigma^{-1}$. The joint likelihood of the data is
 \begin{align}
 \label{eq: like}
-f(x|\mu,\Sigma) = \frac{1}{(2\pi \det \Sigma)^{n/2}}\exp{-\frac{\sum_{i=1}^n(x_i-\mu)^T\Sigma^{-1}(x_i-\mu)}{2}}.
+f(x_1, \dots, x_n|\mu,\Sigma) = \frac{1}{(2\pi \det\lp \Sigma\rp)^{n/2}}\exp\left\{ -\frac{1}{2} \sum_{i=1}^n(x_i-\mu)^T\Sigma^{-1}(x_i-\mu) \right\}.
 \end{align}
 Taking logarithm to get the log-likelihood (and ignore constant terms):
 \begin{align}
 \label{eq: loglike}
-l(\mu,\Sigma^{-1}) = \frac{1}{2\log \det \Sigma}  -\frac{\sum_{i=1}^n(x_i-\mu)^T\Sigma^{-1}(x_i-\mu)}{2}.
+l(\mu,\Sigma^{-1}) = \frac{1}{2\log \det \lp \Sigma \rp}  -\frac{1}{2} \sum_{i=1}^n(x_i-\mu)^T\Sigma^{-1}(x_i-\mu).
 \end{align}
 Then we can do a maximum likelihood estimation (optimize over $\mu$ and $S = \Sigma^{-1}$; easy to see that the MLE for $\mu$ is $\bar{X}$ exponential family, MOM = MLE, so just plug in $\bar{X}$ for $\mu$):
 
 \begin{align}
 \label{eq: loglike}
-\max_S l(S) = \frac{1}{2}\log \det S  -\frac{\sum_{i=1}^n(x_i-\mu)^T S (x_i-\mu)}{2}.
+\max_S\left\{  \frac{1}{2}\log \det\lp S \rp  -\frac{1}{2} \sum_{i=1}^n(x_i-\mu)^T S (x_i-\mu)\right\}. 
 \end{align}
 
 Here comes the trace trick $\sum_{i=1}^n(x_i-\mu)^T S (x_i-\mu) = \textbf{Tr} (\sum_{i=1}^n (x_i-\mu)(x_i-\mu)^TS) = \textbf{Tr}(\hat{\Sigma}S)$. We end up with the following optimization problem
 
 \begin{align}
 \label{eq:mle}
-\max_S \log \det S - \textbf{Tr}\hat{\Sigma}S 
+\max_S \left\{  \log \det \lp S\rp - \textbf{Tr}\lp \hat{\Sigma}S \rp  \right\}
 \end{align}
 
 if the number of features $p$ is large, want to do model selection... So Banerjee et al. (2007) propose the following optimization problem to recover the sparse structure in a gaussian graphical model
 \begin{align}
 \label{eq:gLasso}
-\max_S \log \det S - \textbf{Tr}\hat{\Sigma}S - \lambda ||S||_1
+\max_S \left\{ \log \det S - \textbf{Tr} \lp \hat{\Sigma}S \rp - \lambda ||S||_1 \right\}
 \end{align}
 where $\Sigma$ is the covariance matrix of the data/design matrix $X$ and $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$. In that paper they study the senate voting data to recover the party membership. l-1 norm promotes sparsity. 
 
 Some computation aspects of estimating a sparse graphical model: Banerjee et al (2007) propose a block coordinate ascent method (COVSEL) (updating one row and one column of $S$ at one time). Their approach is exact but takes forever to run. Meinshausen and Buhlmann (2006) uses an approximation approach that is substantially faster. In our study, we adopt the fast and accurate graphical LASSO procedure (R package glasso) due to Friedman et al (2007).  
 
-p
 %%%%%
 \subsection{Classification}
 We are also interested in classifying the posts into different categories. Let $x_i\in R^{p}$ be the $i$-th row of the frequency matrix $X$ and $y_i$ the corresponding category. For simplicity, let us assume that $y_i\in\{-1,+1\}$ is binary, where the ``+1'' can be used to label the following four categories: 1) positive opinion towards Han Han; 2) negative opinion towards Han Han; 3) netural or unidentifiable opinion; 4) spam and ``-1'' labels the complement of the inividual category (e.g. if ``+1'' means positive, ``-1'' would mean anything but positive. Note that the complement of positive is not negative, but rather the union of negative, neutral and spam). For each of the above four cases, we apply LASSO and $l_1$-norm support vector machine to classify the data points into ``-1'' and ``+1''.  
@@ -408,8 +407,12 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 (liar) & & (liar) & & (say) & \\\hline
 扁 & 0.353 & 扁 & 0.353 & 方舟子 & 0.000\\
 (beat up) & & (beat up) & & (FangZhouZi) & \\\hline
-\begin{table}
+\end{tabular}
+\end{center}
+\end{table}
 
+
+\begin{table}
 \caption{Neutral category}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
@@ -463,12 +466,57 @@ Support vector machine (Vapnik 1996) is another commonly-used machine learning m
 where $z_+ = \max(0,z)$ (the function $h(z) = (1-z)_+$ is also known as the hinge loss function). Similarly, the sparse version of SVM simply replaces the $l_2$-norm by $l_1$-norm (which is just another measure of the wideness of the margin):
 \begin{align}
 \label{eq:l1svm}
-\min_{\beta_0,\beta} \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \lambda ||\beta||_1.
+\min_{\beta_0,\beta} \left\{ \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \lambda ||\beta||_1\right\}. 
 \end{align}
 We repeat the same data analysis as we did for the LASSO method. The results are summaried in table XX. For efficiently fitting the sparse svm, we use the matlab package by Fung and Mangasarian (2004). Again, 10-fold cross validations are performed in order to select the ``best'' $\lambda$.
 
 include the four tables here(each of top five words)... and rest in the appendix
 
+
+
+%%%%%%%%%%%%%%%%%%
+\section{Discussion}
+
+ROC curve
+precision and recall curve
+
+%%
+\subsection{Limitations}
+
+sampling \cite{boyd2004fastest} \cite{leskovec2006sampling}  \cite{wang2011understanding}
+
+reposting
+
+other language, such as English
+
+simplified Chinese and traditional Chinese: no simple one-to-one correspondence; word segmentation and then substitute words
+
+
+
+%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+
+
+
+%
+%\begin{center}
+%\begin{figure}[tb]
+%   \centering
+%   \includegraphics[width=\textwidth]{.png} 
+%      \caption{}
+%   \label{fig:}
+%\end{figure}
+%\end{center}
+
+
+\newpage
+%%%%%%%%%%%%%
+% bibliography
+\bibliographystyle{acm}
+\bibliography{215B_FinalProjRef}
+
+
+\newpage
 %%%%%%%%%%%%%%%%%%
 \section{Appendix}
 
@@ -621,46 +669,6 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline
 \end{center}
 \end{table}
 
-%%%%%%%%%%%%%%%%%%
-\section{Discussion}
-
-ROC curve
-precision and recall curve
-
-%%
-\subsection{Limitations}
-
-sampling \cite{boyd2004fastest} \cite{leskovec2006sampling}  \cite{wang2011understanding}
-
-reposting
-
-other language, such as English
-
-simplified Chinese and traditional Chinese: no simple one-to-one correspondence; word segmentation and then substitute words
-
-
-
-%%%%%%%%%%%%%%%%%%
-\section{Conclusion}
-
-
-
-%
-%\begin{center}
-%\begin{figure}[tb]
-%   \centering
-%   \includegraphics[width=\textwidth]{.png} 
-%      \caption{}
-%   \label{fig:}
-%\end{figure}
-%\end{center}
-
-
-\newpage
-%%%%%%%%%%%%%
-% bibliography
-\bibliographystyle{acm}
-\bibliography{215B_FinalProjRef}
 
 
 
