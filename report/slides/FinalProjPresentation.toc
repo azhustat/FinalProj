@@ -1,0 +1,9 @@
+\beamer@endinputifotherversion {3.12pt}
+\select@language {english}
+\beamer@sectionintoc {1}{Introduction}{3}{0}{1}
+\beamer@sectionintoc {2}{Processing}{23}{0}{2}
+\beamer@sectionintoc {3}{EDA}{63}{0}{3}
+\beamer@sectionintoc {4}{Classification}{84}{0}{4}
+\beamer@subsectionintoc {4}{1}{LASSO}{91}{0}{4}
+\beamer@subsectionintoc {4}{2}{$l_1$-Norm Support Vector Machine}{110}{0}{4}
+\beamer@sectionintoc {5}{Further Work}{126}{0}{5}
