@@ -12,20 +12,20 @@ fp = codecs.open(filename, "r", "utf-8")
 
 # opens output file
 try:
-	fout = codecs.open("postscore.txt", "w", "utf-8")
+	fout = codecs.open("testsetpostscore.txt", "w", "utf-8")
 except IOError:
-	print "postscore.txt could not be opened"
+	print "testsetpostscore.txt could not be opened"
 	sys.exit(1)
 	
 # reads in negation words
-fnw = codecs.open("./data/negation.txt", "r", "utf-8")
+fnw = codecs.open("../data/negation.txt", "r", "utf-8")
 nw = fnw.readlines()
 nwset = set([ nw[0].strip() ])
 for j in range(1, len(nw)):
 	nwset.add( nw[j].strip() )	
 	
 # reads in degree words
-fdw = codecs.open("./data/degree.txt", "r", "utf-8")
+fdw = codecs.open("../data/degree.txt", "r", "utf-8")
 dw = fdw.readlines()
 dwset = set([ dw[0].strip() ])
 for j in range(1, len(dw)):
@@ -67,9 +67,9 @@ for i in range(len(lines)):
 
 # writes word counts into a file
 try:
-	fwc = codecs.open("words.txt", "w", "utf-8")
+	fwc = codecs.open("testsetwords.txt", "w", "utf-8")
 except IOError:
-	print "words.txt could not be opened"
+	print "testsetwords.txt could not be opened"
 	sys.exit(1)
 
 for word in worddict.keys():

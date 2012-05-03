@@ -1,4 +1,4 @@
-\documentclass[12pt, trans]{beamer}
+\documentclass[12pt]{beamer}
 
 
 \mode<presentation>{
@@ -216,12 +216,12 @@ Due to the restrictions on API we will discuss in a few slides, ``hot'' topics a
 
 
 %%%%%%%%%%%%%%%
-\begin{frame}{Background}
+\begin{frame}{Background (Cont'd)}
 
 \begin{itemize}[<+->]
 \item Ghostwriting allegation against Han from January 2012
-\item FANG Zhouzi 方舟子, a scientific author and anti-fraud crusader, created widespread debate on the internet
-\item 光明与磊落
+\item FANG Zhouzi 方舟子, a scientific author and anti-fraud crusader, created widespread debate on the Internet
+\item {\em Light and Upright 光明与磊落}: photocopied manuscripts set, including his first novel   {\em Triple Gate 三重门} 
 \item Han received a death threat on April 15, 2012
 \end{itemize}
 
@@ -243,8 +243,14 @@ How do we design our sampling scheme? we want a way to sample data such that the
 }
 
 \begin{itemize}[<+->]
-\item Topic searching via API: \\only the latest results are returned\\up to 30 each time
-\item Collected on April 16 and 17, 2012
+\item Topic searching via API: 
+	\begin{itemize}
+	\item Only the latest results are returned
+	\item Up to 30 each time
+	\end{itemize}
+
+\item 22,398 posts collected on April 16 and 17, 2012
+\item UTF-8 encoding
 \end{itemize}
 
 \end{frame}
@@ -276,23 +282,64 @@ How do we design our sampling scheme? we want a way to sample data such that the
 %%%%%%%%%%%%%%%%
 \begin{frame}{Characteristics of Sina Weibo Posts}
 
-\note{
-A post can be text, an image, video, or other multimedia.
+ \begin{columns}[t]
+ 
 
-}
+ \begin{column}{0.6\textwidth}
+ 
+\begin{block}{}
+ \tiny
+1714080953 2012-04-16 10:01:59 //@風笑巨石: 那尊神容不得别人质疑？//@伯林2011: 
+质疑派人士遭到人肉，人身攻击，甚至死亡威胁的时候，从来没有污名化整个挺韩派，也没有引起什么媒体关注，相比之下，韩寒如此炒作，太无良了，挺韩和批韩的双方本不至于如此撕裂
+\end{block}
 
-\begin{itemize}[<+->]
-\item  .
-\end{itemize}
+\vspace{-12pt}
+\begin{figure}
+	  \centering
+	  \includegraphics[scale=0.35]{weiboEg.png} 
+	\end{figure}
+	
+	
+ \end{column}
+ 
+
+  \begin{column}{0.4\textwidth}
+	\begin{itemize}[<+->]
+		\item Multiple forms
+		\item Informal and short
+		\item Reposting: ``$//@$''
+		\item Spams
+		\item Emotion symbols 
+		\item Internet slangs
+		\item Topic: ``\#话题\#''
+	\end{itemize}
+ \end{column}
+ 
+ \end{columns}
+
+
+
 
 \end{frame}
 
 %%%%%%%%%%%%%%%
-\begin{frame}{Pre-tagging Processing}
+\begin{frame}[fragile]{Pre-Tagging Processing}
+
+\begin{block}{}
+1165303315 2012-04-16 09:55:40  《韩寒收到网友死亡威胁》 (来自 @新浪娱乐) http://t.cn/zOprKap
+1165303315 2012-04-16 09:55:40  《Han Han received death threat online》 (from @新浪娱乐) http://t.cn/zOprKap
+\end{block}
+
 
 \begin{itemize}[<+->]
-\item  .
+\item Remove user identification number and time stamp
+\item Only the reposting user's comment is kept:\\
+If the resulting string is empty, it will be eliminated as well
+\item Remove URLs 
+\item Remove duplicates 
+\item 13,070 posts left
 \end{itemize}
+
 
 \end{frame}
 
@@ -327,10 +374,13 @@ A post can be text, an image, video, or other multimedia.
 \end{frame}
 
 %%%%%%%%%%%%%%%
-\begin{frame}{Pre-segmentation Processing}
+\begin{frame}{Pre-Segmentation Processing}
 
 \begin{itemize}[<+->]
-\item .
+\item Word segmentation is crucial for our word-based analysis
+\item Substitute mentioning of topic-related usernames by the corresponding proper nouns
+\item Remove other mentioned usernames
+\item Substitute emotional symbols and Internet slangs  by the corresponding word surrounded by square brackets
 \end{itemize}
 
 \end{frame}
@@ -340,25 +390,38 @@ A post can be text, an image, video, or other multimedia.
 \begin{frame}{Segmentation}
 
 \begin{itemize}[<+->]
-\item  .
+\item  汉语词法分析系统ICTCLAS (Institute of Computing Technology, Chinese Lexical Analysis System) is a well known Chinese word segmentation system 
+\item Chinese word segmentation, lexical tagging, named entity recognition, unknown words detection, and the user-defined dictionary
+\item Examples from the user-defined dictionary:
+\begin{description}
+\item[围脖] (wei2 bo2, means ``scarf'') refers to 微博 (Weibo, wei1 bo2)
+\item[韩少] (韩: Han Han's surname, 少: abbreviation of 少爷, which means ``young master of the house'') refers to Han Han
+\end{description}
+
 \end{itemize}
 
 \end{frame}
 
 %%%%%%%%%%%%%%%
 \begin{frame}{Conjunction Rules}
-
-\begin{itemize}[<+->]
-\item  .
-\end{itemize}
-
+[Lee and Renganathan, 2011] suggested that special consideration should be given to
+% contrasting transitional expressions
+\begin{block}{}
+\begin{enumerate}
+\item Although (part A), (part B).
+\item (Part A), but (part B).
+\item Although (part A), but (part B).
+\end{enumerate}
+\end{block}
+For each case, only part B will be kept.
 \end{frame}
 
 %%%%%%%%%%%%%%%
 \begin{frame}{Stop Words and Punctuation Elimination}
 
 \begin{itemize}[<+->]
-\item .
+\item Remove prepositions, punctuation marks, English character strings, interjections, modal particles, onomatopoeia, and auxiliary words
+\item Remove pre-defined stop words and number strings
 \end{itemize}
 
 \end{frame}
@@ -369,28 +432,19 @@ A post can be text, an image, video, or other multimedia.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{EDA}
 
-%%%%%%%%%%%%%%%
-\begin{frame}{EDA}
-
-\begin{itemize}[<+->]
-\item $\geq 10$
-\end{itemize}
-
-\end{frame}
-
-
 
 %%%%%%%%%%%%%%%
-\begin{frame}{Word frequency}
+\begin{frame}{Word Frequency}
 \begin{itemize}[<+->]
 \item Extract the word frequency vector $x_i$ from the $i$-th post
+\item Focus on words with overall frequency $\geq$ 10
 \item Construct the word frequency matrix $X=(x_1,...,x_n)^T$. This will be our design matrix.
 \end{itemize}
 \end{frame}
 %%%%%%%%%%%%%%%%%%%%
 
 
-\begin{frame}{Word frequency visualization: matrix plot}
+\begin{frame}{Word Frequency Visualization: Matrix Plot}
 
 \begin{figure}
   \centering
@@ -401,7 +455,7 @@ A post can be text, an image, video, or other multimedia.
 \end{frame}
 
 %%%%%%%%%%%%%%%
-\begin{frame}{Co-occurrance}
+\begin{frame}{Co-Occurrance}
 
 \begin{figure}
   \centering
@@ -412,7 +466,7 @@ A post can be text, an image, video, or other multimedia.
 \end{frame}
 
 %%%%%%%%%%%%%%%
-\begin{frame}{Co-occurrance}
+\begin{frame}{Co-Occurrance}
 
 \begin{figure}
   \centering
@@ -422,7 +476,7 @@ A post can be text, an image, video, or other multimedia.
 \end{frame}
 
 %%%%%%%%%%%%%%%
-\begin{frame}[fragile]{Sparse graphical models}
+\begin{frame}[fragile]{Sparse Graphical Models}
 
 \begin{itemize}[<+->]
 \item Fact: if $x\in R^p$ follows $N(\mu,\Sigma)$, then for $i\ne j$
@@ -443,7 +497,7 @@ x_j )\mid \{x_{\text{all but $(i,j)$}}\} \textbf{ iff } (\Sigma^{-1})_{ij}=0
 
 
 %%%%%%%%%%%%%%%%
-\begin{frame}[fragile]{Sparse graphical models (cont'd)}
+\begin{frame}[fragile]{Sparse Graphical Models (Cont'd)}
 
 \begin{itemize}[<+->]
 \item  Log-likelihood:
@@ -463,7 +517,7 @@ l(\mu,\Sigma^{-1}) = -\frac{n}{2}\log \det \lp \Sigma \rp  -\frac{1}{2} \sum_{i=
 \end{frame}
 
 %%%%%%%%%%%%%%%
-\begin{frame}[fragile]{Sparse graphical models (cont'd)}
+\begin{frame}[fragile]{Sparse Graphical Models (Cont'd)}
 
 \begin{itemize}[<+->]
 \item  Here comes the trace trick $\sum_{i=1}^n(x_i-\mu)^T S (x_i-\mu) = \textbf{Tr} (\sum_{i=1}^n (x_i-\mu)(x_i-\mu)^TS) = n\textbf{Tr}(\hat{\Sigma}S)$. We end up with the optimization problem for fitting a Gaussian graphical model:
@@ -483,7 +537,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 \end{frame}
 
 %%%%%%%%%%%%%%%%
-\begin{frame}{Sparse graphical models: results}
+\begin{frame}{Sparse Graphical Models: Results}
 
 \begin{figure}
   \centering
@@ -493,7 +547,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 \end{frame}
 
 %%%%%%%%%%%%%%%
-\begin{frame}{Sparse graphical models: results}
+\begin{frame}{Sparse Graphical Models: Results}
 
 \begin{figure}
   \centering
@@ -502,7 +556,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 
 \end{frame}
 %%%%%%%%%%%%%%%
-\begin{frame}{Sparse graphical models: results}
+\begin{frame}{Sparse Graphical Models: Results}
 
 \begin{figure}
   \centering
@@ -511,7 +565,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 
 \end{frame}
 %%%%%%%%%%%%%%%
-\begin{frame}{Sparse graphical models: results}
+\begin{frame}{Sparse Graphical Models: Results}
 
 \begin{figure}
   \centering
@@ -520,7 +574,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 
 \end{frame}
 %%%%%%%%%%%%%%%
-\begin{frame}{Sparse graphical models: results}
+\begin{frame}{Sparse Graphical Models: Results}
 
 \begin{figure}
   \centering
@@ -529,7 +583,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 
 \end{frame}
 %%%%%%%%%%%%%%%
-\begin{frame}{Sparse graphical models: results}
+\begin{frame}{Sparse Graphical Models: Results}
 
 \begin{figure}
   \centering
@@ -539,26 +593,12 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 \end{frame}
 
 %%%%%%%%%%%%%%%%
-\begin{frame}{Sparse graphical models v.s. co-occurence}
-
- \begin{columns}[t]
- \begin{column}{0.5\textwidth}
+\begin{frame}{Sparse Graphical Models v.s. Co-Occurence}
 
 \begin{figure}
   \centering
-  \includegraphics[scale=0.25]{./../../gLassoResults/glasso1.png} 
+  \includegraphics[scale=0.35]{sgmVScooc.pdf} 
 \end{figure}
-
- \end{column}
- \begin{column}{0.5\textwidth}
-
-\begin{figure}
-  \centering
-  \includegraphics[scale=0.25]{./../../coocurResults/cooccurNetwork.png} 
-\end{figure}
-
- \end{column}
- \end{columns}
 
 \end{frame}
 
@@ -577,10 +617,10 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 \item $x_i\in R^{p}$ be the $i$-th row of $X\in R^{3000\times795}$
 \item $y_i$ the corresponding category. Assume $y_i\in\{-1,+1\}$, where the $+1$ can have the following meanings:
   \begin{itemize}[<+->]
-    \item positive opinion towards Han Han; 
-    \item negative opinion towards Han Han; 
-    \item netural or unidentifiable opinion; 
-    \item spam. 
+    \item positive opinion towards Han Han
+    \item negative opinion towards Han Han 
+    \item netural or unidentifiable opinion 
+    \item spam
 \end{itemize}
 \item Two classification methods: LASSO and $l_1$-norm SVM.
 \end{itemize}
@@ -616,7 +656,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 \end{frame}
 
 %%%%%%%%%%%%%%%%
-\begin{frame}{Choosing $\lambda$: cross-validation}
+\begin{frame}{Choosing $\lambda$: Cross-Validation}
 
 \begin{figure}
   \centering
@@ -648,7 +688,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 
 
 %%%%%%%%%%%%%%%
-\begin{frame}{Positive v.s. Nonpositive classification result}
+\begin{frame}{Positive v.s. Nonpositive Classification Result}
 
 \begin{itemize}[<+->]
 \item +1: positive opinion;
@@ -679,7 +719,7 @@ LASSO word images for the positive v.s. nonpositive classification.
 
 
 %%%%%%%%%%%%%%%%
-\begin{frame}{Negative v.s. Nonnegative classification result}
+\begin{frame}{Negative v.s. Nonnegative Classification Result}
 \note{
 (To Angie: please delete the zero entries)
 (To Christine: remember to talk about why there are four empty entries; this is probably due to the size of nega sample is too small)
@@ -705,7 +745,7 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 扁 & 0.353 & 扁 & 0.353 & 方舟子 & 0.000\\
 (beat up) & & (beat up) & & (FangZhouZi) & \\\hline
 \end{tabular}
-LASSO word images for the negative v.s. negative classification.
+LASSO word images for the negative v.s. nonnegative classification.
 \end{center}
 
 \end{frame}
@@ -745,7 +785,7 @@ LASSO word images for the negative v.s. negative classification.
 
 \subsection{$l_1$-Norm Support Vector Machine}
 %%%%%%%%%%%%%%%
-\begin{frame}[fragile]{Standard support vector machine}
+\begin{frame}[fragile]{Standard Support Vector Machine}
 
 \begin{itemize}[<+->]
 \item Again, linear decision function $f(x) = \beta_0 + \beta x$;
@@ -775,7 +815,7 @@ where $z_+ = \max(0,z)$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%
-\begin{frame}{Positive v.s. Nonpositive classification result}
+\begin{frame}{Positive v.s. Nonpositive Classification Result}
 
 \begin{itemize}[<+->]
 \item +1: positive opinion;
@@ -788,14 +828,31 @@ where $z_+ = \max(0,z)$.
 
 \end{itemize}
 
+%\end{frame}
 
+%\begin{frame}{Positive v.s. Nonpositive Classification Result}
+\tiny
 % put the table here
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \hline
+加油 & 2.340 & 加油 & 2.340 & 铁证 & 2.305\\
+(keep going) & & (keep going) & & (clear evidence) & \\\hline
+铁证 & 2.305 & 家人 & 2.269 & 接受 & 2.061\\
+(clear evidence) & & (family) & & (accept) & \\\hline
+家人 & 2.269 & 韩少 & 1.969 & 媒体 & 1.907\\
+(family) & & (Master Han) & & (media) & \\\hline
+接受 & 2.061 & 成熟 & 1.806 & 默默 & 1.883\\
+(accept) & & (mature) & & (quietly) & \\\hline
+韩少 & 1.969 & 顶 & 1.803 & 四娘 & 1.762\\
+(Master Han) & & (support) & & (GUO Jingming) & \\\hline
+\end{tabular}
 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%
-\begin{frame}{Negative v.s. Nonnegative classification result}
+\begin{frame}{Negative v.s. Nonnegative Classification Result}
 \begin{itemize}[<+->]
 \item +1: negative opinion;
 \item -1: non-negative opinion, including positive, neutral and spam.
@@ -808,10 +865,54 @@ where $z_+ = \max(0,z)$.
 \end{itemize}
 
 %put the table here
+\tiny
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline  \hline
+扁 & 1.777 & 扁 & 1.777 & 脑子 & 1.447\\
+(beat up) & & (beat up) & & (mind) & \\\hline
+苦肉计 & 1.708 & 苦肉计 & 1.708 & 彻底 & 1.290\\
+(the ruse of  & & (the ruse of  &  &  (completely) &  \\
+self-injury to win & &  self-injury to win &  & &  \\
+somebody's & & somebody's  &  & &  \\
+ confidence) & &  confidence)  &  & &  \\\hline
+恶心 & 1.527 & 恶心 & 1.527 & 送给 & 1.221\\
+(disgusting) & & (disgusting) & & (give) & \\\hline
+脑子 & 1.447 & 骗子 & 1.301 & 感觉 & 1.109\\
+(asdf) & & (liar) & & (feel) & \\\hline
+骗子 & 1.301 & 公开 & 1.220 & 热点 & 1.101\\
+(liar) & & (open) & & (hot interest) & \\\hline
+\end{tabular}
+
 \end{frame}
 
 %%%%%%%%%%%%%%%
-\begin{frame}{LASSO v.s. $l_1$-norm SVM}
+\begin{frame}{$l_1$-Norm SVM v.s. LASSO}
+Positive v.s. Nonpositive Classification Results
+
+Positive coefficients
+
+\small
+\begin{center}
+\begin{tabular}{|c|c||c|c|}
+\hline
+$l_1$-Norm SVM & & LASSO &  \\ \hline
+Word & Postive Coef. & Word & Positive Coef.\\ \hline\hline
+加油 & 2.340 & 加油 & 0.820\\
+(keep going) & & (keep going) &\\\hline
+家人 & 2.269 & 韩少 & 0.644\\
+(family) & & (Master Han) &  \\\hline
+韩少 & 1.969 & 成熟 & 0.546\\
+(Master Han) & & (mature) &  \\\hline
+成熟 & 1.806 & 顶 & 0.533\\
+(mature) & & (support) &  \\\hline
+顶 & 1.803 & 宽容 & 0.518\\
+(support) & & (tolerant) &  \\\hline
+\end{tabular}
+\end{center}
+
+
+
 
 
 \end{frame}
@@ -823,7 +924,10 @@ where $z_+ = \max(0,z)$.
 \begin{frame}{Further Work}
 
 \begin{itemize}[<+->]
-\item .
+\item Comparison with maximum entropy approach
+\item Graphical model to track reposting
+\item Statistical models for identifying Internet slangs
+\item Sampling from large graphs
 \end{itemize}
 
 \end{frame}
@@ -835,71 +939,71 @@ where $z_+ = \max(0,z)$.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%
-\begin{frame}{}
-
-\begin{itemize}[<+->]
-\item  .
-\end{itemize}
-
-\end{frame}
-
-%%%%%%%%%%%%%%%
-\begin{frame}{}
-
-\begin{itemize}[<+->]
-\item  .
-\end{itemize}
-
-\end{frame}
-
-
-%%%%%%%%%%%%%%%
-\begin{frame}{}
-
-\begin{itemize}[<+->]
-\item  .
-\end{itemize}
-
-\end{frame}
-
-%%%%%%%%%%%%%%%
-\begin{frame}{}
-
-\begin{itemize}[<+->]
-\item .
-\end{itemize}
-
-\end{frame}
-
-
-%%%%%%%%%%%%%%%
-\begin{frame}{}
-
-\begin{itemize}[<+->]
-\item  .
-\end{itemize}
-
-\end{frame}
-
-%%%%%%%%%%%%%%%
-\begin{frame}{}
-
-\begin{itemize}[<+->]
-\item  .
-\end{itemize}
-
-\end{frame}
-
-%%%%%%%%%%%%%%%
-\begin{frame}{}
-
-\begin{itemize}[<+->]
-\item .
-\end{itemize}
-
-\end{frame}
-
-
+%\begin{frame}{}
+%
+%\begin{itemize}[<+->]
+%\item  .
+%\end{itemize}
+%
+%\end{frame}
+%
+%%%%%%%%%%%%%%%%
+%\begin{frame}{}
+%
+%\begin{itemize}[<+->]
+%\item  .
+%\end{itemize}
+%
+%\end{frame}
+%
+%
+%%%%%%%%%%%%%%%%
+%\begin{frame}{}
+%
+%\begin{itemize}[<+->]
+%\item  .
+%\end{itemize}
+%
+%\end{frame}
+%
+%%%%%%%%%%%%%%%%
+%\begin{frame}{}
+%
+%\begin{itemize}[<+->]
+%\item .
+%\end{itemize}
+%
+%\end{frame}
+%
+%
+%%%%%%%%%%%%%%%%
+%\begin{frame}{}
+%
+%\begin{itemize}[<+->]
+%\item  .
+%\end{itemize}
+%
+%\end{frame}
+%
+%%%%%%%%%%%%%%%%
+%\begin{frame}{}
+%
+%\begin{itemize}[<+->]
+%\item  .
+%\end{itemize}
+%
+%\end{frame}
+%
+%%%%%%%%%%%%%%%%
+%\begin{frame}{}
+%
+%\begin{itemize}[<+->]
+%\item .
+%\end{itemize}
+%
+%\end{frame}
+%
+%
 
 
 

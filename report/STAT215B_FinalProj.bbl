@@ -1,5 +1,15 @@
 \begin{thebibliography}{1}
 
+\bibitem{WashingtonPostSina}
+{China} shuts down microblog accounts amid rumors of coup attemps.
+\newblock
+  \url{http://www.washingtonpost.com/business/china-shuts-down-microblog-accounts-amid-rumors-of-coup-attemps/2012/04/28/gIQAxYTJoT_story.html}.
+
+\bibitem{bloombergSina}
+{Sina's Weibo} outlook buoys {Internet} stock gains: {China} overnight.
+\newblock
+  \url{http://www.bloomberg.com/news/2012-02-28/sina-s-weibo-outlook-buoys-internet-stock-gains-in-n-y-china-overnight.html}.
+
 \bibitem{boyd2004fastest}
 {\sc Boyd, S., Diaconis, P., and Xiao, L.}
 \newblock Fastest mixing markov chain on a graph.

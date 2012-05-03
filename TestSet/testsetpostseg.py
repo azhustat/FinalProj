@@ -13,13 +13,13 @@ fp = codecs.open(filename, "r", "utf-8")
 
 # opens output file
 try:
-	fout = codecs.open("postseg.txt", "w", "utf-8")
+	fout = codecs.open("testsetpostseg.txt", "w", "utf-8")
 except IOError:
-	print "postseg.txt could not be opened"
+	print "testsetpostseg.txt could not be opened"
 	sys.exit(1)
 	
 # reads in stopping words
-fsw = codecs.open("./data/stoppingwords.txt", "r", "utf-8")
+fsw = codecs.open("../data/stoppingwords.txt", "r", "utf-8")
 sw = fsw.readlines()
 swset = set([sw[0].strip()])
 for j in range(1, len(sw)):
@@ -27,7 +27,7 @@ for j in range(1, len(sw)):
 	
 
 # reads in conjunction words
-fcon = codecs.open("./data/conjunction.txt", "r", "utf-8")
+fcon = codecs.open("../data/conjunction.txt", "r", "utf-8")
 con = fcon.readlines()
 although = []
 but = []	

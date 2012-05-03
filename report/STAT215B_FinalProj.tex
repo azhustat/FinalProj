@@ -108,11 +108,21 @@ columns=flexible%,
 %%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
-the largest microblogging website in China, Sina Weibo 新浪微博
+Due to the restriction on overseas websites such as Facebook or Twitter, domestic substitutes have become the major platforms for the internet citizens to express their opinions towards various social or political issues. Studying posts on those website thus provides interesting insights into the public opinion. For example, some events in the recent years, such as the tragic Wenzhou train collision on July 23 2011
+%\footnote{For details, see \url{http://en.wikipedia.org/wiki/Wenzhou_train_collision}. }
+  and the more recent Wang Lijun incident,
+%\footnote{For details, see \url{http://en.wikipedia.org/wiki/Wang_Lijun_incident}.}  
+have split the public into two major groups among which one considers the government's way of dealing with those incidences is good and one does not. 
+In principle, we can draw text data from those websites identifying whether a particular post is related to the event of interest, and which group the post should be classified into.
 
-A post can be text, an image, video, or other multimedia.
+Sina Weibo 新浪微博 is the largest microblogging website and one of the most popular social network website in China. It had more than 300 million registered users as of February 2012 (\cite{bloombergSina})
+and accounted for 65\% of China's microblog market by pageviews as of December 2011(\cite{WashingtonPostSina}).
+In this project, we develop a framework for for studying public opinions using Sina Weibo as a corpus for a given topic. Posts are sampled from Weibo and then processed taking the characteristics of both Chinese language and Weibo posts into consideration.
+
 
 related works here 
+
+
 %%%%%%%%%%%%%%%%%%
 \section{Methods}
 
@@ -146,14 +156,10 @@ UTF-8 encoding, GBK, Unicode, Big5
 
 %%
 \subsubsection{Characteristics of Chinese Language}\label{subsec:Chinese}
-No explicit delimiter between words in Chinese texts
-
-OOV
-
-ambiguity 
 
 
-\cite{wong2009introduction}
+
+%\cite{wong2009introduction}
 
 
 There has been quite a bit of research done into natural language processing in the English language, but not much on the Chinese language.  This is due to the fact that the Chinese language contains unique characteristics that makes it difficult to do natural language processing well. 
@@ -470,8 +476,98 @@ where $z_+ = \max(0,z)$ (the function $h(z) = (1-z)_+$ is also known as the hing
 \end{align}
 We repeat the same data analysis as we did for the LASSO method. The results are summaried in table XX. For efficiently fitting the sparse svm, we use the matlab package by Fung and Mangasarian (2004). Again, 10-fold cross validations are performed in order to select the ``best'' $\lambda$.
 
+
+
 include the four tables here(each of top five words)... and rest in the appendix
 
+\begin{table}[h!]
+\caption{$l_1$-norm support vector machine results: positive category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \hline
+加油 & 2.340 & 加油 & 2.340 & 铁证 & 2.305\\
+(keep going) & & (keep going) & & (clear evidence) & \\\hline
+铁证 & 2.305 & 家人 & 2.269 & 接受 & 2.061\\
+(clear evidence) & & (family) & & (accept) & \\\hline
+家人 & 2.269 & 韩少 & 1.969 & 媒体 & 1.907\\
+(family) & & (Master Han) & & (media) & \\\hline
+接受 & 2.061 & 成熟 & 1.806 & 默默 & 1.883\\
+(accept) & & (mature) & & (quietly) & \\\hline
+韩少 & 1.969 & 顶 & 1.803 & 四娘 & 1.762\\
+(Master Han) & & (support) & & (GUO Jingming) & \\\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+\begin{table}
+\caption{$l_1$-norm support vector machine results: negative category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline  \hline
+扁 & 1.777 & 扁 & 1.777 & 脑子 & 1.447\\
+(beat up) & & (beat up) & & (mind) & \\\hline
+苦肉计 & 1.708 & 苦肉计 & 1.708 & 彻底 & 1.290\\
+(the ruse of  & & (the ruse of  &  &  (completely) &  \\
+self-injury to win & &  self-injury to win &  & &  \\
+somebody's & & somebody's  &  & &  \\
+ confidence) & &  confidence)  &  & &  \\\hline
+恶心 & 1.527 & 恶心 & 1.527 & 送给 & 1.221\\
+(disgusting) & & (disgusting) & & (give) & \\\hline
+脑子 & 1.447 & 骗子 & 1.301 & 感觉 & 1.109\\
+(asdf) & & (liar) & & (feel) & \\\hline
+骗子 & 1.301 & 公开 & 1.220 & 热点 & 1.101\\
+(liar) & & (open) & & (hot interest) & \\\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\begin{table}
+\caption{$l_1$-norm support vector machine results: neutral category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline\hline
+加油 & 2.233 & 铁证 & 2.054 & 加油 & 2.233\\
+(keep going) & & (clear evidence) & & (keep going) & \\\hline
+铁证 & 2.054 & 片 & 1.896 & 成熟 & 1.756\\
+(clear evidence) & & (piece) & & (mature) & \\\hline
+片 & 1.896 & 至今 & 1.884 & 同意 & 1.725\\
+(piece) & & (so far) & & (agree) & \\\hline
+至今 & 1.884 & 战 & 1.845 & 水 & 1.661\\
+(so far) & & (fight) & & (water) & \\\hline
+战 & 1.845 & 意思 & 1.824 & 昨天 & 1.611\\
+(fight) & & (meaning) & & (yesterday) & \\\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+
+\begin{table}
+\caption{$l_1$-norm support vector machine results: spam category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline\hline
+票子 & 1.000 & 票子 & 1.000 & 书 & 0.000\\
+(ticket) & & (ticket) & & (book) & \\\hline
+书 & 0.000 & 每天 & 0.000 & 围观 & 0.000\\
+(book) & & (everyday) & & (surround to watch) & \\\hline
+围观 & 0.000 & 抽 & 0.000 & 写 & 0.000\\
+(surround to watch) & & (win) & & (write) & \\\hline
+写 & 0.000 & 性 & 0.000 & 骂 & 0.000\\
+(write) & & (sex) & & (curse) & \\\hline
+每天 & 0.000 & 网 & 0.000 & 粉丝 & 0.000\\
+(everyday) & & (Internet) & & (fans) & \\\hline
+\end{tabular}
+\end{center}
+\end{table}
 
 
 %%%%%%%%%%%%%%%%%%
@@ -518,12 +614,14 @@ simplified Chinese and traditional Chinese: no simple one-to-one correspondence;
 
 \newpage
 %%%%%%%%%%%%%%%%%%
-\section{Appendix}
+\appendix
 
 %%%%%
+\section{LASSO Results}
 
-\begin{table}
-\caption{Positive category}
+
+\begin{table}[hb]
+\caption{LASSO results: positive category}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -560,7 +658,7 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 
 
 \begin{table}
-\caption{Negative category}
+\caption{LASSO results: negative category}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -596,7 +694,7 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 
 
 \begin{table}
-\caption{Neutral category}
+\caption{LASSO results: neutral category}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -635,7 +733,7 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline
 
 
 \begin{table}
-\caption{Spam category}
+\caption{LASSO results: spam category}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -670,7 +768,159 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline
 \end{table}
 
 
+%%%%%%%%%
+%%%%%%%%%
+\newpage
+\section{$l_1$-Norm Support Vector Machine Results}
 
+\begin{table}[h!]
+\caption{$l_1$-norm support vector machine results: positive category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \hline
+加油 & 2.340 & 加油 & 2.340 & 铁证 & 2.305\\
+(keep going) & & (keep going) & & (clear evidence) & \\\hline
+铁证 & 2.305 & 家人 & 2.269 & 接受 & 2.061\\
+(clear evidence) & & (family) & & (accept) & \\\hline
+家人 & 2.269 & 韩少 & 1.969 & 媒体 & 1.907\\
+(family) & & (Master Han) & & (media) & \\\hline
+接受 & 2.061 & 成熟 & 1.806 & 默默 & 1.883\\
+(accept) & & (mature) & & (quietly) & \\\hline
+韩少 & 1.969 & 顶 & 1.803 & 四娘 & 1.762\\
+(Master Han) & & (support) & & (GUO Jingming) & \\\hline
+媒体 & 1.907 & 宽容 & 1.764 & 骗子 & 1.524\\ \hline
+默默 & 1.883 & 人士 & 1.758 & 想起 & 1.519\\ \hline
+成熟 & 1.806 & 支持 & 1.593 & 恋 & 1.491\\ \hline
+顶 & 1.803 & 欢乐 & 1.315 & 韩寒和 & 1.476\\ \hline
+宽容 & 1.764 & 影响力 & 1.237 & 关 & 1.415\\ \hline
+四娘 & 1.762 & 诛 & 1.175 & 变成 & 1.411\\ \hline
+人士 & 1.758 & 欣赏 & 1.138 & 圈 & 1.243\\ \hline
+支持 & 1.593 & 幸福 & 1.126 & 曾经 & 1.238\\ \hline
+骗子 & 1.524 & 纠缠 & 1.030 & 战 & 1.225\\ \hline
+想起 & 1.519 & 代笔 & 1.025 & 网 & 1.219\\ \hline
+恋 & 1.491 & 喜欢 & 0.943 & 发表 & 1.190\\ \hline
+韩寒和 & 1.476 & 蛋 & 0.923 & 闲 & 1.190\\ \hline
+关 & 1.415 & 明 & 0.919 & 小四 & 1.125\\ \hline
+变成 & 1.411 & 终于 & 0.914 & 底 & 1.050\\ \hline
+欢乐 & 1.315 & 咬 & 0.884 & 套 & 1.044\\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+\begin{table}
+\caption{$l_1$-norm support vector machine results: negative category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline  \hline
+扁 & 1.777 & 扁 & 1.777 & 脑子 & 1.447\\
+(beat up) & & (beat up) & & (mind) & \\\hline
+苦肉计 & 1.708 & 苦肉计 & 1.708 & 彻底 & 1.290\\
+(the ruse of  & & (the ruse of  &  &  (completely) &  \\
+self-injury to win & &  self-injury to win &  & &  \\
+somebody's & & somebody's  &  & &  \\
+ confidence) & &  confidence)  &  & &  \\\hline
+恶心 & 1.527 & 恶心 & 1.527 & 送给 & 1.221\\
+(disgusting) & & (disgusting) & & (give) & \\\hline
+脑子 & 1.447 & 骗子 & 1.301 & 感觉 & 1.109\\
+(asdf) & & (liar) & & (feel) & \\\hline
+骗子 & 1.301 & 公开 & 1.220 & 热点 & 1.101\\
+(liar) & & (open) & & (hot interest) & \\\hline
+彻底 & 1.290 & 全 & 1.154 & 恶 & 1.077\\ \hline
+送给 & 1.221 & 国家 & 1.149 & 青春 & 1.013\\ \hline
+公开 & 1.220 & 讨厌 & 1.053 & 少 & 0.949\\ \hline
+全 & 1.154 & 网 & 1.034 & 算 & 0.940\\ \hline
+国家 & 1.149 & 烦 & 0.889 & 清楚 & 0.921\\ \hline
+感觉 & 1.109 & 虚伪 & 0.843 & 愿意 & 0.920\\ \hline
+热点 & 1.101 & 装 & 0.812 & 新书 & 0.868\\ \hline
+恶 & 1.077 & 告 & 0.712 & 写作 & 0.840\\ \hline
+讨厌 & 1.053 & 讨论 & 0.674 & 争论 & 0.827\\ \hline
+网 & 1.034 & 难 & 0.636 & 地方 & 0.796\\ \hline
+青春 & 1.013 & 时代 & 0.633 & 铁 & 0.789\\ \hline
+少 & 0.949 & 天才 & 0.629 & 言 & 0.737\\ \hline
+算 & 0.940 & 样子 & 0.626 & 子 & 0.727\\ \hline
+清楚 & 0.921 & 选项 & 0.596 & 来自 & 0.705\\ \hline
+愿意 & 0.920 & 喝 & 0.559 & 精彩 & 0.685\\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\begin{table}
+\caption{$l_1$-norm support vector machine results: neutral category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline\hline
+加油 & 2.233 & 铁证 & 2.054 & 加油 & 2.233\\
+(keep going) & & (clear evidence) & & (keep going) & \\\hline
+铁证 & 2.054 & 片 & 1.896 & 成熟 & 1.756\\
+(clear evidence) & & (piece) & & (mature) & \\\hline
+片 & 1.896 & 至今 & 1.884 & 同意 & 1.725\\
+(piece) & & (so far) & & (agree) & \\\hline
+至今 & 1.884 & 战 & 1.845 & 水 & 1.661\\
+(so far) & & (fight) & & (water) & \\\hline
+战 & 1.845 & 意思 & 1.824 & 昨天 & 1.611\\
+(fight) & & (meaning) & & (yesterday) & \\\hline
+意思 & 1.824 & 遭遇 & 1.729 & 韩少 & 1.604\\ \hline
+成熟 & 1.756 & 儿子 & 1.701 & 路 & 1.568\\ \hline
+遭遇 & 1.729 & 关系 & 1.648 & 国家 & 1.553\\ \hline
+同意 & 1.725 & 生日 & 1.646 & 讨厌 & 1.533\\ \hline
+儿子 & 1.701 & 道德 & 1.626 & 咬 & 1.485\\ \hline
+水 & 1.661 & 称 & 1.610 & 人士 & 1.438\\ \hline
+关系 & 1.648 & 杀 & 1.578 & 掉 & 1.322\\ \hline
+生日 & 1.646 & 接受 & 1.567 & 小丑 & 1.311\\ \hline
+道德 & 1.626 & 狂 & 1.508 & 偏执 & 1.282\\ \hline
+昨天 & 1.611 & 账号 & 1.485 & 抽 & 1.257\\ \hline
+称 & 1.610 & 理解 & 1.444 & 语 & 1.254\\ \hline
+韩少 & 1.604 & 道理 & 1.341 & 声 & 1.252\\ \hline
+杀 & 1.578 & 不幸 & 1.332 & 家人 & 1.235\\ \hline
+路 & 1.568 & 加 & 1.293 & 一直 & 1.213\\ \hline
+接受 & 1.567 & 上调 & 1.267 & 自由 & 1.198\\ \hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+
+\begin{table}
+\caption{$l_1$-norm support vector machine results: spam category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline\hline
+票子 & 1.000 & 票子 & 1.000 & 书 & 0.000\\
+(ticket) & & (ticket) & & (book) & \\\hline
+书 & 0.000 & 每天 & 0.000 & 围观 & 0.000\\
+(book) & & (everyday) & & (surround to watch) & \\\hline
+围观 & 0.000 & 抽 & 0.000 & 写 & 0.000\\
+(surround to watch) & & (win) & & (write) & \\\hline
+写 & 0.000 & 性 & 0.000 & 骂 & 0.000\\
+(write) & & (sex) & & (curse) & \\\hline
+每天 & 0.000 & 网 & 0.000 & 粉丝 & 0.000\\
+(everyday) & & (Internet) & & (fans) & \\\hline
+抽 & 0.000 & 分享 & 0.000 & 寫 & 0.000\\ \hline
+骂 & 0.000 & 容 & 0.000 & 犯 & 0.000\\ \hline
+性 & 0.000 & 公知 & 0.000 & 不错 & 0.000\\ \hline
+粉丝 & 0.000 & 总 & 0.000 & 转 & 0.000\\ \hline
+网 & 0.000 & 小 & 0.000 & 愤 & 0.000\\ \hline
+分享 & 0.000 & 图 & 0.000 & 韩寒 & 0.000\\ \hline
+寫 & 0.000 & 说 & 0.000 & 磊落 & 0.000\\ \hline
+容 & 0.000 & 真 & 0.000 & 错 & 0.000\\ \hline
+犯 & 0.000 & 支持 & 0.000 & 韩寒和 & 0.000\\ \hline
+不错 & 0.000 & 韩 & 0.000 & 韩少 & 0.000\\ \hline
+转 & 0.000 & 喜欢 & 0.000 & 方舟子 & 0.000\\ \hline
+公知 & 0.000 & 想 & 0.000 & 觉得 & 0.000\\ \hline
+愤 & 0.000 & 威胁 & 0.000 & 已经 & 0.000\\ \hline
+韩寒 & 0.000 & 事 & 0.000 & 娱乐 & 0.000\\ \hline
+总 & 0.000 & 看到 & 0.000 & 新 & 0.000\\ \hline
+\end{tabular}
+\end{center}
+\end{table}
 
 
 %%%%%

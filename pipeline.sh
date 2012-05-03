@@ -2,6 +2,8 @@
 
 python pretag.py Han.txt
 
+
+
 python preseg.py hanhansample.txt
 
 javac SegMain.java

@@ -12,43 +12,43 @@ fp = codecs.open(filename, "r", "utf-8")
 
 # opens output file
 try:
-	fout = codecs.open("score.txt", "w", "utf-8")
+	fout = codecs.open("testsetscore.txt", "w", "utf-8")
 except IOError:
-	print "score.txt could not be opened"
+	print "testsetscore.txt could not be opened"
 	sys.exit(1)
 	
 print >> fout, 'score postive negative negation hhc hhp hhn fc fp fn'
 	
 # reads in negation words
-fnw = codecs.open("./data/negation.txt", "r", "utf-8")
+fnw = codecs.open("../data/negation.txt", "r", "utf-8")
 nw = fnw.readlines()
 nwset = set([ nw[0].strip() ])
 for j in range(1, len(nw)):
 	nwset.add( nw[j].strip() )
 	
 # reads in positive emotion words
-fpem = codecs.open("./data/pos_emotion.txt", "r", "utf-8")
+fpem = codecs.open("../data/pos_emotion.txt", "r", "utf-8")
 pem = fpem.readlines()
 pemset = set([ pem[0].strip() ])
 for j in range(1, len(pem)):
 	pemset.add( pem[j].strip() )
 
 # reads in positive evaluation words
-fpev = codecs.open("./data/pos_eval.txt", "r", "utf-8")
+fpev = codecs.open("../data/pos_eval.txt", "r", "utf-8")
 pev = fpev.readlines()
 pevset = set([ pev[0].strip() ])
 for j in range(1, len(pev)):
 	pevset.add( pev[j].strip() )
 
 # reads in negative emotion words
-fnem = codecs.open("./data/neg_emotion.txt", "r", "utf-8")
+fnem = codecs.open("../data/neg_emotion.txt", "r", "utf-8")
 nem = fnem.readlines()
 nemset = set([ nem[0].strip() ])
 for j in range(1, len(nem)):
 	nemset.add( nem[j].strip() )
 
 # reads in negative evaluation words
-fnev = codecs.open("./data/neg_eval.txt", "r", "utf-8")
+fnev = codecs.open("../data/neg_eval.txt", "r", "utf-8")
 nev = fnev.readlines()
 nevset = set([ nev[0].strip() ])
 for j in range(1, len(nev)):
