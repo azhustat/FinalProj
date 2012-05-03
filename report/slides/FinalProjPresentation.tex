@@ -567,10 +567,17 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 
 %%%
 \begin{frame}[fragile]{LASSO}
+\begin{itemize}[<+->]
+
+\item The Lasso approach (Tibshirani, (1996)):
 \[
 \hat{\beta}(\lambda) = \arg \min_\beta \frac{1}{2}||y-(\beta_0+X\beta)||_2^2 + \lambda ||\beta||_1
 \]
-\begin{itemize}[<+->]
+\item The classifier:
+\[
+\text{class}(x) = \textbf{sign}(\beta_0+x^T\beta)\in\{-1,+1\}
+\]
+
 \item Four models for each category for classification
 \item General overview of method
 \item General overview of application to data
@@ -585,25 +592,8 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 
 \end{frame}
 
-%%%
-\begin{frame}{LASSO Results} 
-
-\begin{itemize}[<+->]
-\item Three different ways to look at coefficients
-\item Why:
-	\begin{itemize}
-	\item Absolute value: most relevant
-	\item Positive: more likely to be in category
-	\item Negative: less likely to be in category	
-	\end{itemize}
-	
-\end{itemize}
-
-\end{frame}
-
-
 %%%%%%%%%%%%%%%
-\begin{frame}{LASSO Results: Positive Category}
+\begin{frame}{Choosing $\lambda$: cross-validation}
 
 \begin{figure}
   \centering
@@ -612,8 +602,36 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 
 \end{frame}
 
+
+%%%
+\begin{frame}{LASSO Results} 
+
+\begin{itemize}[<+->]
+\item Three different ways to look at coefficients
+\item Why: can look at the classifier:
+\[
+\text{class}(x) = \textbf{sign}(\beta_0+x^T\beta)\in\{-1,+1\}
+\]
+	\begin{itemize}
+	\item Absolute value: most relevant/predictive words
+	\item Positive: more likely to classify the post in +1 category (all other covariates being fixed)
+	\item Negative: less likely to be in -1 category	
+	\end{itemize}
+	
+\end{itemize}
+
+\end{frame}
+
+
+
 %%%%%%%%%%%%%%%
-\begin{frame}{LASSO Results: Positive Category}
+\begin{frame}{Positive v.s. Nonpositive classification result}
+
+\begin{itemize}[<+->]
+\item +1: positive opinion;
+\item -1: non-positive opinion, including negative, neutral and spam.
+\end{itemize}
+
 \tiny
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
@@ -630,6 +648,7 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 宽容 & 0.518 & 宽容 & 0.518 & 利益 & -0.335\\
 (tolerant) & & (tolerant) & & (benefit) & \\\hline
 \end{tabular}
+LASSO word images for the positive v.s. nonpositive classification.
 \end{center}
 
 
@@ -637,7 +656,14 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 
 
 %%%%%%%%%%%%%%%
-\begin{frame}{LASSO Results: Negative Category}
+\begin{frame}{Negative v.s. Nonnegative classification result}
+(To Angie: please delete the zero entries)
+(To Christine: remember to talk about why there are four empty entries; this is probably due to the size of nega sample is too small)
+\begin{itemize}[<+->]
+\item +1: negative opinion;
+\item -1: non-negative opinion, including positive, neutral and spam.
+\end{itemize}
+
 \tiny
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
@@ -654,6 +680,7 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 扁 & 0.353 & 扁 & 0.353 & 方舟子 & 0.000\\
 (beat up) & & (beat up) & & (FangZhouZi) & \\\hline
 \end{tabular}
+LASSO word images for the negative v.s. negative classification.
 \end{center}
 
 \end{frame}
@@ -693,14 +720,16 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 
 \subsection{$l_1$-Norm Support Vector Machine}
 %%%%%%%%%%%%%%%
-\begin{frame}[fragile]{$l_1$-Norm Support Vector Machine}
+\begin{frame}[fragile]{Standard support vector machine}
 
 \begin{itemize}[<+->]
-\item  Support vector machine (Vapnik 1996) is another commonly-used machine learning method to classify data points into two categories. Consider again the linear decision function $f(x) = \beta_0 + \beta x$ and the classifier $Class(x) = \textbf{sign} (f(x))$. To ``learn'' the parameters, we want the training misclassification rate to be small and the margin of the decision boundary (which can be shown to be $1/||\beta||_2$) to be wide. Hence we consider the following optimization problem (give a 2d illustration here...):   
+\item Again, linear decision function $f(x) = \beta_0 + \beta x$;
+\item The classifier $Class(x) = \textbf{sign} (f(x))$. 
+\item  The support vector machine (SVM) (see, e.g. Hastie et al 2001): 
 \begin{align*}
-\min_{\beta_0,\beta} \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \frac{\lambda}{2} ||\beta||_2,
+\min_{\beta_0,\beta} \sum_{i=1}^n(1-y_if(x_i))_+ + \frac{\lambda}{2} ||\beta||_2,
 \end{align*}
-where $z_+ = \max(0,z)$ (the function $h(z) = (1-z)_+$ is also known as the hinge loss function). 
+where $z_+ = \max(0,z)$. 
 \end{itemize}
 
 \end{frame}
@@ -710,12 +739,10 @@ where $z_+ = \max(0,z)$ (the function $h(z) = (1-z)_+$ is also known as the hing
 \begin{frame}[fragile]{$l_1$-Norm Support Vector Machine}
 
 \begin{itemize}[<+->]  
-\item Similarly, the sparse version of SVM simply replaces the $l_2$-norm by $l_1$-norm (which is just another measure of the wideness of the margin):
+\item Replacing the $l_2$-norm by $l_1$-norm yields the sparse SVM:
 \begin{align*}
 \min_{\beta_0,\beta} \left\{ \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \lambda ||\beta||_1\right\}. 
 \end{align*}
-We repeat the same data analysis as we did for the LASSO method. The results are summaried in table XX. For efficiently fitting the sparse svm, we use the matlab package by Fung and Mangasarian (2004). Again, 10-fold cross validations are performed in order to select the ``best'' $\lambda$.
-
 \end{itemize}
 
 \end{frame}
