@@ -571,8 +571,10 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 \section{Classification}
 \begin{frame}
 \begin{itemize}[<+->]
-\item $x_i\in R^{p}$ be the $i$-th row of $X$
-\item $y_i$ the corresponding category. Assume $y_i\in\{-1,+1\}$, where $+1$ can have the following meanings:
+\note{ I will talk about this slide and Christine continues the next}
+
+\item $x_i\in R^{p}$ be the $i$-th row of $X\in R^{3000\times795}$
+\item $y_i$ the corresponding category. Assume $y_i\in\{-1,+1\}$, where the $+1$ can have the following meanings:
   \begin{itemize}[<+->]
     \item positive opinion towards Han Han; 
     \item negative opinion towards Han Han; 
@@ -677,8 +679,10 @@ LASSO word images for the positive v.s. nonpositive classification.
 
 %%%%%%%%%%%%%%%
 \begin{frame}{Negative v.s. Nonnegative classification result}
+\note{
 (To Angie: please delete the zero entries)
 (To Christine: remember to talk about why there are four empty entries; this is probably due to the size of nega sample is too small)
+}
 \begin{itemize}[<+->]
 \item +1: negative opinion;
 \item -1: non-negative opinion, including positive, neutral and spam.
