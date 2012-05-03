@@ -112,7 +112,7 @@ the largest microblogging website in China, Sina Weibo 新浪微博
 
 A post can be text, an image, video, or other multimedia.
 
-
+related works here 
 %%%%%%%%%%%%%%%%%%
 \section{Methods}
 
@@ -278,37 +278,201 @@ Another interesting quantities are the numbers of positive and negative words in
 
 %%%%%%%
 \subsection{Feature analysis}
+It is of interest to study the relation between features, i.e. in our case, the relation between words in tweets. We shall base our study on the frequency matrix $X\in R^{n\time p}$, where the entry of the matrix $x_{ij}$ stores the times of occurence of the $j$-th word in the $i$-th post. Analyzing the feature matrix $X$ can help us understand the word usage better and identify possible cluster in feature space. 
+
+Our observation matrix is the frequency matrix of dimension 756x3000. The columns represent each post and the rows represent 756 phrases.  These 756 phrases have total occurance of at least 10 times over all 3000 posts and do not include stop words and negation words. Each element of the observation matrix represents the total number of times that particular word (indicated by row) occurrs in that post (indicated by column). Using 10 fold cross validation, we searched for the optimal regularization parameter. 
+
+plot the frequency matrix here.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Exploratory data analysis}
-\subsubsection{Sparse principle component analysis (SPCA)}
+converting frequency matrix to cooccurence matrix. 
+
+include plots of the co matrix, both matrixplot and the network plot 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Sparse principal component analysis (SPCA)}
+Following Zou et al (2006):
+\begin{align}
+(A,B) & = \arg \min_{A,B} \sum_{i=1}^n||x_i-AB^Tx_i||_2^2 + \lambda \sum_{j=1}^k||\beta_j||^2 + \sum_{j=1}^k\lambda_{1,j}||\beta_j||_1 \\ 
+\text{subject to} & A^TA = I_{k}. \nonumber
+\end{align}
+
+table here. Some explanations here as well.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Sparse gaussian graphical model}
+Some review on a Gaussian graphical model. maximum likelihood estimate of the inverse covariance matrix. 
+Suppose the random vector $x\in R^p$ has a multivariate normal distribution with mean $\mu$ and covariance matrix $\Sigma$. The density function of $x$ is
+\begin{align}
+\label{eq: normalPDF}
+f(x|\mu,\Sigma) = \frac{1}{\sqrt{2\pi \det \Sigma}}\exp{-\frac{(x-\mu)^T\Sigma^{-1}(x-\mu)}{2}}.
+\end{align}
+Suppose we have IID $N(\nu,\Sigma)$ data $x_1,x_2,...x_n$ and we want to estimate the inverse covariance matrix $\Sigma^{-1}$. The joint likelihood of the data is
+\begin{align}
+\label{eq: like}
+f(x|\mu,\Sigma) = \frac{1}{(2\pi \det \Sigma)^{n/2}}\exp{-\frac{\sum_{i=1}^n(x_i-\mu)^T\Sigma^{-1}(x_i-\mu)}{2}}.
+\end{align}
+Taking logarithm to get the log-likelihood (and ignore constant terms):
+\begin{align}
+\label{eq: loglike}
+l(\mu,\Sigma^{-1}) = \frac{1}{2\log \det \Sigma}  -\frac{\sum_{i=1}^n(x_i-\mu)^T\Sigma^{-1}(x_i-\mu)}{2}.
+\end{align}
+Then we can do a maximum likelihood estimation (optimize over $\mu$ and $S = \Sigma^{-1}$; easy to see that the MLE for $\mu$ is $\bar{X}$ exponential family, MOM = MLE, so just plug in $\bar{X}$ for $\mu$):
+
+\begin{align}
+\label{eq: loglike}
+\max_S l(S) = \frac{1}{2}\log \det S  -\frac{\sum_{i=1}^n(x_i-\mu)^T S (x_i-\mu)}{2}.
+\end{align}
+
+Here comes the trace trick $\sum_{i=1}^n(x_i-\mu)^T S (x_i-\mu) = \textbf{Tr} (\sum_{i=1}^n (x_i-\mu)(x_i-\mu)^TS) = \textbf{Tr}(\hat{\Sigma}S)$. We end up with the following optimization problem
+
+\begin{align}
+\label{eq:mle}
+\max_S \log \det S - \textbf{Tr}\hat{\Sigma}S 
+\end{align}
+
+if the number of features $p$ is large, want to do model selection... So Banerjee et al. (2007) propose the following optimization problem to recover the sparse structure in a gaussian graphical model
+\begin{align}
+\label{eq:gLasso}
+\max_S \log \det S - \textbf{Tr}\hat{\Sigma}S - \lambda ||S||_1
+\end{align}
+where $\Sigma$ is the covariance matrix of the data/design matrix $X$ and $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$. In that paper they study the senate voting data to recover the party membership. l-1 norm promotes sparsity. 
+
+Some computation aspects of estimating a sparse graphical model: Banerjee et al (2007) propose a block coordinate ascent method (COVSEL) (updating one row and one column of $S$ at one time). Their approach is exact but takes forever to run. Meinshausen and Buhlmann (2006) uses an approximation approach that is substantially faster. In our study, we adopt the fast and accurate graphical LASSO procedure (R package glasso) due to Friedman et al (2007).  
+
+p
 %%%%%
 \subsection{Classification}
-\subsubsection{LASSO}
-Lasso regression is one of the most well known sparse regression methods. Lasso regression uses a L-1 norm penalty to make the regression coefficient vector beta be sparse.  The larger lambda is, the more sparse the optimal beta will be. Our resulting models yield classification rules where we take the sign of the model to indicate whether it is in the category we are predicting (positive sign) or not (negative sign). 
+We are also interested in classifying the posts into different categories. Let $x_i\in R^{p}$ be the $i$-th row of the frequency matrix $X$ and $y_i$ the corresponding category. For simplicity, let us assume that $y_i\in\{-1,+1\}$ is binary, where the ``+1'' can be used to label the following four categories: 1) positive opinion towards Han Han; 2) negative opinion towards Han Han; 3) netural or unidentifiable opinion; 4) spam and ``-1'' labels the complement of the inividual category (e.g. if ``+1'' means positive, ``-1'' would mean anything but positive. Note that the complement of positive is not negative, but rather the union of negative, neutral and spam). For each of the above four cases, we apply LASSO and $l_1$-norm support vector machine to classify the data points into ``-1'' and ``+1''.  
 
-We used the lasso regression method to create four models model for predicting: positive responses, negative responses, the unidentifiable responses, and the spam responses.  We used the R package "lars" to form our models. This package efficiently fits an entire lasso sequence with the least squares loss function.  To find the optimal lambda (the regularization parameter) for our L-1 penalty, we used a 10-fold cross validation on our training 
-set of 3000 posts. 
+For each of the four models, we changed all responses that were not the category we were modeling to -1 and responses that fell into the category we were looking into as 1.  
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Sparse regression with the LASSO}
+The LASSO (Tibshirani, 1996) is a popular sparse regression method which adds a $l_1$-norm penalty to the linear least squares problem to promote sparsity in the regression coefficients:
+\begin{align}
+\label{eq:Lasso}
+\hat{\beta}(\lambda) = \arg \min_\beta \frac{1}{2}||y-(\beta_0+X\beta)||_2^2 + \lambda ||\beta||_1
+\end{align}
+In our study, we regress the class label vector $y$ onto the word frequency matrix $X$, yielding the intercept $\hat{\beta_0}$ and the sparse regression vector $\hat{\beta}(\lambda)$. We can then define the classifier to be $f(x) = \textbf{sign}(\hat{\beta_0}+X\hat{\beta}(\lambda))\in\{-1,+1\}$, where the resulting coefficient regression coefficient $\hat{\beta}$ has the following explanation: for each feature/word $j$, given all other feature/word variable fixed, the increase of the $j$-th word frequency by one lead to increase in regression function $\beta_0+X\beta$ by an amount of $\beta_i$ (if $\beta_i$ turns out to be positive, this means the chance of classifying the data point into the +1 category is increased).
 
-For each of the four models, we changed all responses that were not the category we were modeling to -1 and responses that fell into the category we were looking into as 1. Our observation matrix is the frequency matrix of dimension 756x3000. The columns represent each post and the rows represent 756 phrases.  These 756 phrases have total occurance of at least 10 times over all 3000 posts and do not include stop words and negation words. Each element of the observation matrix represents the total number of times that particular word (indicated by row) occurrs in that post (indicated by column). Using 10 fold cross validation, we searched for the optimal regularization parameter.  The function we used from the lars package in R does not 
-directly return which lambda gives us the optimal model, but rather returns the fraction of the sum of all the absolute values of the betas for that particular model divided by the maximum of all the sums of absolute values of the betas for each model. We pick as our optimal model the model that minimizes our classification error. 
+To look at which words were most relevant to each category we modeled (positive, negative, neutral and spam), we looked at three sets of 20 words based on, respectively, the highest absolute beta values, most positive coefficient values and most negative coefficient values. The top 30 words based on the top 50 highest absolute beta values tells us in general which words were most relevant to predicting that particular category.  The top 50 words based on the top 50 highest positive beta values tells us which words typically were common in posts that fell into the category observed while the top 50 words based on the top 50 highest negative beta values tells us which words typically were not in posts that fell into the category observed but were rather more common in the categories outside of the one we were modeling.
 
-To look at which words were most relevant to each category we modeled (positive, negative, and unidentifiable), we looked at the top 50 words based on the top 50 highest absolute beta values, the top 50 words based on the top 50 highest positive beta values, and the top 50 words based on the top 50 highest negative beta values.  The top 50 words based on the top 50 highest 
-absolute beta values tells us in general which words were most relevant to predicting that particular category.  The top 50 words based on the top 50 highest positive beta values tells us which words typically were common in posts that fell into the category observed while the top 50 words based on the top 50 highest negative beta values tells us which words typically 
-were not in posts that fell into the category observed but were rather more common in the categories outside of the one we were modeling.
-\subsubsection{$l_1$-norm support vector machine}
+Since the estimated $\beta$ depend on the regularization parameter, we are left with the issue of choose the ``best'' $\lambda$. A commonly used approach is to do a grid search for $\lambda$: for each value of $\lambda$, do a 10-fold cross validation; then choose the $\lambda$ that yields the smallest cross validation testint sample error. For this purpose, we used the approach least angle regression by Efron and Hastie (2007) to do the model selection. Their R package lars efficiently fits an entire lasso sequence with the least squares loss function. 
 
-%%%%%%%%%%%%%%%%%%
-\section{Results}
+include the one of the CV plot here; and include the others in the appendix.
 
-%%%%%
-\subsubsection{LASSO}
+For the positive responses, the top 20 most relevant words (based on taking the absolute values of the betas) returned by our model are shown in the table. As can be seen, the top 20 relevant words have an assortment of fairly neutral or positive words. The top 20 most relevant words for just the positive betas resulted in words that were very positive in nature. For example, words such as 'mature', 'support', and 'keep going' are very positive in nature and would certainly indicate a positive reaction to 韩寒. The top 20 most relevant words for just the negative betas resulted in words that showed a great dislike for 韩寒.  Words such as 'liar' indicate a negative response to the author. 
 
-For the positive responses, the top 20 most relevant words (based on taking the absolute values of the betas) returned by our model are shown in the table. As can be seen, the top 20 relevant words have an assortment of fairly neutral or positive words. The top 20 most relevant words for just the positive betas resulted in words that were very positive in nature. For example, words such as 'mature', 'support', and 'keep going' are very positive in nature and would certainly indicate a positive reaction to 韓寒. The top 20 most relevant words for just the negative betas resulted in words that showed a great dislike for 韓寒.  Words such as 'liar' indicate a negative response to the author. 
-
-For the negative responses, the top 20 most relevant words (based on taking the absolute values of the betas) returned by our model are shown in the table. As can be seen, the words are typically negative or neutral.  The top 20 most relevant words for just the positive betas are very telling in the posts sentiment towards 韓寒. Words such as 'disgusting, 'hate', 'liar' and 'annoying' demonstrates easily that the post has a negative sentiment towards the author. The top 20 most relevant words for just the negative betas are hence typically more positive towards the author. With words such as 'support', 'good', and 'like', the posts would not have a negative sentiment. What is interesting to note with these betas is the fact that these betas are all close to
-zero except the highest phrase. 
+For the negative responses, the top 20 most relevant words (based on taking the absolute values of the betas) returned by our model are shown in the table. As can be seen, the words are typically negative or neutral.  The top 20 most relevant words for just the positive betas are very telling in the posts sentiment towards 韩寒. Words such as 'disgusting, 'hate', 'liar' and 'annoying' demonstrates easily that the post has a negative sentiment towards the author. The top 20 most relevant words for just the negative betas are hence typically more positive towards the author. With words such as 'support', 'good', and 'like', the posts would not have a negative sentiment. What is interesting to note with these betas is the fact that these betas are all close to zero except the highest phrase. 
 
 For the neutral responses, the top 20 most relevant words (based on taking the absolute values of the betas) as well as the top 20 most relevant words based on the positive betas are all neutral words. The top 20 most relevant words based on the negative betas consist mainly of phrases that have some clear emotion attached to them, such as "support", "hate", "agree", and "ghostwriter". For the spam posts, the top 20 most relevant words (based on taking the absolute values of the betas) as well as the top most relevant words based on the positive betas are words/phrases that have no relation whatsoever with the author we picked to look into.  As expected, the top 20 most relevant words based on the negative betas are words/phrases that do have to do with the topic, such as the author's name. 
+
+for the spam responses...
+change 20 to 5, and say the complete lists of words can be found in the appendix
+\begin{table}
+\caption{Positive category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \hline
+加油 & 0.820 & 加油 & 0.820 & 样子 & -0.396\\
+(keep going) & & (keep going) & & (manner) & \\\hline
+韩少 & 0.644 & 韩少 & 0.644 & 恋 & -0.344\\
+(Master Han) & & (Master Han) & & (love) & \\\hline
+成熟 & 0.546 & 成熟 & 0.546 & 发表 & -0.336\\
+(mature) & & (mature) & & (announce) & \\\hline
+顶 & 0.533 & 顶 & 0.533 & 道理 & -0.336\\
+(support) & & (support) & & (rational) & \\\hline
+宽容 & 0.518 & 宽容 & 0.518 & 利益 & -0.335\\
+(tolerant) & & (tolerant) & & (benefit) & \\\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+\begin{table}
+\caption{Negative category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \hline
+讨厌 & 0.481 & 讨厌 & 0.481 & 支持 & -0.008\\
+(hate) & & (hate) & & (support) & \\\hline
+无耻 & 0.412 & 无耻 & 0.412 & 不 & 0.000\\
+(shameless) & & (shameless) & & (no) & \\\hline
+恶心 & 0.395 & 恶心 & 0.395 & 人 & 0.000\\
+(disgusting) & & (disgusting) & & (people/person) & \\\hline
+骗子 & 0.380 & 骗子 & 0.380 & 说 & 0.000\\
+(liar) & & (liar) & & (say) & \\\hline
+扁 & 0.353 & 扁 & 0.353 & 方舟子 & 0.000\\
+(beat up) & & (beat up) & & (FangZhouZi) & \\\hline
+\begin{table}
+
+\caption{Neutral category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline
+上调 & 0.586 & 上调 & 0.586 & 加油 & -0.491\\
+(increase) & & (increase) & & (keep going) & \\\hline
+道理 & 0.566 & 道理 & 0.566 & 韩少 & -0.358\\
+(rational) & & (rational) & & (Master Han) & \\\hline
+账号 & 0.534 & 账号 & 0.534 & 苦肉计 & -0.327\\
+(account) & & (account) & & (the ruse of  & \\
+& &  & &  self-injury to win & \\
+& &  & &  somebody's & \\
+& &  & &   confidence) & \\\hline
+加油 & 0.491 & 铁证 & 0.459 & 支持 & -0.290\\
+(keep going) & & (clear evidence) & & (support) & \\\hline
+铁证 & 0.459 & 称 & 0.453 & 善良 & -0.268\\
+(clear evidence) & & (refer) & & (kind) & \\\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+\begin{table}
+\caption{Spam category}
+\begin{center}
+\begin{tabular}{|c|c||c|c||c|c|}
+\hline
+Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline
+查看 & 3.777 & 查看 & 3.777 & 韩少 & -1.033\\
+(examine) & & (examine) & & (Master Hanhan) & \\\hline
+抽 & 1.998 & 抽 & 1.998 & 韩寒 & -0.716\\
+(win) & & (win) & & (Master Hanhan) & \\\hline
+每天 & 1.251 & 每天 & 1.251 & 别 & -0.232\\
+(everyday) & & (everyday) & & (don't) & \\\hline
+往往 & 1.208 & 往往 & 1.208 & 支持 & -0.217\\
+(often) & & (often) & & (support) & \\\hline
+外 & 1.043 & 外 & 1.043 & 这种 & -0.202\\
+(outside) & & (outside) & & (this kind) & \\\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{$l_1$-norm support vector machine}
+Support vector machine (Vapnik 1996) is another commonly-used machine learning method to classify data points into two categories. Consider again the linear decision function $f(x) = \beta_0 + \beta x$ and the classifier $Class(x) = \textbf{sign} (f(x))$. To ``learn'' the parameters, we want the training misclassification rate to be small and the margin of the decision boundary (which can be shown to be $1/||\beta||_2$) to be wide. Hence we consider the following optimization problem (give a 2d illustration here...):   
+\begin{align}
+\label{eq:l2svm}
+\min_{\beta_0,\beta} \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \frac{\lambda}{2} ||\beta||_2,
+\end{align}
+where $z_+ = \max(0,z)$ (the function $h(z) = (1-z)_+$ is also known as the hinge loss function). Similarly, the sparse version of SVM simply replaces the $l_2$-norm by $l_1$-norm (which is just another measure of the wideness of the margin):
+\begin{align}
+\label{eq:l1svm}
+\min_{\beta_0,\beta} \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \lambda ||\beta||_1.
+\end{align}
+We repeat the same data analysis as we did for the LASSO method. The results are summaried in table XX. For efficiently fitting the sparse svm, we use the matlab package by Fung and Mangasarian (2004). Again, 10-fold cross validations are performed in order to select the ``best'' $\lambda$.
+
+include the four tables here(each of top five words)... and rest in the appendix
+
+%%%%%%%%%%%%%%%%%%
+\section{Appendix}
+
+%%%%%
 
 \begin{table}
 \caption{Positive category}
