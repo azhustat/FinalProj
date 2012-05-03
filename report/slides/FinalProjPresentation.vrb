@@ -2,7 +2,8 @@
 \par\begin{itemize}[<+->]
 \item Replacing the $l_2$-norm by $l_1$-norm yields the sparse SVM (Zhu et al 2003):
 \begin{align*}
-\min_{\beta_0,\beta} \left\{ \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \lambda ||\beta||_1\right\}.
+\min_{\beta_0,\beta} \left\{ \sum_{i=1}^n(1-y_if(x_i))_+ + \lambda ||\beta||_1\right\}.
 \end{align*}
+\item Computation: use the matlab \textbf{lpsvm} package by Fung and Mangasarian (2002)
 \end{itemize}
 
