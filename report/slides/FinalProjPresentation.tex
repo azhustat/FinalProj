@@ -407,16 +407,16 @@ A post can be text, an image, video, or other multimedia.
 \end{frame}
 
 %%%%%%%%%%%%%%%
-\begin{frame}[fragile]{Graphical LASSO}
+\begin{frame}[fragile]{Sparse graphical models}
 
 \begin{itemize}[<+->]
-\item Suppose the random vector $x\in R^p$ has a multivariate normal distribution with mean $\mu$ and covariance matrix $\Sigma$. The density function of $x$ is
+\item Fact: if $x\in R^p$ follows $N(\mu,\Sigma)$, then for $i\ne j$
 \begin{align*}
-\label{eq: normalPDF}
-f(x|\mu,\Sigma) = \frac{1}{\sqrt{2\pi \det\lp \Sigma\rp}}\exp \left\{ -\frac{1}{2} (x-\mu)^T \Sigma^{-1}(x-\mu) \right\}.
+\label{eq: condIndpt}
+(x_i \prep x_j )| \{x_{\text{all but $(i,j)$}}\} \textbf{iff} (\Sigma^{-1})_{ij}=0
 \end{align*}
-
-\item Suppose we have IID $N(\nu,\Sigma)$ data $x_1,x_2,...x_n$ and we want to estimate the inverse covariance matrix $\Sigma^{-1}$. The joint likelihood of the data is
+\item This motivates us to estimate $\Sigma^{-1}$.
+\item Let $x_1,x_2,...x_n$ be IID $N(\nu,\Sigma)$ data. The joint likelihood of the data is
 \begin{align*}
 & f(x_1, \dots, x_n|\mu,\Sigma) 
 \\&= \frac{1}{(2\pi \det\lp \Sigma\rp)^{n/2}}\exp\left\{ -\frac{1}{2} \sum_{i=1}^n(x_i-\mu)^T\Sigma^{-1}(x_i-\mu) \right\}.
@@ -428,18 +428,18 @@ f(x|\mu,\Sigma) = \frac{1}{\sqrt{2\pi \det\lp \Sigma\rp}}\exp \left\{ -\frac{1}{
 
 
 %%%%%%%%%%%%%%%
-\begin{frame}[fragile]{Graphical LASSO}
+\begin{frame}[fragile]{Sparse graphical models (cont'd)}
 
 \begin{itemize}[<+->]
-\item  Taking logarithm to get the log-likelihood (and ignore constant terms):
+\item  Log-likelihood:
 \begin{align*}
-l(\mu,\Sigma^{-1}) = \frac{1}{2\log \det \lp \Sigma \rp}  -\frac{1}{2} \sum_{i=1}^n(x_i-\mu)^T\Sigma^{-1}(x_i-\mu)
+l(\mu,\Sigma^{-1}) = -\frac{n}{2}\log \det \lp \Sigma \rp  -\frac{1}{2} \sum_{i=1}^n(x_i-\mu)^T\Sigma^{-1}(x_i-\mu)
 \end{align*}
 
-\item Do a maximum likelihood estimation (optimize over $\mu$ and $S = \Sigma^{-1}$; easy to see that the MLE for $\mu$ is $\bar{X}$):
+\item Do a maximum likelihood estimation (optimize over $\mu$ and $S = \Sigma^{-1}$; easy to see that the MLE for $\mu$ is $\bar{x}$):
 
 \begin{align*}
-\max_S\left\{  \frac{1}{2}\log \det\lp S \rp  -\frac{1}{2} \sum_{i=1}^n(x_i-\mu)^T S (x_i-\mu)\right\} 
+\max_S\left\{  \frac{n}{2}\log \det\lp S \rp  -\frac{1}{2} \sum_{i=1}^n(x_i-\bar{x})^T S (x_i-\bar{x})\right\} 
 \end{align*}
 
 
@@ -448,20 +448,20 @@ l(\mu,\Sigma^{-1}) = \frac{1}{2\log \det \lp \Sigma \rp}  -\frac{1}{2} \sum_{i=1
 \end{frame}
 
 %%%%%%%%%%%%%%%
-\begin{frame}[fragile]{Graphical LASSO}
+\begin{frame}[fragile]{Sparse graphical models (cont'd)}
 
 \begin{itemize}[<+->]
-\item  Here comes the trace trick $\sum_{i=1}^n(x_i-\mu)^T S (x_i-\mu) = \textbf{Tr} (\sum_{i=1}^n (x_i-\mu)(x_i-\mu)^TS) = n\textbf{Tr}(\hat{\Sigma}S)$. We end up with the following optimization problem
+\item  Here comes the trace trick $\sum_{i=1}^n(x_i-\mu)^T S (x_i-\mu) = \textbf{Tr} (\sum_{i=1}^n (x_i-\mu)(x_i-\mu)^TS) = n\textbf{Tr}(\hat{\Sigma}S)$. We end up with the optimization problem for fitting a Gaussian graphical model:
 
 \begin{align*}
 \max_S \left\{  \log \det \lp S\rp - \textbf{Tr}\lp \hat{\Sigma}S \rp  \right\}
 \end{align*}
 
-\item Banerjee et al. (2007) propose the following optimization problem to recover the sparse structure in a gaussian graphical model
+\item  Fitting a sparse Gaussian graphical model:
 \begin{align*}
 \max_S \left\{ \log \det S - \textbf{Tr} \lp \hat{\Sigma}S \rp - \lambda ||S||_1 \right\}
 \end{align*}
-where $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$.
+where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Friedman et al. (2007). 
 
 \end{itemize}
 
@@ -477,7 +477,7 @@ where $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$.
 \end{frame}
 
 %%%%%%%%%%%%%%%
-\begin{frame}{Graphical LASSO}
+\begin{frame}{Sparse graphical models: results}
 
 \begin{figure}
   \centering
@@ -487,7 +487,7 @@ where $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$.
 \end{frame}
 
 %%%%%%%%%%%%%%%
-\begin{frame}{Graphical LASSO}
+\begin{frame}{Sparse graphical models: results}
 
 \begin{figure}
   \centering
@@ -496,7 +496,7 @@ where $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$.
 
 \end{frame}
 %%%%%%%%%%%%%%%
-\begin{frame}{Graphical LASSO}
+\begin{frame}{Sparse graphical models: results}
 
 \begin{figure}
   \centering
@@ -505,7 +505,7 @@ where $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$.
 
 \end{frame}
 %%%%%%%%%%%%%%%
-\begin{frame}{Graphical LASSO}
+\begin{frame}{Sparse graphical models: results}
 
 \begin{figure}
   \centering
@@ -514,7 +514,7 @@ where $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$.
 
 \end{frame}
 %%%%%%%%%%%%%%%
-\begin{frame}{Graphical LASSO}
+\begin{frame}{Sparse graphical models: results}
 
 \begin{figure}
   \centering
@@ -523,7 +523,7 @@ where $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$.
 
 \end{frame}
 %%%%%%%%%%%%%%%
-\begin{frame}{Graphical LASSO}
+\begin{frame}{Sparse graphical models: results}
 
 \begin{figure}
   \centering
@@ -533,7 +533,7 @@ where $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$.
 \end{frame}
 
 %%%%%%%%%%%%%%%
-\begin{frame}{Graphical LASSO}
+\begin{frame}{Sparse graphical models v.s. co-occurence}
 
  \begin{columns}[t]
  \begin{column}{0.5\textwidth}
