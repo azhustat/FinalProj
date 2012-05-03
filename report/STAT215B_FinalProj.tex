@@ -277,10 +277,12 @@ Another interesting quantities are the numbers of positive and negative words in
 
 
 %%%%%%%
-\subsection{Analysis}
-
-
+\subsection{Feature analysis}
+\subsubsection{Exploratory data analysis}
+\subsubsection{Sparse principle component analysis (SPCA)}
+\subsubsection{Sparse gaussian graphical model}
 %%%%%
+\subsection{Classification}
 \subsubsection{LASSO}
 Lasso regression is one of the most well known sparse regression methods. Lasso regression uses a L-1 norm penalty to make the regression coefficient vector beta be sparse.  The larger lambda is, the more sparse the optimal beta will be. Our resulting models yield classification rules where we take the sign of the model to indicate whether it is in the category we are predicting (positive sign) or not (negative sign). 
 
@@ -293,7 +295,7 @@ directly return which lambda gives us the optimal model, but rather returns the 
 To look at which words were most relevant to each category we modeled (positive, negative, and unidentifiable), we looked at the top 50 words based on the top 50 highest absolute beta values, the top 50 words based on the top 50 highest positive beta values, and the top 50 words based on the top 50 highest negative beta values.  The top 50 words based on the top 50 highest 
 absolute beta values tells us in general which words were most relevant to predicting that particular category.  The top 50 words based on the top 50 highest positive beta values tells us which words typically were common in posts that fell into the category observed while the top 50 words based on the top 50 highest negative beta values tells us which words typically 
 were not in posts that fell into the category observed but were rather more common in the categories outside of the one we were modeling.
-
+\subsubsection{$l_1$-norm support vector machine}
 
 %%%%%%%%%%%%%%%%%%
 \section{Results}
