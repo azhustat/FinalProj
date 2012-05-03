@@ -375,7 +375,16 @@ A post can be text, an image, video, or other multimedia.
 
 
 %%%%%%%%%%%%%%%
-\begin{frame}{Frequency}
+\begin{frame}{Word frequency}
+\begin{itemize}[<+->]
+\item Extract the word frequency vector $x_i$ from the $i$-th post
+\item Construct the word frequency matrix $X=(x_1,...,x_n)^T$. This will be our design matrix.
+
+\end{frame}
+%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}{Word frequency visualization: matrix plot}
 
 \begin{figure}
   \centering
@@ -559,9 +568,20 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 \clearpage 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Analysis}
-
-
+\section{Classification}
+\begin{frame}
+\begin{itemize}[<+->]
+\item $x_i\in R^{p}$ be the $i$-th row of $X$
+\item $y_i$ the corresponding category. Assume $y_i\in\{-1,+1\}$, where $+1$ can have the following meanings:
+  \begin{itemize}[<+->]
+    \item positive opinion towards Han Han; 
+    \item negative opinion towards Han Han; 
+    \item netural or unidentifiable opinion; 
+    \item spam. 
+\end{itemize}
+\item Two classification methods: LASSO and $l_1$-norm SVM.
+\end{itemize}
+\end{frame}
 %%%%%%%%%%%%%%%
 \subsection{LASSO}
 
@@ -739,7 +759,7 @@ where $z_+ = \max(0,z)$.
 \begin{frame}[fragile]{$l_1$-Norm Support Vector Machine}
 
 \begin{itemize}[<+->]  
-\item Replacing the $l_2$-norm by $l_1$-norm yields the sparse SVM:
+\item Replacing the $l_2$-norm by $l_1$-norm yields the sparse SVM (Zhu et al 2003):
 \begin{align*}
 \min_{\beta_0,\beta} \left\{ \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \lambda ||\beta||_1\right\}. 
 \end{align*}
@@ -749,6 +769,48 @@ where $z_+ = \max(0,z)$.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%
+\begin{frame}{Positive v.s. Nonpositive classification result}
+
+\begin{itemize}[<+->]
+\item +1: positive opinion;
+\item -1: non-positive opinion, including negative, neutral and spam.
+\item Cross validation result: 
+  \begin{itemize}[<+->]
+  \item training sample misclassification rate: 16.9\%
+  \item testing sample misclassification rate: 28.2\%
+  \end{itemize}
+
+\end{itemize}
+
+
+% put the table here
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%
+\begin{frame}{Negative v.s. Nonnegative classification result}
+\begin{itemize}[<+->]
+\item +1: negative opinion;
+\item -1: non-negative opinion, including positive, neutral and spam.
+\item Cross validation result: 
+  \begin{itemize}[<+->]
+  \item training sample misclassification rate: 6.4\%
+  \item testing sample misclassification rate: 11.5\%
+  \end{itemize}
+
+\end{itemize}
+
+%put the table here
+\end{frame}
+
+%%%%%%%%%%%%%%%
+\begin{frame}{LASSO v.s. $l_1$-norm SVM}
+
+
+\end{frame}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Further Work}
 
