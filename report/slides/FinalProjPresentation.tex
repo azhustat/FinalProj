@@ -623,7 +623,7 @@ where $||S||_1 = \sum_{i,j}|s_{ij}|$. See, e.g. Banerjee et al. (2007) and Fried
 \item $y_i$: the corresponding category. Assume $y_i\in\{-1,+1\}$, where the $+1$ can have one (and only one) of the following meanings (at a time):
   \begin{itemize}[<+->]
     \item positive feeling about Han Han
-    \item negative feeling Han Han 
+    \item negative feeling about Han Han 
     \item netural or unidentifiable opinion 
     \item spam
 \end{itemize}
@@ -855,13 +855,16 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 韩少 & 1.969 & 顶 & 1.803 & 四娘 & 1.762\\
 (Master Han) & & (support) & & (GUO Jingming) & \\\hline
 \end{tabular}
+\begin{center} 
 $l_1$-SVM word images for the positive v.s. positive classification.
+\end{center}
 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%
 \begin{frame}{Negative v.s. Nonnegative Classification Result}
+\footnotesize
 \begin{itemize}[<+->]
 \item $+1$: negative opinion;
 \item $-1$: non-negative opinion, including positive, neutral and spam.
@@ -873,6 +876,8 @@ $l_1$-SVM word images for the positive v.s. positive classification.
 
 \end{itemize}
 
+
+\vspace{-3pt}
 %put the table here
 \tiny
 \begin{tabular}{|c|c||c|c||c|c|}
@@ -892,17 +897,22 @@ somebody's & & somebody's  &  & &  \\
 骗子 & 1.301 & 公开 & 1.220 & 热点 & 1.101\\
 (liar) & & (open) & & (hot interest) & \\\hline
 \end{tabular}
+\begin{center}
 $l_1$-SVM word images for the negative v.s. nonnegative classification.
+\end{center}
 
 \end{frame}
 
 %%%%%%%%%%%%%%%
 \begin{frame}{$l_1$-Norm SVM v.s. LASSO}
+
+\begin{center}
 Positive v.s. Nonpositive Classification Results
 
 Positive coefficients
+\end{center}
 
-\small
+\footnotesize
 \begin{center}
 \begin{tabular}{|c|c||c|c|}
 \hline
