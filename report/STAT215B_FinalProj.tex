@@ -284,29 +284,37 @@ Another interesting quantities are the numbers of positive and negative words in
 
 %%%%%%%
 \subsection{Feature analysis}
-It is of interest to study the relation between words or phrases in the posts. We base our study on the frequency matrix $X\in R^{n\times p}$, where the entry of the matrix $x_{ij}$ stores the frequency of occurencies of the $j$-th word(or phrase) in the $i$-th post. We include only words or phrases that have total occurence of at least 10 times over all 3000 posts. Analyzing the feature matrix $X$ can help us better understand word usage and identify possible cluster in the feature space. 
+It is of interest to study the relation between words or phrases in the posts. In what follows, we will base our analysis on the frequency matrix $X\in R^{n\times p}$, where the entry $x_{ij}$ stores the frequency of occurencies of the $j$-th word(or phrase) in the $i$-th post. We include only words or phrases that have total occurence of at least 10 times over all 3000 posts. Analyzing feature relation can help us better understand word usage and identify possible cluster in the feature space. 
 
-plot the frequency matrix here. in the notes below the frequency matrix, comment on the sparsity of the data.
+\note{ To Angie:plot the transpose of the frequency matrix here. 
+
+Also to Christine: in the notes below the frequency matrix, comment on the sparsity of the data. then point out the need to use high dimension tools in the later-on section.
+}
 
 One way to study the word usage relation is to look at the cooccurence between any two pair of words. Denote by $C$ the cooccurence matrix, where the entry $c_{ij}$ records the number of cooccurences of the $i$-th and the $j$-th word in the same post. Figure XX and XX give the matrix plot and the network plot of the top 50 most frequent phrases. 
 
 \note{
 To Angie: include plots of the comatrix, both matrixplot and the network plot; 
-To Christine: comment on sparsity and network structure} 
+To Christine: comment on sparsity and the network structure} 
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Sparse principal component analysis (SPCA)}
-Principal component analysis (PCA) is a standard approach for feature extraction and dimension reduction. In high dimensional setting, Zou et al (2006) suggest the following variant of the traditional PCA:
+Principal component analysis (PCA) is a standard approach for feature extraction and dimension reduction. In high dimensional setting, Zou et al (2006) \cite{ZouSpca} suggest the following variant of the traditional PCA:
 \begin{align}
 (A,B) & = \arg \min_{A,B} \left \{ \sum_{i=1}^n||x_i-AB^Tx_i||_2^2 + \lambda \sum_{j=1}^k||\beta_j||^2 + \sum_{j=1}^k\lambda_{1,j}||\beta_j||_1 \right\} \\ 
 \text{subject to } & A^TA = I_{k}. \nonumber
 \end{align}
-In the above formulation, only the first $k$ leading principal components are kept, with the corresponding loading matirx $B = (\beta_1,...,\beta_k) \in R^{p\times k}$. The $x_i$'s are required to be demeaned. The same $\lambda$ is used to penalized the square $l_2$ norm of the all the loading coefficients whereas different regularization parameters $\lambda_{1,j}$ are used for the $l_1$ norm of the loadings. To solve the SPCA problem, we use the efficient algorithm by Zou et al (2006). The results of finding $k=3$ principal components are summarized in Table XX.
+In the above formulation, only the first $k$ leading principal components are kept, with the corresponding loading matirx $B = (\beta_1,...,\beta_k) \in R^{p\times k}$. The feature vector $x_i$'s are required to be demeaned. The same $\lambda$ is used to penalized the square $l_2$ norm of the all the loading coefficients whereas different regularization parameters $\lambda_{1,j}$ are used for the $l_1$ norm of the loadings. To solve the SPCA problem, we use the efficient algorithm proposed by Zou et al (2006). 
 
-Comments on the result here. 
+By doing a sparse PCA, we hope to find possible principal components that can summarized the 3000 posts we collected. For simplicity, we set the number of principal component $k=3$ and tune for the regularization parameters. The results are summarized in Table XX.
 
 
-Table here.
+Table here. simply include the words; no need the coefficients
+
+
+Comments on the result here: it is easy to see that the first principal seems to be about the writing of Han Han; the second column is related to the fact that the fraud-crusader Fang Zhouzi suspects the authorship of HanHan's works; the third is about the death threat to Han Han. These three components correspond to three major aspects of Han Han that are known to us. 
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Sparse graphical models}
@@ -320,18 +328,21 @@ If the number of features $p$ is large, certain regularization is needed to cont
 \label{eq:gLasso}
 \max_S \left\{ \log \det S - \textbf{Tr} \lp \hat{\Sigma}S \rp - \lambda ||S||_1 \right\}
 \end{align}
-where $\Sigma$ is the covariance matrix of the data/design matrix $X$ and $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$. To solve for $S$, Banerjee et al (2007) propose a block coordinate ascent method (COVSEL) (updating one row and one column of $S$ at one time). Their approach is exact but is time consuming. Meinshausen and Buhlmann (2006) uses an approximation approach that is substantially faster. In our study, we adopt the fast and accurate graphical LASSO procedure (R package glasso) by Friedman et al (2007). Figure XX shows the word usage network by fitting a sparse graphical model.
+where $\Sigma$ is the covariance matrix of the data/design matrix $X$ and $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$. To solve for $S$, Banerjee et al (2007) propose a block coordinate ascent method (COVSEL) (updating one row and one column of $S$ at one time). Their approach is exact but is time consuming. Meinshausen and Buhlmann (2006) uses an approximation approach that is substantially faster. In our study, we adopt the fast and accurate graphical LASSO procedure (R package glasso) by Friedman et al (2007). Figure XX shows the word usage network by fitting a sparse graphical model. Due to space limit, only the top 50 most frequent words are shown.
 
 \note{lambda = 0.01 plot here.}
- 
-A comparison of the cooccurence network and sparse graphical model: the cooccurence network is heavily influenced by usage frequency of words. For example, "bu''(the negation word) and "Han han''(Han Han) are strongly connected in the cooccurence network, but this might not imply that there is an nontrivial relation between these two words. Sparse graphical models, on the other hand, give more interpretable results. For example, ``bu'' and "han han'' are not longer heavily connected; in addition, some interesting word combinations are revealed: the word "GuangMing'' and ``LeiLuo'' are  
+The network plot of the estimated inverse covariance matrix $S$. As discussed, an edge (i.e. $S_{ij}\nq0$) represents conditional dependency between two nodes given all the other nodes. Red edges indicate positive correlated occurence $S_{ij}<0$ (Given all other words, word $i$ is more likely to occur if word $j$ is observed) and black edges indicate negative correlated occurence $S_{ij}>0$. Edge width is proportional to $|S_{ij}|$, representing the strength of the tie.
+
+
+A comparison of the cooccurence network and sparse graphical model: the cooccurence network is heavily influenced by usage frequency of words. For example, "bu''(the negation word) and "Han han''(Han Han) are strongly connected in the cooccurence network, but this might not imply that there is an nontrivial relation between these two words. Sparse graphical models, on the other hand, give more interpretable results. For example, ``bu'' and "han han'' are not longer heavily connected; in addition, some interesting word combinations are revealed: the word "GuangMing'' and ``LeiLuo'' are words that constitute the name of the Han Han's new book Light and Upright; and the clique form by ``FangZhouZi'',''suspect'' and  ``HanHan'' seems to reveal the fact that Fang suspects Hanhan has a ghost writer. Other obvious relation revealed include "death'' and ``threat''; ``buy'' and ``book''; ``write'' and ``article'' etc.
+
 %%%%%
 \subsection{Classification}
 We are also interested in classifying the posts into different categories. Let $x_i\in R^{p}$ be the $i$-th row of the frequency matrix $X$ and $y_i$ the corresponding category. For simplicity, let us assume that $y_i\in\{-1,+1\}$ is binary, where the ``+1'' can be used to label the following four categories: 1) positive opinion towards Han Han; 2) negative opinion towards Han Han; 3) netural or unidentifiable opinion; 4) spam and we use ``-1'' to label the complement of the inividual category (e.g. if ``+1'' means positive, ``-1'' would mean anything but positive. Note that the complement of positive is not negative, but rather, the union of negative, neutral and spam). For each of the above four cases, we apply LASSO and $l_1$-norm support vector machine to classify the data points into ``-1'' and ``+1''.  
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Sparse regression with the LASSO}
-The LASSO (Tibshirani, 1996) is a sparse regression method which adds a $l_1$-norm penalty to the linear least squares objetive to promote sparsity in the regression coefficients:
+The LASSO (Tibshirani, 1996 \cite{Tibs}) is a sparse regression method which adds a $l_1$-norm penalty to the linear least squares objetive to promote sparsity in the regression coefficients:
 \begin{align}
 \label{eq:Lasso}
 \hat{\beta}(\lambda) = \arg \min_\beta \frac{1}{2}||y-(\beta_0+X\beta)||_2^2 + \lambda ||\beta||_1
@@ -343,7 +354,7 @@ To look at which words were most relevant to each category we modeled (positive,
 Since the estimated $\beta$ depend on the regularization parameter, we are left with the issue of choose the ``best'' $\lambda$. A commonly used approach is to do a grid search for $\lambda$: for each value of $\lambda$, do a 10-fold cross validation; then choose the $\lambda$ that yields the smallest cross validation testint sample error. For this purpose, we used the approach least-angle regression (LARS) by Efron et al (2007) to do the model selection. Their R package lars efficiently fits an entire lasso sequence with the least squares loss function. The results are summarized in Table XX-XX.
 
 \note{
-To Angie: include the one of the CV plot here; and include the others in the appendix.
+To Angie: include the one of the CV plot here(the positive case); and include the others in the appendix.
 
 To Christine: shorten the following paragraphs...just give some examples for the positive and negative part.
 change 20 to 5, and say the complete lists of words can be found in the appendix
