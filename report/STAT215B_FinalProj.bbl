@@ -51,4 +51,46 @@
 \newblock {\em Synthesis Lectures on Human Language Technologies 2}, 1 (2009),
   1--148.
 
+\bibitem{Laurent}
+{\sc LAURENT EL GHAOUI, GUAN-CHENG LI, VIET-AN DUONG, VU PHAM,
+ASHOK SRIVASTAVA, and KANISHKA BHADURI. }
+\newblock Sparse machine learning methods for understanding large text corpora
+\newblock {\em Proc.\ Conference on Intelligent Data Understanding}, 1 (2011).
+
+\bibitem{ZouSpca}
+{\sc Hui Zou, Trevor Hastie, Robert Tibshirani.}
+\newblock Sparse Principal Component Analysis
+\newblock {\em Journal of computational statistics and graphics}, (2006).
+
+\bibitem{WainJordan}
+{\sc Wainright M and Jordan M.}
+\newblock Graphical Models, Variational Methods and Message-Passing. 
+\newblock {\em Foundations and Trends in Machine Learning}, (2003).
+
+\bibitem{Banerjee}
+{\sc O.Banerjee and L. {El Ghaoui} and A. {d'Aspremont}}
+\newblock Model Selection Through Sparse Maximum Likelihood Estimation for Multivariate Gaussian or Binary Data.
+\newblock {\em Journal of Machine Learning Research}, (2008).
+
+\bibitem{MeiBuh}
+{\sc Meinshausen N. and Bühlmann P.}
+\newblock High-dimensional graphs and variable selection with the Lasso
+\newblock {\em Annals of Statistics}. (2006).
+
+\bibitem{HastieSVM}
+{\sc Trevor Hastie and Robert Tibshirani and Saharon Rosset and Ji Zhu.}
+\newblock The Entire Regularization Path for the Support Vector Machine.
+\newblock {\em The Journal of Machine Learning Research}. (2004).
+
+\bibitem{ZhuSVM}
+{\sc Ji Zhu, Saharon Rosset, Trevor Hastie, Rob Tibshirani.}
+\newblock 1-norm Support Vector Machines.
+\newblock {\em NIPS}. (2003).
+
+\bibitem{Fung}
+{\sc G. Fung and O. L. Mangasarian. }
+\newblock A Feature Selection Newton Method for Support Vector Machine Classification
+\newblock {\em Data Mining Institute, Computer Sciences Department, University of Wisconsin}. (2002)
+
+
 \end{thebibliography}
