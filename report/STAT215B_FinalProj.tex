@@ -284,61 +284,36 @@ Another interesting quantities are the numbers of positive and negative words in
 
 %%%%%%%
 \subsection{Feature analysis}
-It is of interest to study the relation between features, i.e. in our case, the relation between words in tweets. We shall base our study on the frequency matrix $X\in R^{n\times p}$, where the entry of the matrix $x_{ij}$ stores the times of occurence of the $j$-th word in the $i$-th post. Analyzing the feature matrix $X$ can help us understand the word usage better and identify possible cluster in feature space. 
+It is of interest to study the relation between words or phrases in the posts. We base our study on the frequency matrix $X\in R^{n\times p}$, where the entry of the matrix $x_{ij}$ stores the frequency of occurencies of the $j$-th word(or phrase) in the $i$-th post. We include only words or phrases that have total occurence of at least 10 times over all 3000 posts. Analyzing the feature matrix $X$ can help us better understand word usage and identify possible cluster in the feature space. 
 
-Our observation matrix is the frequency matrix of dimension 756x3000. The columns represent each post and the rows represent 756 phrases.  These 756 phrases have total occurance of at least 10 times over all 3000 posts and do not include stop words and negation words. Each element of the observation matrix represents the total number of times that particular word (indicated by row) occurrs in that post (indicated by column). Using 10 fold cross validation, we searched for the optimal regularization parameter. 
+plot the frequency matrix here. in the notes below the frequency matrix, comment on the sparsity of the data.
 
-plot the frequency matrix here.
+One way to study the word usage relation is to look at the cooccurence between any two pair of words. Denote by $C$ the cooccurence matrix, where the entry $c_{ij}$ records the number of cooccurences of the $i$-th and the $j$-th word in the same post. Figure XX and XX give the matrix plot and the network plot of the top 50 most frequent phrases. 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Exploratory data analysis}
-converting frequency matrix to cooccurence matrix. 
-
-include plots of the co matrix, both matrixplot and the network plot 
+include plots of the co matrix, both matrixplot and the network plot; comment on sparsity and network structure 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Sparse principal component analysis (SPCA)}
-Following Zou et al (2006):
+Principal component analysis (PCA) is a standard approach for feature extraction and dimension reduction. In high dimensional setting, Zou et al (2006) suggest the following variant of the traditional PCA:
 \begin{align}
 (A,B) & = \arg \min_{A,B} \left \{ \sum_{i=1}^n||x_i-AB^Tx_i||_2^2 + \lambda \sum_{j=1}^k||\beta_j||^2 + \sum_{j=1}^k\lambda_{1,j}||\beta_j||_1 \right\} \\ 
 \text{subject to } & A^TA = I_{k}. \nonumber
 \end{align}
+In the above formulation, only the first $k$ leading principal components are kept, with the corresponding loading matirx $B = (\beta_1,...,\beta_k) \in R^{p\times k}$. The $x_i$'s are required to be demeaned. The same $\lambda$ is used to penalized the square $l_2$ norm of the all the loading coefficients whereas different regularization parameters $\lambda_{1,j}$ are used for the $l_1$ norm of the loadings. To solve the SPCA problem, we use the efficient algorithm by Zou et al (2006). The results of finding $k=3$ principal components are summarized in Table XX.
 
-table here. Some explanations here as well.
+Comments on the result here. 
+
+
+Table here.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Sparse gaussian graphical model}
-Some review on a Gaussian graphical model. maximum likelihood estimate of the inverse covariance matrix. 
-Suppose the random vector $x\in R^p$ has a multivariate normal distribution with mean $\mu$ and covariance matrix $\Sigma$. The density function of $x$ is
-\begin{align}
-\label{eq: normalPDF}
-f(x|\mu,\Sigma) = \frac{1}{\sqrt{2\pi \det\lp \Sigma\rp}}\exp \left\{ -\frac{1}{2} (x-\mu)^T \Sigma^{-1}(x-\mu) \right\}.
-\end{align}
-Suppose we have IID $N(\nu,\Sigma)$ data $x_1,x_2,...x_n$ and we want to estimate the inverse covariance matrix $\Sigma^{-1}$. The joint likelihood of the data is
-\begin{align}
-\label{eq: like}
-f(x_1, \dots, x_n|\mu,\Sigma) = \frac{1}{(2\pi \det\lp \Sigma\rp)^{n/2}}\exp\left\{ -\frac{1}{2} \sum_{i=1}^n(x_i-\mu)^T\Sigma^{-1}(x_i-\mu) \right\}.
-\end{align}
-Taking logarithm to get the log-likelihood (and ignore constant terms):
-\begin{align}
-\label{eq: loglike}
-l(\mu,\Sigma^{-1}) = \frac{1}{2\log \det \lp \Sigma \rp}  -\frac{1}{2} \sum_{i=1}^n(x_i-\mu)^T\Sigma^{-1}(x_i-\mu).
-\end{align}
-Then we can do a maximum likelihood estimation (optimize over $\mu$ and $S = \Sigma^{-1}$; easy to see that the MLE for $\mu$ is $\bar{X}$ exponential family, MOM = MLE, so just plug in $\bar{X}$ for $\mu$):
-
-\begin{align}
-\label{eq: loglike}
-\max_S\left\{  \frac{1}{2}\log \det\lp S \rp  -\frac{1}{2} \sum_{i=1}^n(x_i-\mu)^T S (x_i-\mu)\right\}. 
-\end{align}
-
-Here comes the trace trick $\sum_{i=1}^n(x_i-\mu)^T S (x_i-\mu) = \textbf{Tr} (\sum_{i=1}^n (x_i-\mu)(x_i-\mu)^TS) = \textbf{Tr}(\hat{\Sigma}S)$. We end up with the following optimization problem
-
+\subsubsection{Sparse graphical models}
+Graphical models are commonly used in machine learning to study the relation between random variables (See, for example, Wainwright and Jordan (2006)). Here we consider undirected graphical representation of random variables. Each node of the graph represents a random variable. An edge connecting two nodes represents the conditional dependency between the two random variables given all other random variables (The missing of an edge indicates conditional independency). If, in addition, the joint distribution of the random variables is a multivarite normal with mean $\mu$ and covariance matrix $\Sigma$, then the $i$-th node and $j$-th node are conditionally independent (or, equivalently, missing an edge) if and only if $(\Sigma^{-1})_{ij} = 0$. Therefore, given data $x_1,x_2,...,x_n\in R^p$, to explore the relation between features, we can estimate the inverse covariance matrix by computing the MLE:   
 \begin{align}
 \label{eq:mle}
-\max_S \left\{  \log \det \lp S\rp - \textbf{Tr}\lp \hat{\Sigma}S \rp  \right\}
+\max_S \left\{  \log \det \lp S\rp - \textbf{Tr}( \hat{\Sigma}S)  \right\}
 \end{align}
-
-if the number of features $p$ is large, want to do model selection... So Banerjee et al. (2007) propose the following optimization problem to recover the sparse structure in a gaussian graphical model
+If the number of features $p$ is large, certain regularization is needed to control the number of edges. Banerjee et al. (2007) propose the following optimization problem to recover the sparse structure in a gaussian graphical model
 \begin{align}
 \label{eq:gLasso}
 \max_S \left\{ \log \det S - \textbf{Tr} \lp \hat{\Sigma}S \rp - \lambda ||S||_1 \right\}
