@@ -19,7 +19,7 @@ except IOError:
 	sys.exit(1)
 
 # words with frequency >= 10 
-fwl = codecs.open("../selectedwords.txt", "r", "utf-8") 
+fwl = codecs.open("selectedwords.txt", "r", "utf-8") 
 wlist = []
 for word in fwl.readlines():
 	wlist.append( word.strip() )	 
