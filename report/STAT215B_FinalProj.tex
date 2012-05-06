@@ -307,13 +307,18 @@ Principal component analysis (PCA) is a standard approach for feature extraction
 \end{align}
 In the above formulation, only the first $k$ leading principal components are kept, with the corresponding loading matirx $B = (\beta_1,...,\beta_k) \in R^{p\times k}$. The feature vector $x_i$'s are required to be demeaned. The same $\lambda$ is used to penalized the square $l_2$ norm of the all the loading coefficients whereas different regularization parameters $\lambda_{1,j}$ are used for the $l_1$ norm of the loadings. To solve the SPCA problem, we use the efficient algorithm proposed by Zou et al (2006). 
 
-By doing a sparse PCA, we hope to find possible principal components that can summarized the 3000 posts we collected. For simplicity, we set the number of principal component $k=3$ and tune for the regularization parameters. The results are summarized in Table XX.
+By doing a sparse PCA on the frequency matrix, we hope to find possible principal components that can summarized the 3000 posts we targeted. For simplicity, we set the number of principal component $k=3$ and tune for the regularization parameters. The results are summarized in Table XX.
 
 
-Table here. simply include the words; no need the coefficients
+1st PC top abs.coef.   2nd PC top abs.coef    3rd PC top abs.coef
+     韩寒(Han Han)           方舟子(Fang Zhouzi)     死亡(death)
+     韩少(Master Han)         够(enough)              韩(Han)
+     写 (write)              质疑(suspect)           威胁(Threat)
+     真 (truth)                韩(Han)                倒(oppose)
+     死亡 (death)              事(event)             网友(netizen)
+Table XX: Sparse PCA results on the frequency matrix.
 
-
-Comments on the result here: it is easy to see that the first principal seems to be about the writing of Han Han; the second column is related to the fact that the fraud-crusader Fang Zhouzi suspects the authorship of HanHan's works; the third is about the death threat to Han Han. These three components correspond to three major aspects of Han Han that are known to us. 
+It is easy to see that the first principal seems to be about the writing of Han Han; the second column is related to the fact that the fraud-crusader Fang Zhouzi suspects the authorship of HanHan's works; the third is about the death threat to Han Han. These three components correspond to three major aspects of Han Han that are known to us. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -563,7 +568,22 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline\h
 \end{center}
 \end{table}
 
+\subsubsection{Test set misclassification rates}
+To compare the classification performance, we use the best fitted models discussed above to classify the a test set of 500 posts. Recall that the best models are selected to minimize the 10-fold cross validation error. Table XX shows the frequency count of each category in the 500 posts and Table XX summarizes the test results. 
 
+
+positive negative neutral spam
+ 172       36      287     5
+Table XX: counts of posts in each of the four categories in the 500 test posts.
+
+                postive  negative   neutral      spam
+sentiment score
+assignment
+LASSO               22.6\%      7\%      33.6\%        1\%
+l1-svm              22.6\%      8\%      33.4\%        1\%
+Table XX: misclassification rates of the three methods for each of the four categories
+
+It can be seen that the two standard machine learning methods produce very similar results. Also notice the low misclassification rates in the negative and spam categories, which might due to the fact that it is not common to see the posts that belong to those two categories in our test set.
 %%%%%%%%%%%%%%%%%%
 \section{Discussion}
 
