@@ -1,0 +1,6 @@
+LASSO misclassification rate
+postive  negative   neutral      spam
+ 22.6 %      7%      33.6%        1%
+l1-svm misclassification rate
+positive negative   neutral      spam
+ 22.6%      8%        33.4%       1%
