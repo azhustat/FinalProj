@@ -286,16 +286,16 @@ Another interesting quantities are the numbers of positive and negative words in
 \subsection{Feature analysis}
 It is of interest to study the relation between words or phrases in the posts. In what follows, we will base our analysis on the frequency matrix $X\in R^{n\times p}$, where the entry $x_{ij}$ stores the frequency of occurencies of the $j$-th word(or phrase) in the $i$-th post. We include only words or phrases that have total occurence of at least 10 times over all 3000 posts. Analyzing feature relation can help us better understand word usage and identify possible cluster in the feature space. 
 
-\note{ To Angie:plot the transpose of the frequency matrix here. 
-
-Also to Christine: in the notes below the frequency matrix, comment on the sparsity of the data. then point out the need to use high dimension tools in the later-on section.
-}
+%\note{ To Angie:plot the transpose of the frequency matrix here. 
+%
+%Also to Christine: in the notes below the frequency matrix, comment on the sparsity of the data. then point out the need to use high dimension tools in the later-on section.
+%}
 
 One way to study the word usage relation is to look at the cooccurence between any two pair of words. Denote by $C$ the cooccurence matrix, where the entry $c_{ij}$ records the number of cooccurences of the $i$-th and the $j$-th word in the same post. Figure XX and XX give the matrix plot and the network plot of the top 50 most frequent phrases. 
 
-\note{
-To Angie: include plots of the comatrix, both matrixplot and the network plot; 
-To Christine: comment on sparsity and the network structure} 
+%\note{
+%To Angie: include plots of the comatrix, both matrixplot and the network plot; 
+%To Christine: comment on sparsity and the network structure} 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -330,8 +330,8 @@ If the number of features $p$ is large, certain regularization is needed to cont
 \end{align}
 where $\Sigma$ is the covariance matrix of the data/design matrix $X$ and $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$. To solve for $S$, Banerjee et al (2007) propose a block coordinate ascent method (COVSEL) (updating one row and one column of $S$ at one time). Their approach is exact but is time consuming. Meinshausen and Buhlmann (2006) uses an approximation approach that is substantially faster. In our study, we adopt the fast and accurate graphical LASSO procedure (R package glasso) by Friedman et al (2007). Figure XX shows the word usage network by fitting a sparse graphical model. Due to space limit, only the top 50 most frequent words are shown.
 
-\note{lambda = 0.01 plot here.}
-The network plot of the estimated inverse covariance matrix $S$. As discussed, an edge (i.e. $S_{ij}\nq0$) represents conditional dependency between two nodes given all the other nodes. Red edges indicate positive correlated occurence $S_{ij}<0$ (Given all other words, word $i$ is more likely to occur if word $j$ is observed) and black edges indicate negative correlated occurence $S_{ij}>0$. Edge width is proportional to $|S_{ij}|$, representing the strength of the tie.
+%\note{lambda = 0.01 plot here.}
+The network plot of the estimated inverse covariance matrix $S$. As discussed, an edge (i.e. $S_{ij}\neq 0$) represents conditional dependency between two nodes given all the other nodes. Red edges indicate positive correlated occurence $S_{ij}<0$ (Given all other words, word $i$ is more likely to occur if word $j$ is observed) and black edges indicate negative correlated occurence $S_{ij}>0$. Edge width is proportional to $|S_{ij}|$, representing the strength of the tie.
 
 
 A comparison of the cooccurence network and sparse graphical model: the cooccurence network is heavily influenced by usage frequency of words. For example, "bu''(the negation word) and "Han han''(Han Han) are strongly connected in the cooccurence network, but this might not imply that there is an nontrivial relation between these two words. Sparse graphical models, on the other hand, give more interpretable results. For example, ``bu'' and "han han'' are not longer heavily connected; in addition, some interesting word combinations are revealed: the word "GuangMing'' and ``LeiLuo'' are words that constitute the name of the Han Han's new book Light and Upright; and the clique form by ``FangZhouZi'',''suspect'' and  ``HanHan'' seems to reveal the fact that Fang suspects Hanhan has a ghost writer. Other obvious relation revealed include "death'' and ``threat''; ``buy'' and ``book''; ``write'' and ``article'' etc.
@@ -353,12 +353,12 @@ To look at which words were most relevant to each category we modeled (positive,
 
 Since the estimated $\beta$ depend on the regularization parameter, we are left with the issue of choose the ``best'' $\lambda$. A commonly used approach is to do a grid search for $\lambda$: for each value of $\lambda$, do a 10-fold cross validation; then choose the $\lambda$ that yields the smallest cross validation testint sample error. For this purpose, we used the approach least-angle regression (LARS) by Efron et al (2007) to do the model selection. Their R package lars efficiently fits an entire lasso sequence with the least squares loss function. The results are summarized in Table XX-XX.
 
-\note{
-To Angie: include the one of the CV plot here(the positive case); and include the others in the appendix.
-
-To Christine: shorten the following paragraphs...just give some examples for the positive and negative part.
-change 20 to 5, and say the complete lists of words can be found in the appendix
-}
+%\note{
+%To Angie: include the one of the CV plot here(the positive case); and include the others in the appendix.
+%
+%To Christine: shorten the following paragraphs...just give some examples for the positive and negative part.
+%change 20 to 5, and say the complete lists of words can be found in the appendix
+%}
 
 For the positive responses, the top 20 most relevant words (based on taking the absolute values of the betas) returned by our model are shown in the table. As can be seen, the top 20 relevant words have an assortment of fairly neutral or positive words. The top 20 most relevant words for just the positive betas resulted in words that were very positive in nature. For example, words such as 'mature', 'support', and 'keep going' are very positive in nature and would certainly indicate a positive reaction to 韩寒. The top 20 most relevant words for just the negative betas resulted in words that showed a great dislike for 韩寒.  Words such as 'liar' indicate a negative response to the author. 
 
@@ -466,13 +466,13 @@ where $z_+ = \max(0,z)$ (the function $h(z) = (1-z)_+$ is also known as the hing
 \begin{align*}
 \label{eq:l1svm}
 \min_{\beta_0,\beta} \left\{ \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \lambda ||\beta||_1\right\}. 
-\end{align}
+\end{align*}
 We repeat the same data analysis for the text data using $l_1$-norm SVM as we did for the LASSO classification. The results are summarized in Table XX. To fit the sparse SVM, we use the matlab package {\tt lpsvm} by Fung and Mangasarian (2004) \cite{Fung}. Again, 10-fold cross validations are performed in order to select the regularization parameter $\lambda$. Again the model seems to produce plausible results. Also, the top coefficients obtained by $l_1$-norm SVM seems to be consistent with those obtained by fitting a LASSO.  
-
-\note{
-To Angie:
-include the four tables here(each of top five words)... and rest in the appendix
-}
+%
+%\note{
+%To Angie:
+%include the four tables here(each of top five words)... and rest in the appendix
+%}
 
 \begin{table}[h!]
 \caption{$l_1$-norm support vector machine results: positive category}
