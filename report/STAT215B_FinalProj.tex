@@ -118,13 +118,11 @@ columns=flexible%,
 Recent years have seen a growing interest of the analysis of text corpus from social media such as Facebook and Twitter. Gwalt et al (\cite{gawalt2010discovering}), for example, study word associations from a series new articles of NYTimes. Due to the increasing size of the corpus, modern sparse machine learning tools are needed in both text summarizing and topic classification. El Ghaoui et al. (\cite{ELDPSB:11}) gives an excellent summary of sparse learning tools that are useful in analyzing high dimension text data sets.  
 
 
-So far most of the literatures focus on the study of English text corpus. Researches on Chinese text data have been relative few. Tan and Zhang (\cite{tan2008empirical}) conduct an empirical study of sentiment analysis in Chinese documents using a combination of feature selection methods and classification method. Lee and Renganathan (\cite{lee2011chinese}) study Chinese document via a maximum entropy method. In both of the above study, the complex structure of Chinese language makes it difficult to analyze the raw text data directly. We will explore this issue more in Section 3.1. 
+So far most of the literatures focus on the study of English text corpus. Researches on Chinese text data have been relative few. Tan and Zhang (\cite{tan2008empirical}) conduct an empirical study of sentiment analysis in Chinese documents using a combination of feature selection methods and classification method. Lee and Renganathan (\cite{lee2011chinese}) study Chinese document via a maximum entropy method. In both of the above study, the complex structure of Chinese language makes it difficult to analyze the raw text data directly. We will explore this issue more in Section~\ref{subsubsec:Chinese}. 
 
 
-Due to the restriction on overseas websites such as Facebook or Twitter, domestic substitutes have become the major platforms for the internet citizens to express their opinions towards various social or political issues. Studying posts on those website thus provides interesting insights into the public opinion. For example, some events in the recent years, such as the tragic Wenzhou train collision on July 23 2011
-\footnote{For details, see \url{http://en.wikipedia.org/wiki/Wenzhou_train_collision}. }
-  and the more recent Wang Lijun incident,
-\footnote{For details, see \url{http://en.wikipedia.org/wiki/Wang_Lijun_incident}.}  
+Due to the restriction on overseas websites such as Facebook or Twitter, domestic substitutes have become the major platforms for the internet citizens to express their opinions towards various social or political issues. Studying posts on those website thus provides interesting insights into the public opinion. For instance, some events in the recent years, such as the tragic Wenzhou train collision on July 23 2011\footnote{For details, see \url{http://en.wikipedia.org/wiki/Wenzhou_train_collision}. }
+  and the more recent Wang Lijun incident,\footnote{For details, see \url{http://en.wikipedia.org/wiki/Wang_Lijun_incident}.}  
 have split the public into two major groups among which one considers the government's way of dealing with those incidences is good and one does not. 
 In principle, we can draw text data from those websites identifying whether a particular post is related to the event of interest, and which group the post should be classified into.
 
@@ -142,14 +140,11 @@ For a given topic, the ideal way to collect sample post are taking a random samp
 
 There are certain technical restrictions on API. Regarding topical searches, only the latest search results are returned. The maximum number of posts returned is 30 and our own searches typically returned about 18 posts. There is waiting time between consecutive searches. Overlapping among sets of search results is examined. Clearly the sample is time-sensitive. We preferred having a relatively short collection time so as to obtain a cross-sectional sample. Hence, the chosen topic for testing should have active discussion on Weibo. 
 
-It is well-known that China has strict Internet censorship compared to other countries. Even though the downfall of Bo Xilai
-\footnote{For more information on Bo Xilai, see \url{http://en.wikipedia.org/wiki/Bo_Xilai}.}
+It is well-known that China has strict Internet censorship compared to other countries. Even though the downfall of Bo Xilai\footnote{For more information on Bo Xilai, see \url{http://en.wikipedia.org/wiki/Bo_Xilai}.}
 was a hot topic at the time of our data collection, there were no meaningful posts on Weibo. 
-The topic we finally chose is Han Han 韩寒. 
-\footnote{For more information on Han Han, see \url{http://en.wikipedia.org/wiki/Han_Han} and {\em Han Han: China's Literary Bad Boy} by Simon Elegant Monday, published on November 02, 2009, {em Time Magazine}, \url{http://www.time.com/time/magazine/article/0,9171,1931619,00.html}.}
+The topic we finally chose is Han Han 韩寒.\footnote{For more information on Han Han, see \url{http://en.wikipedia.org/wiki/Han_Han} and {\em Han Han: China's Literary Bad Boy} by Simon Elegant Monday, published on November 02, 2009, {em Time Magazine}, \url{http://www.time.com/time/magazine/article/0,9171,1931619,00.html}.}
 Born September 23, 1982, Han Han
-is a Chinese best-selling author, professional rally driver, and  wildly  popular blogger. He published his first novel {\em Triple Gate 三重门} at the age of 17 and later dropped out of high school. Even though Han Han is famous for his criticism on social issues, he has not been heavily censored. A ghostwriting allegation against Han Han started in January 2012. Fang Zhouzi 方舟子,
-\footnote{For more information on Fang Zhouzi, see \url{http://en.wikipedia.org/wiki/Fang_Zhouzi}.}
+is a Chinese best-selling author, professional rally driver, and  wildly  popular blogger. He published his first novel {\em Triple Gate 三重门} at the age of 17 and later dropped out of high school. Even though Han Han is famous for his criticism on social issues, he has not been heavily censored. A ghostwriting allegation against Han Han started in January 2012. Fang Zhouzi 方舟子,\footnote{For more information on Fang Zhouzi, see \url{http://en.wikipedia.org/wiki/Fang_Zhouzi}.}
  a scientific author and anti-fraud crusader, created widespread debate with Han Han on the Internet regarding the ghostwriting allegation. In response to the allegation, Han Han published a photocopied manuscripts set {\em Light and Upright 光明与磊落} in April 2012, including the manuscript of his first novel {\em Triple Gate}. 
  
 Han Han received an online death threat on April 15, 2012. We collected a set of 22,398 posts on April 16 and 17, 2012. The above proper nouns and words related to the death threat appeared frequently in our data set. 
@@ -210,12 +205,11 @@ The post starts with the user identification number and time stamp. We ignore pi
 \item[Mentioning] A user may mention other users in their post by inserting their usernames preceded by the \MVAt\  symbol. The mentioned usernames may be integrated into the post. We define a set of topic-related usernames and substitute the mentioning of these usernames by the corresponding proper nouns. The other mentioned usernames are removed.
 
 \item[Emotion Symbols] Sina Weibo provides users a set of emotion symbols which are denoted with a phrase indicating its corresponding meaning surrounded by square brackets. The users may use other emotion symbols, such as ``:)'' for a smile and ``T\_T'' for a crying face. 
-The two classes of graphic characters in CJK (Chinese, Japanese and Korean) computing,
-\footnote{For more details, see \url{http://en.wikipedia.org/wiki/Halfwidth_and_fullwidth_forms}.}
+The two classes of graphic characters in CJK (Chinese, Japanese and Korean) computing,\footnote{For more details, see \url{http://en.wikipedia.org/wiki/Halfwidth_and_fullwidth_forms}.}
  namely fullwidth and halfwidth, make emotion symbols more complicated. The punctuation marks in the emotion symbols can be in either fullwidth or halfwidth, such as fullwidth ``。'' and halfwidth ``.'' for period. Thus, there are various combinations, even for a limited set of commonly used emotion symbols. A dictionary for emotion symbols is constructed manually by the authors.
  
 \item[Internet Slangs] 
-Internet slangs are a large part of Out-of-Vocabulary (OOV) words. Some substitute the characters in a word with characters that have similar pronunciations, such as ``蜀黍'' (Shu3 Shu2) for ``叔叔'' (Shu1 Shu1, means ``uncle'') and ``围脖'' (wei2 bo2, means ``scarf'') for ``微博'' Weibo (wei1 bo2). Some are popular Internet interjections, such as ``喵了个咪'' (喵: ``meow,'' 了: past tense marker, 个: universal measure word, 咪: ``mew'') which means ``dog my cats.'' Again, a dictionary for commonly used Internet slangs is constructed manually by the authors.
+Internet slangs are a large part of Out-of-Vocabulary (OOV) words. Some substitute the characters in a word with characters that have similar pronunciations, such as ``蜀黍'' (pronunciation: shu3 shu2) for ``叔叔'' (pronunciation: shu1 shu1, means ``uncle'') and ``围脖'' (pronunciation: wei2 bo2, means ``scarf'') for ``微博'' Weibo (pronunciation: wei1 bo2). Some are popular Internet interjections, such as ``喵了个咪'' (喵: ``meow,'' 了: past tense marker, 个: universal measure word, 咪: ``mew'') which means ``dog my cats.'' Again, a dictionary for commonly used Internet slangs is constructed manually by the authors.
 
 
 \item[Topic] Since the Chinese language has no explicit delimiter between words, topic words are surrounded by the pound signs {\ttfamily \#} . The topic words can be integrated into the post. 
@@ -248,7 +242,7 @@ The pre-tagging processing consists of the following steps:
 \item Duplicates are removed.
 \end{enumerate}
 
-The resulting file consists of 13,070 unique posts. A set of randomly selected 3500 posts, among which 3000 are for training and 500 for testing, will be manually tagged.
+The resulting file consists of 13,070 unique posts. A set of randomly selected 3,500 posts, among which 3,000 are for training and 500 for testing, will be manually tagged.
 
 
 
@@ -257,11 +251,11 @@ The resulting file consists of 13,070 unique posts. A set of randomly selected 3
 
 %Tagging Limitations
 
-In all, we tagged a total of 3500 Weibo posts.  We made a search for the topic we were looking into and did this over time to get a total of 22,398 Weibo posts, with 13,070 posts left after pre-processing, from which we randomly picked out 3000 posts as our training set.  We split up the posts to tag by hand.  The final 500 posts were for our test set. We had a total of four different categories that we tagged the posts as -- neutral/unidentifiable, positive, negative, and irrelevant (spam).  
+In all, we tagged a total of 3,500 Weibo posts.  We made a search for the topic we were looking into and did this over time to get a total of 22,398 Weibo posts, with 13,070 posts left after pre-processing, from which we randomly picked out 3000 posts as our training set.  We split up the posts to tag by hand.  The final 500 posts were for our test set. We had a total of four different categories that we tagged the posts as -- neutral/unidentifiable, positive, negative, and irrelevant (spam).  
 
 As we each tagged the posts, we encountered and realized some of the limitations involved. One limitation was in the fact that tagging these posts produced subjective responses.  What one of us read as a negative response to the topic we chose, another may have read as a positive response.  For example, the English phrase ``that wasn't too bad'' could be taken as positive or negative.  Positive -- the experience was better than expected; negative -- the experience wasn't great. Hence, it is difficult sometimes to truly know whether the original author of the post had in mind a negative or positive reaction to the topic he was posting about.  
 
-Another limitation was that some posts we were not sure how to tag. Many posts consisted of just a quote by the author we were looking into.  These could have been seen as positive posts since the writer may have liked the quote and so posted it. But at the same time, the author could have been neutral and was just merely using the quote to apply to a specific circumstance in his life at the time. We were not entirely sure of how to tag each of the posts that fell into this category, and so again, the subjectiveness of tagging the posts by hand comes into play as a limitation in the forming of our model.  Another uncertainty that occurred in trying to manually tag the posts was that some of the posts didn't talk about our chosen topic specifically, but a related topic.  With our chosen topic, people who had negative responses towards 韓寒 (Hanhan), were usually on the side of the opposing author who was discrediting him.  Some of the posts did not directly mention 韓寒, but would instead show support for the opposing side. With these posts, we typically labeled as a negative response.  However, an argument could be made for just throwing out those posts since they do not directly say anything about 韓寒, and they could possibly just be supporting the opposing author in his own literary works and not necessarily in his stance against 韓寒.  Another uncertainty in tagging is what to tag posts that have no subject.  There were a few posts that had nothing to do with the chosen topic at all, but there were also posts that had no subject but contained phrases such as ``Keep it up!'' and ``always a supporter!'' that could very well be taken as positive posts since our search is for our specific topic. But because there is no subject in the posts, this cannot be taken with 100\% certainty. In these instances, where there is no subject in the posts, we marked them as irrelevant to be on the conservative side in our predictions. 
+Another limitation was that some posts we were not sure how to tag. Many posts consisted of just a quote by the author we were looking into.  These could have been seen as positive posts since the writer may have liked the quote and so posted it. But at the same time, the author could have been neutral and was just merely using the quote to apply to a specific circumstance in his life at the time. We were not entirely sure of how to tag each of the posts that fell into this category, and so again, the subjectiveness of tagging the posts by hand comes into play as a limitation in the forming of our model.  Another uncertainty that occurred in trying to manually tag the posts was that some of the posts didn't talk about our chosen topic specifically, but a related topic.  With our chosen topic, people who had negative responses towards 韓寒 (Han Han), were usually on the side of the opposing author who was discrediting him.  Some of the posts did not directly mention 韓寒, but would instead show support for the opposing side. With these posts, we typically labeled as a negative response.  However, an argument could be made for just throwing out those posts since they do not directly say anything about 韓寒, and they could possibly just be supporting the opposing author in his own literary works and not necessarily in his stance against 韓寒.  Another uncertainty in tagging is what to tag posts that have no subject.  There were a few posts that had nothing to do with the chosen topic at all, but there were also posts that had no subject but contained phrases such as ``Keep it up!'' and ``always a supporter!'' that could very well be taken as positive posts since our search is for our specific topic. But because there is no subject in the posts, this cannot be taken with 100\% certainty. In these instances, where there is no subject in the posts, we marked them as irrelevant to be on the conservative side in our predictions. 
 
 These limitations in tagging will affect our model's accuracy in predicting whether a post contains a positive or negative response to the topic at hand.  These limitations also indicate to us that in general, models for predicting whether or not a social media post is negative or positive towards a chosen topic is limited greatly by the subjectiveness of the sentence's meaning and interpretation which affects the training set used to form the model. This limitation could present a potential future question to look into on how we can improve tagging -- whether we should just remove posts that have too subjective of an interpretation to tag or if by studying these types of ambiguous posts, we can create certain priors or statistical models to help in the tagging process. 
 
@@ -326,7 +320,7 @@ Note that the pre-defined stop words do not contain the following six negation w
 \end{center}
 
 
-\section{Feature Analysis}
+\section{Feature Analysis}\label{sec:feature}
 It is of interest to study the relation between words or phrases in the posts. In what follows, we will base our analysis on the frequency matrix $X\in R^{n\times p}$, where the entry $x_{ij}$ stores the frequency of occurrences of the $j$-th word(or phrase) in the $i$-th post. We include only words or phrases that have total occurrence of at least 10 times over all 3000 posts. Analyzing feature relations can help us better understand word usage and identify possible clusters in the feature space.  Figure~\ref{fig:freqmat} shows the frequency of the top 50 most frequent words in the first 50 posts.
 
 
@@ -372,7 +366,7 @@ Principal component analysis (PCA) is a standard approach for feature extraction
 \begin{align*}
 (A,B) & = \arg \min_{A,B} \left \{ \sum_{i=1}^n||x_i-AB^Tx_i||_2^2 + \sum_{j=1}^k\lambda_{j}||\beta_j||_1 \right\} \\ 
 \text{subject to } & A^TA = I_{k}. \nonumber
-\end{align}
+\end{align*}
 In the above formulation, only the first $k$ leading principal components are kept, with the corresponding loading matrix $B = (\beta_1,...,\beta_k) \in R^{p\times k}$. The feature vector $x_i$'s are required to be demeaned. Different regularization parameters $\lambda_{j}$ are used for the $l_1$ norm of the loadings. To solve the SPCA problem, we use the efficient algorithm proposed by \cite{zou2006sparse}. 
 
 %(A,B) & = \arg \min_{A,B} \left \{ \sum_{i=1}^n||x_i-AB^Tx_i||_2^2 + \lambda \sum_{j=1}^k||\beta_j||^2 + \sum_{j=1}^k\lambda_{1,j}||\beta_j||_1 \right\} \\ 
@@ -437,9 +431,9 @@ where $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$. To solve for $S$,  Banerjee et 
 \end{figure}
 \end{center}
 
-We can make a comparison between the concurrence network (Figure~\ref{fig:coocur}) and sparse graphical model (Figure~\ref{fig:glasso1}): the concurrence network is heavily influenced by usage frequency of words. For example, ``不'' (the negation word) and ``韩寒''(Han Han) are strongly connected in the concurrence network, but this might not imply that there is an nontrivial relation between these two words. Sparse graphical models, on the other hand, give more interpretable results. For example,  ``不''(the negation word) and ``韩寒''(Han Han) are not longer heavily connected. In addition, some interesting word combinations are revealed: the word ``光明'' (light) and ``磊落'' (upright) are words that constitute the name of the Han Han's new book {Light and Upright} as mentioned in Section~\ref{subsec:datacol}; and the clique form by ``方舟子'' (Fang Zhouzi),''怀疑'' (suspect) and  ``韩寒'' (Han Han) seems to reveal the fact that Fang suspects Han Han has a team of ghost writers. Other obvious relation revealed include ``死亡'' (death) and ``威胁'' (threat), ``买'' (buy) and ``书'' (book), ``写'' (write) and ``文章'' (article),  and so forth.
+We can make a comparison between the concurrence network (Figure~\ref{fig:coocur}) and sparse graphical model (Figure~\ref{fig:glasso1}): the concurrence network is heavily influenced by usage frequency of words. For example, ``不'' (the negation word) and ``韩寒''(Han Han) are strongly connected in the concurrence network, but this might not imply that there is an nontrivial relation between these two words. Sparse graphical models, on the other hand, give more interpretable results. For example,  ``不''(the negation word) and ``韩寒''(Han Han) are not longer heavily connected. In addition, some interesting word combinations are revealed: the word ``光明'' (light) and ``磊落'' (upright) are words that constitute the name of the Han Han's new book {Light and Upright} as mentioned in Section~\ref{subsec:datacol}; and the clique form by ``方舟子'' (Fang Zhouzi), ``怀疑'' (suspect) and  ``韩寒'' (Han Han) seems to reveal the fact that Fang suspects Han Han has a team of ghost writers. Other obvious relation revealed include ``死亡'' (death) and ``威胁'' (threat), ``买'' (buy) and ``书'' (book), ``写'' (write) and ``文章'' (article),  and so forth.
 
-It is also of interest to observe how the word usage network structure change as we change the regularization parameter $\lambda$. From Figure~\ref{fig:glasso1}-~\ref{fig:glasso6} in Appendix A one can see that widths of the edges weaken and the number of edges decreases. Only strong conditional dependency between two words can survive for the largest regularization parameter we try: $\lambda = 0.03$, e.g. word pairs like ``死亡'' (death) and ``威胁'' (threat), and ``方舟子'' (Fang Zhouzi) and ``韩寒'' (Han Han).  
+It is also of interest to observe how the word usage network structure change as we change the regularization parameter $\lambda$. From Figure~\ref{fig:glasso1}-~\ref{fig:glasso6} in Appendix~\ref{asec:sgm} one can see that widths of the edges weaken and the number of edges decreases. Only strong conditional dependency between two words can survive for the largest regularization parameter we try: $\lambda = 0.03$, e.g. word pairs like ``死亡'' (death) and ``威胁'' (threat), and ``方舟子'' (Fang Zhouzi) and ``韩寒'' (Han Han).  
 
 
 %The network plot of the estimated inverse covariance matrix $S$ is shown. As discussed, an edge (i.e. $S_{ij}\neq 0$) represents conditional dependency between two nodes given all the other nodes. Red edges indicate positive correlated occurence $S_{ij}<0$ (Given all other words, word $i$ is more likely to occur if word $j$ is observed) and black edges indicate negative correlated occurrence $S_{ij}>0$. Edge width is proportional to $|S_{ij}|$, representing the strength of the tie.
@@ -782,7 +776,7 @@ In this project, we developed a framework for studying public opinions using Sin
 Word usage relation has been examined. Due to the sparsity of the word frequency matrix, both sparse principle component analysis  (SPCA) and sparse graphical models are employed in our feature analysis. 
 Two standard machine learning methods, namely sparse regression with LASSO and $l_1$-norm SVM, have been applied to the training set of 3,000 posts and then the best fitted models are tested on a test set of 500 posts. These two methods have similar performance on our data set. Due to limitation in time we have not extented our study to a larger corpus. However, the sparse machine learning tools we have used in this project produce human-interpretable results and reasonable misclassification rates.
 
-Many future efforts remain to be done. One possible direction is to enlarge the scale of our study, in both time (i.e. extend the time period we do the sampling) and number of posts. In terms of sampling techniques, we would like to study random samples by sampling from large network as discussed in Section~\ref{subsec:datacol} after spams, OOV, and reposting can be handled properly. In terms of methodology, we would like to compare our LASSO and $l_1$-norm SVM methods with the popular maximum entropy approach \cite{lee2011chinese, nigam1999using}. Also, as discussed in Section~\ref{subsec:datacol}, one topic of interest is to track repostings using graphical models. Identification of OOV needs more statistical work as well.  Clearly sentiment classifier is topic-dependent and there is no reason why we should restrict our analysis on just a few famous public figures. In the future, we can collect data on more and broader topics, preferably in other domains, to test our framework.
+Many future efforts remain to be done. One possible direction is to enlarge the scale of our study, in both time (i.e. extend the time period we do the sampling) and number of posts. In terms of sampling techniques, we would like to study random samples by sampling from large network as discussed in Section~\ref{subsec:datacol} after spams, OOV, and reposting can be handled properly. In terms of methodology, we would like to compare our LASSO and $l_1$-norm SVM methods with the popular maximum entropy approach (\cite{lee2011chinese, nigam1999using}). Also, as discussed in Section~\ref{subsec:datacol}, one topic of interest is to track repostings using graphical models. Identification of OOV needs more statistical work as well.  Clearly sentiment classifier is topic-dependent and there is no reason why we should restrict our analysis on just a few famous public figures. In the future, we can collect data on more and broader topics, preferably in other domains, to test our framework.
 \clearpage
 
 \newpage
@@ -796,53 +790,57 @@ Many future efforts remain to be done. One possible direction is to enlarge the 
 \newpage
 %%%%%%%%%%%%%%%%%%
 \appendix
-\section{Sparse graphical model plots}
+
+
+%%%
+\section{Sparse Graphical Model Plots}\label{asec:sgm}
 
 \begin{center}
-\begin{figure}[tb]
+\begin{figure}[!h]
    \centering
    \includegraphics[width=0.7\textwidth]{../gLassoResults/glasso2.png} 
-      \caption{ }
+      \caption{The network plot of the estimated inverse covariance matrix $S$, with $\lambda = 0.01222$.}
    \label{fig:glasso2}
 \end{figure}
 \end{center}
 
 \begin{center}
-\begin{figure}[tb]
+\begin{figure}[!h]
    \centering
-   \includegraphics[width=0.7\textwidth]{../gLassoResults/glasso3.png} 
-      \caption{ }
+   \includegraphics[width=0.6\textwidth]{../gLassoResults/glasso3.png} 
+      \caption{The network plot of the estimated inverse covariance matrix $S$, with $\lambda = 0.01444$.}
    \label{fig:glasso3}
 \end{figure}
 \end{center}
 
 \begin{center}
-\begin{figure}[tb]
+\begin{figure}[!h]
    \centering
-   \includegraphics[width=0.7\textwidth]{../gLassoResults/glasso4.png} 
-      \caption{ }
+   \includegraphics[width=0.6\textwidth]{../gLassoResults/glasso4.png} 
+      \caption{The network plot of the estimated inverse covariance matrix $S$, with $\lambda = 0.01667$.}
    \label{fig:glasso4}
 \end{figure}
 \end{center}
 
 \begin{center}
-\begin{figure}[tb]
+\begin{figure}[!h]
    \centering
-   \includegraphics[width=0.7\textwidth]{../gLassoResults/glasso5.png} 
-      \caption{ }
+   \includegraphics[width=0.6\textwidth]{../gLassoResults/glasso5.png} 
+      \caption{The network plot of the estimated inverse covariance matrix $S$, with $\lambda = 0.02556$.}
    \label{fig:glasso5}
 \end{figure}
 \end{center}
 
 \begin{center}
-\begin{figure}[tb]
+\begin{figure}[!h]
    \centering
-   \includegraphics[width=0.7\textwidth]{../gLassoResults/glasso6.png} 
-      \caption{ }
+   \includegraphics[width=0.6\textwidth]{../gLassoResults/glasso6.png} 
+      \caption{The network plot of the estimated inverse covariance matrix $S$, with $\lambda = 0.03$.}
    \label{fig:glasso6}
 \end{figure}
 \end{center}
 
+\clearpage
 
 %%%%%
 \section{LASSO Results}
