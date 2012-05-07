@@ -28,6 +28,13 @@ Efron, B., Hastie, T., Johnstone, I., and Tibshirani, R. (2004).
 \newblock Least angle regression.
 \newblock {\em The Annals of statistics}, 32(2):407--499.
 
+\bibitem[{El Ghaoui} et~al., 2011]{ELDPSB:11}
+{El Ghaoui}, L., Li, G.-C., Duong, V.-A., Pham, V., Srivastava, A., and
+  Bhaduri, K. (2011).
+\newblock Sparse machine learning methods for understanding large text corpora.
+\newblock In {\em Proc.\ Conference on Intelligent Data Understanding}.
+\newblock Accepted for publication, July 2011.
+
 \bibitem[Friedman et~al., 2011]{Rglasso}
 Friedman, J., Hastie, T., and Tibshirani, R. (2011).
 \newblock {\em glasso: Graphical lasso- estimation of Gaussian graphical
@@ -39,6 +46,14 @@ Fung, G. and Mangasarian, O. (2004).
 \newblock A feature selection newton method for support vector machine
   classification.
 \newblock {\em Computational optimization and applications}, 28(2):185--202.
+
+\bibitem[Gawalt et~al., 2010]{gawalt2010discovering}
+Gawalt, B., Jia, J., Miratrix, L., El~Ghaoui, L., Yu, B., and Clavier, S.
+  (2010).
+\newblock Discovering word associations in news media via feature selection and
+  sparse classification.
+\newblock In {\em Proceedings of the international conference on Multimedia
+  information retrieval}, pages 211--220. ACM.
 
 \bibitem[Hastie and Efron, 2012]{Rlars}
 Hastie, T. and Efron, B. (2012).
@@ -84,6 +99,11 @@ Nigam, K., Lafferty, J., and McCallum, A. (1999).
 \newblock Using maximum entropy for text classification.
 \newblock In {\em IJCAI-99 workshop on machine learning for information
   filtering}, volume~1, pages 61--67.
+
+\bibitem[Tan and Zhang, 2008]{tan2008empirical}
+Tan, S. and Zhang, J. (2008).
+\newblock An empirical study of sentiment analysis for chinese documents.
+\newblock {\em Expert Systems with Applications}, 34(4):2622--2629.
 
 \bibitem[Tibshirani, 1996]{tibshirani1996regression}
 Tibshirani, R. (1996).
