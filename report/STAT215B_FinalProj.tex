@@ -369,13 +369,20 @@ frequency matrix.  This frequency matrix will be our design matrix for our model
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Sparse Principal Component Analysis (SPCA)}
 Principal component analysis (PCA) is a standard approach for feature extraction and dimension reduction. In high dimensional settings, \cite{zou2006sparse} suggest the following variant of the traditional PCA:
-\begin{align}
-(A,B) & = \arg \min_{A,B} \left \{ \sum_{i=1}^n||x_i-AB^Tx_i||_2^2 + \lambda \sum_{j=1}^k||\beta_j||^2 + \sum_{j=1}^k\lambda_{1,j}||\beta_j||_1 \right\} \\ 
+\begin{align*}
+(A,B) & = \arg \min_{A,B} \left \{ \sum_{i=1}^n||x_i-AB^Tx_i||_2^2 + \sum_{j=1}^k\lambda_{j}||\beta_j||_1 \right\} \\ 
 \text{subject to } & A^TA = I_{k}. \nonumber
 \end{align}
-In the above formulation, only the first $k$ leading principal components are kept, with the corresponding loading matrix $B = (\beta_1,...,\beta_k) \in R^{p\times k}$. The feature vector $x_i$'s are required to be demeaned. The same $\lambda$ is used to penalized the square $l_2$ norm of all the loading coefficients whereas different regularization parameters $\lambda_{1,j}$ are used for the $l_1$ norm of the loadings. To solve the SPCA problem, we use the efficient algorithm proposed by \cite{zou2006sparse}. 
+In the above formulation, only the first $k$ leading principal components are kept, with the corresponding loading matrix $B = (\beta_1,...,\beta_k) \in R^{p\times k}$. The feature vector $x_i$'s are required to be demeaned. Different regularization parameters $\lambda_{j}$ are used for the $l_1$ norm of the loadings. To solve the SPCA problem, we use the efficient algorithm proposed by \cite{zou2006sparse}. 
 
-By doing a sparse PCA on the frequency matrix, we hope to find possible principal components that can summarize the 3000 posts we targeted. For simplicity, we set the number of principal components $k=3$ and tune for the regularization parameters. The results are summarized in Table~\ref{tb:spca}.
+%(A,B) & = \arg \min_{A,B} \left \{ \sum_{i=1}^n||x_i-AB^Tx_i||_2^2 + \lambda \sum_{j=1}^k||\beta_j||^2 + \sum_{j=1}^k\lambda_{1,j}||\beta_j||_1 \right\} \\ 
+%\text{subject to } & A^TA = I_{k}. \nonumber
+%\end{align}
+%In the above formulation, only the first $k$ leading principal components are kept, with the corresponding loading matrix $B = (\beta_1,...,\beta_k) \in R^{p\times k}$. The feature vector $x_i$'s are required to be demeaned. The same $\lambda$ is used to penalized the square $l_2$ norm of all the loading coefficients whereas different regularization parameters $\lambda_{1,j}$ are used for the $l_1$ norm of the loadings. To solve the SPCA problem, we use the efficient algorithm proposed by \cite{zou2006sparse}. 
+
+%By doing a sparse PCA on the frequency matrix, we hope to find possible principal components that can summarize the 3000 posts we targeted. For simplicity, we set the number of principal components $k=3$ and tune for the regularization parameters. The results are summarized in Table~\ref{tb:spca}.
+
+By doing a sparse PCA on the frequency matrix, we hope to find possible principal components that can summarized the 3000 posts in the training set. For simplicity, we set the number of principal components $k=3$ and tune for the regularization parameters. The words with top loading coefficient in each of the three principal components are listed in Table~\ref{tb:spca}.
 
 \begin{table}[htb]
 \caption{Sparse PCA results on the frequency matrix ($\lambda_1=\lambda_2=\lambda_3 = 10$).}
@@ -393,14 +400,18 @@ By doing a sparse PCA on the frequency matrix, we hope to find possible principa
 \label{tb:spca}
 \end{table}%
 
+It is surprising how the above results from sparse PCA are related to our prior knowledge of the subject. The first principal seems to be about the Han Han the person and perhaps his writing; the second column is related to the fact that the fraud-crusader Fang Zhouzi suspects the authorship of HanHan's works; the third is about the death threat to Han Han. Thus all these three components seem to correspond to the three major aspects of Han Han that are known to us prior to our analysis. See Section~\ref{subsec:datacol} again.
 
 
-It is easy to see that the first principal seems to be about the writing of Han Han; the second principal is related to the fact that the fraud-crusader Fang Zhouzi suspects the authorship of HanHan's works; the third is about the death threat to Han Han. These three components correspond to three major aspects of Han Han that are known to us as discussed in Section~\ref{subsec:datacol}.
+%It is easy to see that the first principal seems to be about the writing of Han Han; the second principal is related to the fact that the fraud-crusader Fang Zhouzi suspects the authorship of HanHan's works; the third is about the death threat to Han Han. These three components correspond to three major aspects of Han Han that are known to us as discussed in Section~\ref{subsec:datacol}.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Sparse Graphical Models}
-Graphical models are commonly used in machine learning to study the relation between random variables (\cite{wainwright2008graphical}). Here we consider undirected graphical representations of random variables. Each node of the graph represents a random variable. An edge connecting two nodes represents the conditional dependency between the two random variables given all other random variables (the absence of an edge indicates conditional independency). If, in addition, the joint distribution of the random variables is a multivariate normal with mean $\mu$ and covariance matrix $\Sigma$, then the $i$-th node and $j$-th node are conditionally independent (or, equivalently, missing an edge) if and only if $(\Sigma^{-1})_{ij} = 0$. Therefore, given data $x_1,x_2,...,x_n\in R^p$, to explore the relation between features, we can estimate the inverse covariance matrix by computing the MLE:   
+%Graphical models are commonly used in machine learning to study the relation between random variables (\cite{wainwright2008graphical}). Here we consider undirected graphical representations of random variables. Each node of the graph represents a random variable. An edge connecting two nodes represents the conditional dependency between the two random variables given all other random variables (the absence of an edge indicates conditional independency). If, in addition, the joint distribution of the random variables is a multivariate normal with mean $\mu$ and covariance matrix $\Sigma$, then the $i$-th node and $j$-th node are conditionally independent (or, equivalently, missing an edge) if and only if $(\Sigma^{-1})_{ij} = 0$. Therefore, given data $x_1,x_2,...,x_n\in R^p$, to explore the relation between features, we can estimate the inverse covariance matrix by computing the MLE:   
+
+Undirected graphical models are commonly used in machine learning to study the relation between random variables (\cite{wainwright2008graphical}). Each node of the graph represents a random variable and an edge connecting two nodes represents the conditional dependency between the two random variables given all other random variables (and the missing of an edge indicates conditional independency). If, in addition, the joint distribution of the random variables is a multivariate normal with mean $\mu$ and covariance matrix $\Sigma$, then the $i$-th node and $j$-th node are conditionally independent (or, equivalently, missing an edge) if and only if $(\Sigma^{-1})_{ij} = 0$. Therefore, given data $x_1,x_2,...,x_n\in R^p$, to explore the relation between features, we can estimate the inverse covariance matrix by computing the MLE:   
+
 \begin{align}
 \label{eq:mle}
 \max_S \left\{  \log \det \lp S\rp - \textbf{Tr}( \hat{\Sigma}S)  \right\}
@@ -410,7 +421,10 @@ If the number of features $p$ is large, certain regularization is needed to cont
 \label{eq:gLasso}
 \max_S \left\{ \log \det S - \textbf{Tr} \lp \hat{\Sigma}S \rp - \lambda ||S||_1 \right\}
 \end{align}
-where $\Sigma$ is the covariance matrix of the data/design matrix $X$ and $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$. To solve for $S$,  Banerjee et al. (\cite{banerjee2008model}) propose a block coordinate ascent method (COVSEL) (updating one row and one column of $S$ at one time). Their approach is exact but also time consuming. Meinshausen and Buhlmann (\cite{meinshausen2006high}) use an approximation approach that is substantially faster. In our study, we adopt the fast and accurate graphical LASSO procedure ({\sffamily R} package {\sffamily glasso}, \cite{Rglasso}). Figure~\ref{fig:glasso1} shows the word usage network by fitting a sparse graphical model. Due to space limit, only the top 50 most frequent words are shown.
+%where $\Sigma$ is the covariance matrix of the data/design matrix $X$ and $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$. To solve for $S$,  Banerjee et al. (\cite{banerjee2008model}) propose a block coordinate ascent method (COVSEL) (updating one row and one column of $S$ at one time). Their approach is exact but also time consuming. Meinshausen and Buhlmann (\cite{meinshausen2006high}) use an approximation approach that is substantially faster. In our study, we adopt the fast and accurate graphical LASSO procedure ({\sffamily R} package {\sffamily glasso}, \cite{Rglasso}). Figure~\ref{fig:glasso1} shows the word usage network by fitting a sparse graphical model. Due to space limit, only the top 50 most frequent words are shown.
+
+where $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$. To solve for $S$,  Banerjee et al. (\cite{banerjee2008model}) propose a block coordinate ascent method (updating one row and one column of $S$ at one time). Their approach is exact but is time consuming. Meinshausen and Buhlmann (\cite{meinshausen2006high}) uses an approximation approach that is substantially faster. In our study, we adopt the fast and accurate graphical LASSO procedure ({\sffamily R} package {\sffamily glasso}, \cite{Rglasso}). Figure~\ref{fig:glasso1} shows the word usage network by fitting a sparse graphical model for $\lambda=0.01$. Different values of the regularization parameters are tuned and more such plots can be found in Appendix A. 
+
 
 %\note{lambda = 0.01 plot here.}
 
@@ -423,11 +437,15 @@ where $\Sigma$ is the covariance matrix of the data/design matrix $X$ and $||S||
 \end{figure}
 \end{center}
 
+We can make a comparison between the concurrence network (Figure~\ref{fig:coocur}) and sparse graphical model (Figure~\ref{fig:glasso1}): the concurrence network is heavily influenced by usage frequency of words. For example, ``不'' (the negation word) and ``韩寒''(Han Han) are strongly connected in the concurrence network, but this might not imply that there is an nontrivial relation between these two words. Sparse graphical models, on the other hand, give more interpretable results. For example,  ``不''(the negation word) and ``韩寒''(Han Han) are not longer heavily connected. In addition, some interesting word combinations are revealed: the word ``光明'' (light) and ``磊落'' (upright) are words that constitute the name of the Han Han's new book {Light and Upright} as mentioned in Section~\ref{subsec:datacol}; and the clique form by ``方舟子'' (Fang Zhouzi),''怀疑'' (suspect) and  ``韩寒'' (Han Han) seems to reveal the fact that Fang suspects Han Han has a team of ghost writers. Other obvious relation revealed include ``死亡'' (death) and ``威胁'' (threat), ``买'' (buy) and ``书'' (book), ``写'' (write) and ``文章'' (article),  and so forth.
 
-The network plot of the estimated inverse covariance matrix $S$ is shown. As discussed, an edge (i.e. $S_{ij}\neq 0$) represents conditional dependency between two nodes given all the other nodes. Red edges indicate positive correlated occurence $S_{ij}<0$ (Given all other words, word $i$ is more likely to occur if word $j$ is observed) and black edges indicate negative correlated occurrence $S_{ij}>0$. Edge width is proportional to $|S_{ij}|$, representing the strength of the tie.
+It is also of interest to observe how the word usage network structure change as we change the regularization parameter $\lambda$. From Figure~\ref{fig:glasso1}-~\ref{fig:glasso6} in Appendix A one can see that widths of the edges weaken and the number of edges decreases. Only strong conditional dependency between two words can survive for the largest regularization parameter we try: $\lambda = 0.03$, e.g. word pairs like ``死亡'' (death) and ``威胁'' (threat), and ``方舟子'' (Fang Zhouzi) and ``韩寒'' (Han Han).  
 
 
-A comparison of the concurrence network (Figure~\ref{fig:coocur}) and sparse graphical model (Figure~\ref{fig:glasso1}): the concurrence network is heavily influenced by usage frequency of words. For example, ``不'' (the negation word) and ``韩寒''(Han Han) are strongly connected in the concurrence network, but this might not imply that there is a nontrivial relation between these two words. Sparse graphical models, on the other hand, give more interpretable results. For example,  ``不''(the negation word) and ``韩寒''(Han Han) are no longer heavily connected. In addition, some interesting word combinations are revealed: the word ``光明'' (light) and ``磊落'' (upright) are words that constitute the name of the Han Han's new book {Light and Upright} as mentioned in Section~\ref{subsec:datacol}; and the phrase formed by ``方舟子'' (Fang Zhouzi),''怀疑'' (suspect) and  ``韩寒'' (Han Han) seems to reveal the fact that Fang suspects Han Han has a team of ghost writers. Other obvious relations revealed include ``死亡'' (death) and ``威胁'' (threat), ``买'' (buy) and ``书'' (book), ``写'' (write) and ``文章'' (article),  and so forth.
+%The network plot of the estimated inverse covariance matrix $S$ is shown. As discussed, an edge (i.e. $S_{ij}\neq 0$) represents conditional dependency between two nodes given all the other nodes. Red edges indicate positive correlated occurence $S_{ij}<0$ (Given all other words, word $i$ is more likely to occur if word $j$ is observed) and black edges indicate negative correlated occurrence $S_{ij}>0$. Edge width is proportional to $|S_{ij}|$, representing the strength of the tie.
+
+
+%A comparison of the concurrence network (Figure~\ref{fig:coocur}) and sparse graphical model (Figure~\ref{fig:glasso1}): the concurrence network is heavily influenced by usage frequency of words. For example, ``不'' (the negation word) and ``韩寒''(Han Han) are strongly connected in the concurrence network, but this might not imply that there is a nontrivial relation between these two words. Sparse graphical models, on the other hand, give more interpretable results. For example,  ``不''(the negation word) and ``韩寒''(Han Han) are no longer heavily connected. In addition, some interesting word combinations are revealed: the word ``光明'' (light) and ``磊落'' (upright) are words that constitute the name of the Han Han's new book {Light and Upright} as mentioned in Section~\ref{subsec:datacol}; and the phrase formed by ``方舟子'' (Fang Zhouzi),''怀疑'' (suspect) and  ``韩寒'' (Han Han) seems to reveal the fact that Fang suspects Han Han has a team of ghost writers. Other obvious relations revealed include ``死亡'' (death) and ``威胁'' (threat), ``买'' (buy) and ``书'' (book), ``写'' (write) and ``文章'' (article),  and so forth.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%
@@ -481,9 +499,9 @@ LASSO (\cite{tibshirani1996regression}) is a sparse regression method which adds
 \label{eq:Lasso}
 \hat{\beta}(\lambda) = \arg \min_\beta \frac{1}{2}||y-(\beta_0+X\beta)||_2^2 + \lambda ||\beta||_1
 \end{align}
-In our study, we regress the class label vector $y$ onto the word frequency matrix $X$, yielding the intercept $\hat{\beta_0}$ and the sparse regression vector $\hat{\beta}(\lambda)$. The classifier can be determined to be $f(x) = \textbf{sign}(\hat{\beta_0}+\hat{\beta}^Tx)\in\{-1,+1\}$, where the resulting coefficient regression coefficient $\hat{\beta}$ has the following explanation: for each feature/word $j$, given all other feature/word variables fixed, the increase of the $j$-th word frequency by one leads to an increase in the regression function $\beta_0+\beta^Tx$ by an amount of $\beta_i$ (if $\beta_i$ turns out to be positive, this means the chance of classifying the data point into the $+1$ category is increased).
+In our study, we regress the class label vector $y$ onto the word frequency matrix $X$, yielding the intercept $\hat{\beta_0}$ and the sparse regression vector $\hat{\beta}(\lambda)$. The classifier can be determined to be $f(x) = \textbf{sign}(\hat{\beta_0}+\hat{\beta}^Tx)\in\{-1,+1\}$, where the resulting coefficient regression coefficient $\hat{\beta}$ has the following explanation: for each feature or word $j$, given all other feature or word variables fixed, the increase of the $j$-th word frequency by one leads to an increase in the regression function $\beta_0+\beta^Tx$ by an amount of $\beta_i$ (if $\beta_i$ turns out to be positive, this means the chance of classifying the data point into the $+1$ category is increased).
 
-To look at which words were most relevant to each category we modeled (positive, negative, neutral, and spam), we looked at three sets of 20 words based on, respectively, the highest absolute $\beta$ values, highest positive coefficient values and most negative coefficient values. The top 50 words based on the top 50 highest absolute $\beta$ values tell us in general which words were most relevant to predicting that particular category.  The top 50 words based on the top 50 highest positive $\beta$ values tell us which words typically were common in posts that fell into the category modeled while the top 50 words based on the top 50 largest (in terms of magnitude) negative $\beta$ values tell us which words typically were not in posts that fell into the category modeled but were rather more common in the categories outside of the one we were modeling.
+To look at which words were most relevant to each category we modeled (positive, negative, neutral, and spam), we looked at three sets of 20 words based on, respectively, the highest absolute $\beta$ values, highest positive coefficient values and most negative coefficient values. The top 20 words based on the top 20 highest absolute $\beta$ values tell us in general which words were most relevant to predicting that particular category.  The top 20 words based on the top 20 highest positive $\beta$ values tell us which words typically were common in posts that fell into the category modeled while the top 20 words based on the top 20 largest (in terms of magnitude) negative $\beta$ values tell us which words typically were not in posts that fell into the category modeled but were rather more common in the categories outside of the one we were modeling.
 
 Since the estimated $\beta$ depends on the regularization parameter, we are left with the issue of choosing the ``best'' $\lambda$. A commonly used approach is to do a grid search for $\lambda$: for each value of $\lambda$, do a 10-fold cross validation; then choose the $\lambda$ that yields the smallest cross validation testing sample error. For this method, we used the approach least-angle regression (LARS) by \cite{efron2004least} to do the model selection. Their {\sffamily R} package {\sffamily lars} efficiently fits an entire lasso sequence with the least squares loss function (\cite{Rlars}). Figure~\ref{fig:cvplotpos} shows the cross-validation error plot for the positive v.s. nonpositive classification and the other plots are in Appendix~\ref{asec:cverror}.
 
@@ -538,7 +556,7 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 讨厌 & 0.481 & 讨厌 & 0.481 & 支持 & -0.008\\
 (hate) & & (hate) & & (support) & \\\hline
 无耻 & 0.412 & 无耻 & 0.412 & - & -\\
-(shameless) & & (shameless) & & (no) & \\\hline
+(shameless) & & (shameless) & & (-) & \\\hline
 恶心 & 0.395 & 恶心 & 0.395 & - & -\\
 (disgusting) & & (disgusting) & &  & \\\hline
 骗子 & 0.380 & 骗子 & 0.380 & - & -\\
@@ -603,14 +621,16 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 The support vector machine (SVM) is another commonly used machine learning method to classify data points into two categories. Consider again the linear decision function $f(x) = \beta_0 + \beta^T x$ and the sign classifier $\text{class}(x) = \textbf{sign} (f(x))$. The SVM minimizes the training misclassification rate and the margin of the decision boundary. Following the notations in \cite{hastie2004entire}:
 \begin{align}
 \label{eq:l2svm}
-\min_{\beta_0,\beta} \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \frac{\lambda}{2} ||\beta||_2,
+\min_{\beta_0,\beta} \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \frac{\lambda}{2} ||\beta||_2^2,
 \end{align}
 where $z_+ = \max(0,z)$ (the function $h(z) = (1-z)_+$ is also known as the hinge loss function). Similarly, the sparse version of SVM simply replaces the $l_2$-norm by $l_1$-norm (see, e.g. \cite{zhu20041}):
 \begin{align*}
 \label{eq:l1svm}
 \min_{\beta_0,\beta} \left\{ \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \lambda ||\beta||_1\right\}. 
 \end{align*}
-We repeat the same data analysis for the text data using $l_1$-norm SVM as we did for the LASSO classification. The results are summarized in Table XX. To fit the sparse SVM, we use the matlab package {\tt lpsvm} by \cite{fung2004feature}. Again, 10-fold cross validations are performed in order to select the regularization parameter $\lambda$. Again the model seems to produce plausible results. Also, the top coefficients obtained by $l_1$-norm SVM seem to be consistent with those obtained by fitting a LASSO.  
+We repeat the same data analysis for the text data using $l_1$-norm SVM as we did for the LASSO classification. To fit the sparse SVM, we use the matlab package {\tt lpsvm} by \cite{fung2004feature}. Again, 10-fold cross validations are performed in order to select the regularization parameter $\lambda$. Again the model seems to produce plausible results. Also, the top coefficients obtained by $l_1$-norm SVM seems to be consistent with those obtained by fitting a LASSO.  
+
+%We repeat the same data analysis for the text data using $l_1$-norm SVM as we did for the LASSO classification. The results are summarized in Table XX. To fit the sparse SVM, we use the matlab package {\tt lpsvm} by \cite{fung2004feature}. Again, 10-fold cross validations are performed in order to select the regularization parameter $\lambda$. Again the model seems to produce plausible results. Also, the top coefficients obtained by $l_1$-norm SVM seem to be consistent with those obtained by fitting a LASSO.  
 %
 %\note{
 %To Angie:
@@ -718,7 +738,7 @@ somebody's & & somebody's  &  & &  \\
 To compare the classification performance, we use the best fitted models discussed above to classify the test set of 500 posts. Recall that the best models are selected to minimize the 10-fold cross validation error. Table~\ref{tb:testcounts} shows the frequency count of each category in the 500 posts and Table~\ref{tb:testmis} summarizes the test results. 
 
 \begin{table}[!h]
-\caption{Counts of posts in each of the four categories in the 500 test posts.}
+\caption{Counts of posts in each of the four categories among the 500 test posts.}
 \begin{center}
 \begin{tabular}{|c|c|c|c|}
 \hline
@@ -759,11 +779,10 @@ It is also surprising to see how the sentiment score assignment method fails mis
 \section{Conclusion}
 
 In this project, we developed a framework for studying public opinions using Sina Weibo as a corpus for a given topic. Posts are collected from Weibo and then processed taking the characteristics of both the Chinese language and Weibo posts into consideration. Also the processing is topic-dependent since there are certain proper nouns related to a given topic.
-Word usage relation has been examined. Since the word frequency matrix is quite sparse, sparse principle component analysis  (SPCA) and sparse graphical models are employed in our feature analysis. 
-Two standard machine learning methods, namely sparse regression with LASSO and $l_1$-norm SVM, have been applied to the training set of 3,000 posts and then the best fitted models are tested on a test set of 500 posts. These two methods have similar performance on our data set. 
+Word usage relation has been examined. Due to the sparsity of the word frequency matrix, both sparse principle component analysis  (SPCA) and sparse graphical models are employed in our feature analysis. 
+Two standard machine learning methods, namely sparse regression with LASSO and $l_1$-norm SVM, have been applied to the training set of 3,000 posts and then the best fitted models are tested on a test set of 500 posts. These two methods have similar performance on our data set. Due to limitation in time we have not extented our study to a larger corpus. However, the sparse machine learning tools we have used in this project produce human-interpretable results and reasonable misclassification rates.
 
-For future work, we would like to compare our LASSO and $l_1$-norm SVM methods with the popular maximum entropy approach \cite{lee2011chinese, nigam1999using}. As discussed in Section~\ref{subsec:datacol}, one topic of interest is to track repostings using graphical models. Identification of OOV needs more statistical work as well. We would also like to study random samples by sampling from large graphs as discussed in Section~\ref{subsec:datacol} after spams, OOV, and reposting can be handled properly. Clearly sentiment classifier is topic-dependent. We would like to collect data on more topics, preferably in other domains, to test our framework.
-
+Many future efforts remain to be done. One possible direction is to enlarge the scale of our study, in both time (i.e. extend the time period we do the sampling) and number of posts. In terms of sampling techniques, we would like to study random samples by sampling from large network as discussed in Section~\ref{subsec:datacol} after spams, OOV, and reposting can be handled properly. In terms of methodology, we would like to compare our LASSO and $l_1$-norm SVM methods with the popular maximum entropy approach \cite{lee2011chinese, nigam1999using}. Also, as discussed in Section~\ref{subsec:datacol}, one topic of interest is to track repostings using graphical models. Identification of OOV needs more statistical work as well.  Clearly sentiment classifier is topic-dependent and there is no reason why we should restrict our analysis on just a few famous public figures. In the future, we can collect data on more and broader topics, preferably in other domains, to test our framework.
 \clearpage
 
 \newpage
@@ -777,6 +796,53 @@ For future work, we would like to compare our LASSO and $l_1$-norm SVM methods w
 \newpage
 %%%%%%%%%%%%%%%%%%
 \appendix
+\section{Sparse graphical model plots}
+
+\begin{center}
+\begin{figure}[tb]
+   \centering
+   \includegraphics[width=0.7\textwidth]{../gLassoResults/glasso2.png} 
+      \caption{ }
+   \label{fig:glasso2}
+\end{figure}
+\end{center}
+
+\begin{center}
+\begin{figure}[tb]
+   \centering
+   \includegraphics[width=0.7\textwidth]{../gLassoResults/glasso3.png} 
+      \caption{ }
+   \label{fig:glasso3}
+\end{figure}
+\end{center}
+
+\begin{center}
+\begin{figure}[tb]
+   \centering
+   \includegraphics[width=0.7\textwidth]{../gLassoResults/glasso4.png} 
+      \caption{ }
+   \label{fig:glasso4}
+\end{figure}
+\end{center}
+
+\begin{center}
+\begin{figure}[tb]
+   \centering
+   \includegraphics[width=0.7\textwidth]{../gLassoResults/glasso5.png} 
+      \caption{ }
+   \label{fig:glasso5}
+\end{figure}
+\end{center}
+
+\begin{center}
+\begin{figure}[tb]
+   \centering
+   \includegraphics[width=0.7\textwidth]{../gLassoResults/glasso6.png} 
+      \caption{ }
+   \label{fig:glasso6}
+\end{figure}
+\end{center}
+
 
 %%%%%
 \section{LASSO Results}
