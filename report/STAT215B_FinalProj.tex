@@ -109,19 +109,19 @@ columns=flexible%,
 
 %%%%%%%%%%%%%%%%%%
 \begin{abstract}
-{\bf Abstract.} In this project, we try to develop a framework to study the public opinions via Sina Weibo -- a Twitter equivalence in China. Text data are collected from  Weibo via an application programming interface (API). Word processing techniques are used to extract useful information from the raw data. Several standard machine learning tools are applied to feature analysis and sentiment classifications. 
+In this project, we try to develop a framework to study the public opinions via Sina Weibo -- a Twitter equivalence in China. Text data are collected from  Weibo via an application programming interface (API). Word processing techniques are used to extract useful information from the raw data. Several standard machine learning tools are applied to feature analysis and sentiment classifications. 
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%
 \section{Introduction}
 
-Recent years have seen a growing interest of the analysis of text corpus from social media such as Facebook and Twitter. Gwalt et al (\cite{gawalt2010discovering}), for example, study word associations from a series new articles of NYTimes. Due to the increasing size of the corpus, modern sparse machine learning tools are needed in both text summarizing and topic classification. El Ghaoui et al. (\cite{ELDPSB:11}) gives an excellent summary of sparse learning tools that are useful in analyzing high dimension text data sets.  
+Recent years have seen a growing interest of the analysis of text corpus from social media such as Facebook and Twitter. Gwalt et al (\cite{gawalt2010discovering}), for example, study word associations from a series of new articles on NY Times. Due to the increasing size of the corpus, modern sparse machine learning tools are needed in both text summarizing and topic classification. El Ghaoui et al. (\cite{ELDPSB:11}) gives an excellent summary of sparse learning tools that are useful in analyzing high dimension text data sets.  
 
 
 So far most of the literatures focus on the study of English text corpus. Researches on Chinese text data have been relative few. Tan and Zhang (\cite{tan2008empirical}) conduct an empirical study of sentiment analysis in Chinese documents using a combination of feature selection methods and classification method. Lee and Renganathan (\cite{lee2011chinese}) study Chinese document via a maximum entropy method. In both of the above study, the complex structure of Chinese language makes it difficult to analyze the raw text data directly. We will explore this issue more in Section~\ref{subsubsec:Chinese}. 
 
 
-Due to the restriction on overseas websites such as Facebook or Twitter, domestic substitutes have become the major platforms for the internet citizens to express their opinions towards various social or political issues. Studying posts on those website thus provides interesting insights into the public opinion. For instance, some events in the recent years, such as the tragic Wenzhou train collision on July 23 2011\footnote{For details, see \url{http://en.wikipedia.org/wiki/Wenzhou_train_collision}. }
+Due to the restriction on overseas websites such as Facebook or Twitter in China, domestic substitutes have become the major platforms for the internet citizens to express their opinions towards various social or political issues. Studying posts on those website thus provides interesting insights into the public opinion. For instance, some events in the recent years, such as the tragic Wenzhou train collision on July 23 2011\footnote{For details, see \url{http://en.wikipedia.org/wiki/Wenzhou_train_collision}. }
   and the more recent Wang Lijun incident,\footnote{For details, see \url{http://en.wikipedia.org/wiki/Wang_Lijun_incident}.}  
 have split the public into two major groups among which one considers the government's way of dealing with those incidences is good and one does not. 
 In principle, we can draw text data from those websites identifying whether a particular post is related to the event of interest, and which group the post should be classified into.
@@ -138,16 +138,19 @@ In this project, we aim to develop a framework for studying public opinions usin
 A Weibo  application programming interface (API) is set up to collect posts.
 For a given topic, the ideal way to collect sample post are taking a random sample. \cite{boyd2004fastest, leskovec2006sampling, wang2011understanding} have presented sampling algorithms from large graphs. However, our preliminary results show that the sample contains a large proportion of spams and posts which do not relate to the chosen topic. Therefore, the topic searching functionality of the Weibo API is utilized to collect posts. 
 
-There are certain technical restrictions on API. Regarding topical searches, only the latest search results are returned. The maximum number of posts returned is 30 and our own searches typically returned about 18 posts. There is waiting time between consecutive searches. Overlapping among sets of search results is examined. Clearly the sample is time-sensitive. We preferred having a relatively short collection time so as to obtain a cross-sectional sample. Hence, the chosen topic for testing should have active discussion on Weibo. 
+There are certain technical restrictions on API. Regarding topical searches, only the latest search results are returned. The maximum number of posts returned is 30 and our own searches typically returned about 18 posts. There is  30 seconds waiting time between consecutive searches. Overlapping among sets of search results is examined. Clearly the sample is time-sensitive. We preferred having a relatively short collection time so as to obtain a cross-sectional sample. Hence, the chosen topic for testing should have active discussion on Weibo. 
 
 It is well-known that China has strict Internet censorship compared to other countries. Even though the downfall of Bo Xilai\footnote{For more information on Bo Xilai, see \url{http://en.wikipedia.org/wiki/Bo_Xilai}.}
-was a hot topic at the time of our data collection, there were no meaningful posts on Weibo. 
+was a hot topic at the time of our data collection, there were no meaningful posts on Weibo due to the censorship.
 The topic we finally chose is Han Han 韩寒.\footnote{For more information on Han Han, see \url{http://en.wikipedia.org/wiki/Han_Han} and {\em Han Han: China's Literary Bad Boy} by Simon Elegant Monday, published on November 02, 2009, {em Time Magazine}, \url{http://www.time.com/time/magazine/article/0,9171,1931619,00.html}.}
 Born September 23, 1982, Han Han
 is a Chinese best-selling author, professional rally driver, and  wildly  popular blogger. He published his first novel {\em Triple Gate 三重门} at the age of 17 and later dropped out of high school. Even though Han Han is famous for his criticism on social issues, he has not been heavily censored. A ghostwriting allegation against Han Han started in January 2012. Fang Zhouzi 方舟子,\footnote{For more information on Fang Zhouzi, see \url{http://en.wikipedia.org/wiki/Fang_Zhouzi}.}
  a scientific author and anti-fraud crusader, created widespread debate with Han Han on the Internet regarding the ghostwriting allegation. In response to the allegation, Han Han published a photocopied manuscripts set {\em Light and Upright 光明与磊落} in April 2012, including the manuscript of his first novel {\em Triple Gate}. 
  
-Han Han received an online death threat on April 15, 2012. We collected a set of 22,398 posts on April 16 and 17, 2012. The above proper nouns and words related to the death threat appeared frequently in our data set. 
+Han Han received an online death threat on April 15, 2012. 
+Our sampling took place immediately after this event on April 16 and 17, 2012. 
+The data consist of 22,398 posts. 
+The above proper nouns and words related to the death threat appeared frequently in our data set. 
 
 
 
@@ -157,13 +160,13 @@ Han Han received an online death threat on April 15, 2012. We collected a set of
 
 %%%
 
-\subsubsection{Encoding}
+\subsection{Encoding}
 Chinese documents use various encoding standards (\cite{wong2009introduction}). {\em GB 国标}, abbreviation for ``National Standard'' in Chinese, is the standard used in mainland China, Singapore, and Malaysia. Since GB is unable to cover traiditional Chinese characters, {\em GBK 国标扩展}, ``Extension of National Standard,'' is developed to support both simplified and traditional characters. Meanwhile, {\em Big5} is the encoding standard used by Taiwan, Hong Kong, and Macau. {\em Unicode} is an industry standard for the consistent encoding of text expressed in most of the world's writing systems. {\em UTF-8} is the most commonly used encoding implementation of Unicode. All our data and related files use UTF-8 encoding for processing purpose.
 
 %%
 \subsection{Characteristics of Chinese Language}\label{subsubsec:Chinese}
 
-There has been quite a bit of research done on natural language processing in the English language, but not much on the Chinese language.  This is due to the fact that the Chinese language contains unique characteristics that makes it difficult to do natural language processing on it well. 
+There has been  many researches done on natural language processing in the English language, but not much on the Chinese language.  This is due to the fact that the Chinese language contains unique characteristics that makes it difficult to do natural language processing on it well. 
  
 First, the Chinese language, unlike the English language, has no explicit delimiter between words. In the English language, spaces separate words and so to segment a sentence into its appropriate components is not too difficult since one could just separate based on spaces.  The Chinese language however has no such delimiter between words.
  
@@ -406,17 +409,16 @@ It is surprising how the above results from sparse PCA are related to our prior 
 
 Undirected graphical models are commonly used in machine learning to study the relation between random variables (\cite{wainwright2008graphical}). Each node of the graph represents a random variable and an edge connecting two nodes represents the conditional dependency between the two random variables given all other random variables (and the missing of an edge indicates conditional independency). If, in addition, the joint distribution of the random variables is a multivariate normal with mean $\mu$ and covariance matrix $\Sigma$, then the $i$-th node and $j$-th node are conditionally independent (or, equivalently, missing an edge) if and only if $(\Sigma^{-1})_{ij} = 0$. Therefore, given data $x_1,x_2,...,x_n\in R^p$, to explore the relation between features, we can estimate the inverse covariance matrix by computing the MLE:   
 
-\begin{align}
-\label{eq:mle}
+\begin{align*}
+%\label{eq:mle}
 \max_S \left\{  \log \det \lp S\rp - \textbf{Tr}( \hat{\Sigma}S)  \right\}
-\end{align}
+\end{align*}
 If the number of features $p$ is large, certain regularization is needed to control the number of edges. Banerjee et al. (\cite{banerjee2008model}) propose the following optimization problem to recover the sparse structure in a gaussian graphical model
-\begin{align}
-\label{eq:gLasso}
+\begin{align*}
+%\label{eq:gLasso}
 \max_S \left\{ \log \det S - \textbf{Tr} \lp \hat{\Sigma}S \rp - \lambda ||S||_1 \right\}
-\end{align}
+\end{align*}
 %where $\Sigma$ is the covariance matrix of the data/design matrix $X$ and $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$. To solve for $S$,  Banerjee et al. (\cite{banerjee2008model}) propose a block coordinate ascent method (COVSEL) (updating one row and one column of $S$ at one time). Their approach is exact but also time consuming. Meinshausen and Buhlmann (\cite{meinshausen2006high}) use an approximation approach that is substantially faster. In our study, we adopt the fast and accurate graphical LASSO procedure ({\sffamily R} package {\sffamily glasso}, \cite{Rglasso}). Figure~\ref{fig:glasso1} shows the word usage network by fitting a sparse graphical model. Due to space limit, only the top 50 most frequent words are shown.
-
 where $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$. To solve for $S$,  Banerjee et al. (\cite{banerjee2008model}) propose a block coordinate ascent method (updating one row and one column of $S$ at one time). Their approach is exact but is time consuming. Meinshausen and Buhlmann (\cite{meinshausen2006high}) uses an approximation approach that is substantially faster. In our study, we adopt the fast and accurate graphical LASSO procedure ({\sffamily R} package {\sffamily glasso}, \cite{Rglasso}). Figure~\ref{fig:glasso1} shows the word usage network by fitting a sparse graphical model for $\lambda=0.01$. Different values of the regularization parameters are tuned and more such plots can be found in Appendix A. 
 
 
@@ -489,10 +491,10 @@ This sentiment score can be used for classification purposes. A positive or nega
 \subsection{Sparse Regression with LASSO}
 
 LASSO (\cite{tibshirani1996regression}) is a sparse regression method which adds a $l_1$-norm penalty to the linear least squares objective to promote sparsity in the regression coefficients:
-\begin{align}
-\label{eq:Lasso}
+\begin{align*}
+%\label{eq:Lasso}
 \hat{\beta}(\lambda) = \arg \min_\beta \frac{1}{2}||y-(\beta_0+X\beta)||_2^2 + \lambda ||\beta||_1
-\end{align}
+\end{align*}
 In our study, we regress the class label vector $y$ onto the word frequency matrix $X$, yielding the intercept $\hat{\beta_0}$ and the sparse regression vector $\hat{\beta}(\lambda)$. The classifier can be determined to be $f(x) = \textbf{sign}(\hat{\beta_0}+\hat{\beta}^Tx)\in\{-1,+1\}$, where the resulting coefficient regression coefficient $\hat{\beta}$ has the following explanation: for each feature or word $j$, given all other feature or word variables fixed, the increase of the $j$-th word frequency by one leads to an increase in the regression function $\beta_0+\beta^Tx$ by an amount of $\beta_i$ (if $\beta_i$ turns out to be positive, this means the chance of classifying the data point into the $+1$ category is increased).
 
 To look at which words were most relevant to each category we modeled (positive, negative, neutral, and spam), we looked at three sets of 20 words based on, respectively, the highest absolute $\beta$ values, highest positive coefficient values and most negative coefficient values. The top 20 words based on the top 20 highest absolute $\beta$ values tell us in general which words were most relevant to predicting that particular category.  The top 20 words based on the top 20 highest positive $\beta$ values tell us which words typically were common in posts that fell into the category modeled while the top 20 words based on the top 20 largest (in terms of magnitude) negative $\beta$ values tell us which words typically were not in posts that fell into the category modeled but were rather more common in the categories outside of the one we were modeling.
@@ -550,7 +552,7 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 讨厌 & 0.481 & 讨厌 & 0.481 & 支持 & -0.008\\
 (hate) & & (hate) & & (support) & \\\hline
 无耻 & 0.412 & 无耻 & 0.412 & - & -\\
-(shameless) & & (shameless) & & (-) & \\\hline
+(shameless) & & (shameless) & &  & \\\hline
 恶心 & 0.395 & 恶心 & 0.395 & - & -\\
 (disgusting) & & (disgusting) & &  & \\\hline
 骗子 & 0.380 & 骗子 & 0.380 & - & -\\
@@ -613,13 +615,13 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 \subsection{$l_1$-Norm Support Vector Machine}
 
 The support vector machine (SVM) is another commonly used machine learning method to classify data points into two categories. Consider again the linear decision function $f(x) = \beta_0 + \beta^T x$ and the sign classifier $\text{class}(x) = \textbf{sign} (f(x))$. The SVM minimizes the training misclassification rate and the margin of the decision boundary. Following the notations in \cite{hastie2004entire}:
-\begin{align}
+\begin{align*}
 \label{eq:l2svm}
 \min_{\beta_0,\beta} \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \frac{\lambda}{2} ||\beta||_2^2,
-\end{align}
+\end{align*}
 where $z_+ = \max(0,z)$ (the function $h(z) = (1-z)_+$ is also known as the hinge loss function). Similarly, the sparse version of SVM simply replaces the $l_2$-norm by $l_1$-norm (see, e.g. \cite{zhu20041}):
 \begin{align*}
-\label{eq:l1svm}
+%\label{eq:l1svm}
 \min_{\beta_0,\beta} \left\{ \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \lambda ||\beta||_1\right\}. 
 \end{align*}
 We repeat the same data analysis for the text data using $l_1$-norm SVM as we did for the LASSO classification. To fit the sparse SVM, we use the matlab package {\tt lpsvm} by \cite{fung2004feature}. Again, 10-fold cross validations are performed in order to select the regularization parameter $\lambda$. Again the model seems to produce plausible results. Also, the top coefficients obtained by $l_1$-norm SVM seems to be consistent with those obtained by fitting a LASSO.  
