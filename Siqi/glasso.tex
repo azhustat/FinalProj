@@ -1,0 +1,309 @@
+%% STAT 215B, Spring 2012
+%% Final Project
+%% Note: need to use XeLaTeX to compile
+
+\documentclass[11pt]{article}
+\usepackage[letterpaper, hmargin={1in,1in}, vmargin={1in,1in}, noheadfoot]{geometry}
+\usepackage{listings} % for including source code
+
+%\usepackage[usenames,dvipsnames]{color}
+
+\usepackage{hyperref, graphicx}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{ marvosym }
+
+%%% for displaying Chinese
+\usepackage{fontspec,xltxtra,xunicode}
+\usepackage[slantfont,boldfont]{xeCJK}
+
+% 设置中文字体
+% ==========================================================
+\setCJKmainfont[BoldFont=STHeiti,ItalicFont=STKaiti]{STSong}
+\setCJKsansfont{STHeiti}
+\setCJKmonofont{STFangsong}
+ 
+\setCJKfamilyfont{zhsong}{STSong}
+\setCJKfamilyfont{zhhei}{STHeiti}
+\setCJKfamilyfont{zhfs}{STFangsong}
+\setCJKfamilyfont{zhkai}{STKaiti}
+ 
+\newcommand*{\songti}{\CJKfamily{zhsong}} % 宋体
+\newcommand*{\heiti}{\CJKfamily{zhhei}}   % 黑体
+\newcommand*{\kaishu}{\CJKfamily{zhkai}}  % 楷书
+\newcommand*{\fangsong}{\CJKfamily{zhfs}} % 仿宋
+% ==========================================================
+
+%%%%%%%%%%
+% the following are user defined commands
+
+\newcommand{\pr}[1]{{\mathbb P}\left(#1\right)}        % probability
+\newcommand{\E}[1]{{\mathbb E}\left[#1\right]}        % expectation 
+\newcommand{\1}[1]{{\mathbf 1}\left\{#1\right\}}        % indicator
+\newcommand{\V}[1]{\text{Var}\left(#1\right)}    % variance
+
+\def\lp{\left(}
+\def\rp{\right)}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercise}[theorem]{Exercise}
+\newtheorem{example}[theorem]{Example}
+
+%%%%%%%%%%%
+%%%%%%%%%%%
+
+\title{\scshape STAT 215B Final Project, Spring 2012}
+\author{Christine Kuang, Siqi Wu, and Angie Zhu}
+\date{\today} % delete this line to display the current date
+
+%%% BEGIN DOCUMENT
+\begin{document}
+\setlength\footskip{0.5in}
+
+
+%%% the following is for including source code. Don't worry about it for now. --AZ
+\lstset{
+% backgroundcolor=\color{Gray} % requires package color
+%frame=double,
+showspaces=false, 
+language=R, 
+basicstyle=\ttfamily, 
+tabsize=3, 
+showstringspaces=false, 
+columns=flexible%, 
+%numbers=left, 
+%numberstyle=\footnotesize, 
+%stepnumber=5, 
+%numbersep=6pt  % how far the line-numbers are from the code
+}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%
+% To Christine:
+% Don't worry about the above part. The report starts from here. 
+% Comments are preceded by a percentage symbol.
+% LaTeX is a markup language like HTML. All the formatting is specified by particular code. 
+% The structure of the report is identified by \section{}, \subsection{}, \subsubsection{}, etc. 
+
+% I made some slides for the Productivity Seminar last Spring: http://www.stat.berkeley.edu/~luis/seminar/IntroToLaTeXSlides_Angie_Zhu.pdf
+% It's very short. I have some longer intro material if you are interested.
+% It covers some basic rules of LaTeX.
+
+% I will put more reminders here for your reference :D
+
+
+%% Double quotation marks: require 4 charaters ``'' (a left and a right pair of single quotes, [`] on keyboard is the one right next to [1])
+
+
+
+%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+
+the largest microblogging website in China, Sina Weibo 新浪微博
+
+A post can be text, an image, video, or other multimedia.
+
+
+%%%%%%%%%%%%%%%%%%
+\section{Methods}
+
+
+
+%%%%%%%
+\subsection{Sampling}
+
+
+%%%%%%%
+\subsection{Processing}
+
+
+
+UTF-8 encoding, GBK, Unicode, Big5
+
+%%
+\subsubsection{Characteristics of Chinese Language}\label{subsec:Chinese}
+No explicit delimiter between words in Chinese texts
+
+OOV
+
+ambiguity 
+
+
+\cite{wong2009introduction}
+
+
+%%
+\subsubsection{Characteristics of Sina Weibo Posts}\label{subsec:Weibo}
+
+Our analysis takes not only the characteristics of Chinese language, but also the characteristics of Sina Weibo posts into consideration.
+
+The writing of Weibo posts are generally informal. The users may not use standard punctuation marks for separation of sentences and parts of sentences. The most important features are described as follows:
+
+\begin{description}
+\item[Reposting] A user may repost other post. Reposting does not automatically imply agreement or liking. This type of post usually consists of two parts: the reposting user's comment and the post being reposted. The user's comment may be empty or set as default text ``Repost'' or ``转发微博'' (``Repost Weibo''). The reposted post itself may include multiple reposting. The topic of keeping track of reposting and identifying agreement or disagreement can be a project itself. In our analysis, only the reposting user's comment is kept.  
+
+\item[Spams] There are a fair amount of spams on Weibo. Some spam posts are identical except for the URL. Hence, URLs are removed and then we check for duplication in the pre-tagging processing step.
+
+\item[Mentioning] A user may mention other users whose usernames are preceded by the \MVAt\  symbol. The mentioned usernames may be an integrated part of the post. We define a set of topic-related usernames and substitute the mentioning of these usernames by the corresponding proper nouns. The other mentioned usernames are removed.
+
+\item[Emotion Symbols and Internet Slangs] Sina Weibo provides the users a set of emotion symbols, which are corresponding words surrounded by square brackets in text. The users may use other emotion symbols, such as {\ttfamily :)} for smile and {\ttfamily T\_T} for crying. Internet slangs are a large part of Out-of-Vocabulary (OOV). Some substitute the characters in a word with the characters which have similar pronunciation, such as ``蜀黍'' (Shu3 Shu2) for ``叔叔'' (Shu1 Shu1, means ``uncle''). Some are Internet popular interjections, such as ``喵了个咪'' (喵: ``meow,'' 了: past tense marker, 个: universal measure word, 咪: ``mew'') which means ``dog my cats.'' 
+
+\item[Topic] Topic words are surrounded by the pound signs {\ttfamily \#} since Chinese language has no explicit delimiter between words. The topic word can be an integrated part of the post. 
+
+\end{description}
+
+
+
+%%
+\subsubsection{Pre-tagging Processing}
+
+The data set {\ttfamily Han.txt} contains 22,398 posts.
+
+In order to obtain labeled messages for training and testing purpose, the authors manually provided sentiment tags to a data set containing 3000 messages. The three types of sentiment tags used here are positive, negative, and noninformative.
+
+The data need to be cleaned before manual labeling.
+A typical post looks like:
+\begin{verbatim}
+1165303315 2012-04-16 09:55:40  《韩寒收到网友死亡威胁》 (来自 @新浪娱乐) http://t.cn/zOprKap
+\end{verbatim}
+
+\begin{enumerate}
+\item The user identification number and time stamp are removed.
+\item Only the reposting user's comment is kept. The reposted part is removed from further analysis. If the resulting string is empty, it will be eliminated as well.
+\item URLs are removed.
+\item Duplicates are removed.
+\end{enumerate}
+
+The output file {\ttfamily hanhanweibo.txt} consists of 13,070 unique posts. 3000 posts are chosen from this data set and will be manually tagged.
+
+
+
+%%
+\subsubsection{Pre-segmentation Processing}
+
+As discussed in Section~\ref{subsec:Chinese}, sentences in Chinese are normally strings of Chinese characters without spaces between words. Hence, word segmentation is crucial for our word-based analysis. According to the characteristics of Weibo posts described in Setion~\ref{subsec:Weibo}, the following processing is preformed:
+\begin{enumerate}
+\item A set of topic-related usernames are defined.  Then the mentioning of these usernames are substituted by the corresponding proper nouns. The other mentioned usernames are removed.
+\item A set of emotional symbols and Internet slangs are defined.  Then they are substituted by the corresponding word surrounded by square brackets.
+\end{enumerate}
+
+	
+
+%%
+\subsubsection{Segmentation}
+
+汉语词法分析系统ICTCLAS (Institute of Computing Technology, Chinese Lexical Analysis System) is a well known Chinese word segmentation system developed by Institute of Computing Technology, Chinese Academy of Sciences \cite{ICTCLAS}. It offers the functionality of  Chinese word segmentation, lexical tagging, named entity recognition, unknown words detection, and the user-defined dictionary. 
+The current version is ICTCLAS 2011, which supports GB2312, GBK, UTF8 and several encodings and has precision rate of 98.45\%. 
+
+The Java version of ICTCLAS 2011 preforms word segmentation and lexical tagging on a Linux 32-bit machine. A user-defined dictionary is provided. The entries in this dictionary contains proper nouns and some common Internet slangs. For instance, 微博 (Weibo, wei1 bo2) can be written as 围脖 (wei2 bo2, means ``scarf''). Some users refer Han Han as 韩少 (韩: Han Han's surname, 少: abbreviation of 少爷, which means ``young master of the house''). 
+
+Even with the user-defined dictionary, some appearance of Han Han's name 韩寒 can not be segmented and tagged correctly. This is corrected directly using regular expression.
+
+%%	
+\subsubsection{Conjunction Rules}
+
+Lee and Renganathan \cite{lee2011chinese} presented that special consideration should be given to the sentences whose parts are linked by contrasting transitional expressions. In particular, if a sentence contains conjunctions such as ``although'' and  ``but,'' only the part being emphasized will be kept and used to infer the sentiment polarity of this sentence. There are three cases:
+\begin{enumerate}
+\item Although (part A), (part B).
+\item (Part A), but (part B).
+\item Although (part A), but (part B).
+\end{enumerate}
+For each case, only part B will be kept. 
+
+The four words for ``although'' are 虽然, 虽说, 虽, and 尽管. The words for ``but'' are 但, 但是, 不过, 可是, 然而, 只是, 可, 只, 然, and 却. 
+
+
+
+%%
+\subsubsection{Stop Words and Punctuation Elimination}
+Moreover, stop words, non-text strings, and punctuation marks are eliminated. The detailed process is as follows: 
+\begin{enumerate}
+\item  Remove prepositions, punctuation marks, English character strings, interjections, modal particles, onomatopoeia, and auxiliary words.
+\item Remove pre-defined stop words and number strings.
+\end{enumerate}
+Note that the pre-defined stop words do not contain the following six negation words:  不, 不是, 没有, 没, 无, and 别. These negation words will be used in sentiment score assignment.
+
+
+%%
+\subsubsection{Sentiment Score Assignment}
+Dictionary-based sentiment score can provide us some intuitive understanding of the sentiment polarity of the posts. 
+The dictionaries are obtained from HowNet \cite{HowNet}. HowNet is an online extralinguistic common-sense knowledge system for the computation of meaning in human language technology.
+
+
+Each post is examined and the numbers of positive and negative words are recorded. Positive word contributes $+1$ to the sentiment score, whereas negative word contributes $-1$. If there is a negation words among the three words before the positive/negative word, their combination will be treated as an entity and their updated contribution is $-1$ times the original contribution. The six negation words used are 不, 不是, 没有, 没, 无, and 别. The sentiment score of the post is the sum of all the contributions. 
+
+Also topic-related positive/negative words are added to the dictionaries. For instance, the users who refer Han Han as 韩少 (韩: Han Han's surname, 少: abbreviation of 少爷, which means ``young master of the house'') clearly have positive feelings about him. 
+
+Another interesting quantities are the numbers of positive and negative words in a neighborhood of a particular person. The neighborhood used in our analysis is three words before and after the person's name.
+
+
+%%%%%%%
+\subsection{Sentiment Analysis}
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%
+\section{Results}
+
+%%%%%%%%%%%%%%%%%%
+\section{Discussion}
+
+ROC curve
+precision and recall curve
+
+%%
+\subsection{Limitations}
+
+sampling \cite{boyd2004fastest} \cite{leskovec2006sampling}  \cite{wang2011understanding}
+
+reposting
+
+other language, such as English
+
+simplified Chinese and traditional Chinese: no simple one-to-one correspondence; word segmentation and then substitute words
+
+
+
+%%%%%%%%%%%%%%%%%%
+\section{Conclusion}
+
+
+
+%
+%\begin{center}
+%\begin{figure}[tb]
+%   \centering
+%   \includegraphics[width=\textwidth]{.png} 
+%      \caption{}
+%   \label{fig:}
+%\end{figure}
+%\end{center}
+
+
+\newpage
+%%%%%%%%%%%%%
+% bibliography
+\bibliographystyle{acm}
+\bibliography{215B_FinalProjRef}
+
+
+
+
+%%%%%
+%\appendix
+%The complete source code is as follows:
+%\lstinputlisting{}
+
+
+\end{document}

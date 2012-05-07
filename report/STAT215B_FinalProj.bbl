@@ -1,99 +1,124 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{}
 
-\bibitem{WashingtonPostSina}
-{China} shuts down microblog accounts amid rumors of coup attemps.
-\newblock
-  \url{http://www.washingtonpost.com/business/china-shuts-down-microblog-accounts-amid-rumors-of-coup-attemps/2012/04/28/gIQAxYTJoT_story.html}.
+\bibitem[Banerjee et~al., 2008]{banerjee2008model}
+Banerjee, O., El~Ghaoui, L., and d'Aspremont, A. (2008).
+\newblock Model selection through sparse maximum likelihood estimation for
+  multivariate gaussian or binary data.
+\newblock {\em The Journal of Machine Learning Research}, 9:485--516.
 
-\bibitem{bloombergSina}
-{Sina's Weibo} outlook buoys {Internet} stock gains: {China} overnight.
+\bibitem[Boyd et~al., 2004]{boyd2004fastest}
+Boyd, S., Diaconis, P., and Xiao, L. (2004).
+\newblock Fastest mixing markov chain on a graph.
+\newblock {\em SIAM review}, pages 667--689.
+
+\bibitem[Cao, 2012]{bloombergSina}
+Cao, B. (2012).
+\newblock {Sina's Weibo} outlook buoys {Internet} stock gains: {China}
+  overnight.
 \newblock
   \url{http://www.bloomberg.com/news/2012-02-28/sina-s-weibo-outlook-buoys-internet-stock-gains-in-n-y-china-overnight.html}.
 
-\bibitem{boyd2004fastest}
-{\sc Boyd, S., Diaconis, P., and Xiao, L.}
-\newblock Fastest mixing markov chain on a graph.
-\newblock {\em SIAM review\/} (2004), 667--689.
-
-\bibitem{HowNet}
-{\sc Dong, Z., and Dong, Q.}
+\bibitem[Dong and Dong, 2012]{HowNet}
+Dong, Z. and Dong, Q. (2012).
 \newblock {知网 HowNet}.
 \newblock \url{http://www.keenage.com/}.
 
-\bibitem{ICTCLAS}
-{\sc {Institute of Computing Technology, Chinese Academy of Sciences}}.
+\bibitem[Efron et~al., 2004]{efron2004least}
+Efron, B., Hastie, T., Johnstone, I., and Tibshirani, R. (2004).
+\newblock Least angle regression.
+\newblock {\em The Annals of statistics}, 32(2):407--499.
+
+\bibitem[Friedman et~al., 2011]{Rglasso}
+Friedman, J., Hastie, T., and Tibshirani, R. (2011).
+\newblock {\em glasso: Graphical lasso- estimation of Gaussian graphical
+  models}.
+\newblock R package version 1.7.
+
+\bibitem[Fung and Mangasarian, 2004]{fung2004feature}
+Fung, G. and Mangasarian, O. (2004).
+\newblock A feature selection newton method for support vector machine
+  classification.
+\newblock {\em Computational optimization and applications}, 28(2):185--202.
+
+\bibitem[Hastie and Efron, 2012]{Rlars}
+Hastie, T. and Efron, B. (2012).
+\newblock {\em lars: Least Angle Regression, Lasso and Forward Stagewise}.
+\newblock R package version 1.1.
+
+\bibitem[Hastie et~al., 2004]{hastie2004entire}
+Hastie, T., Rosset, S., Tibshirani, R., and Zhu, J. (2004).
+\newblock The entire regularization path for the support vector machine.
+\newblock {\em The Journal of Machine Learning Research}, 5:1391--1415.
+
+\bibitem[{Institute of Computing Technology, Chinese Academy of Sciences},
+  2011]{ICTCLAS}
+{Institute of Computing Technology, Chinese Academy of Sciences} (2011).
 \newblock {汉语词法分析系统ICTCLAS (Institute of Computing Technology,
   Chinese Lexical Analysis System)}.
-\newblock \url{http://ictclas.org/}, 2011.
+\newblock \url{http://ictclas.org/}.
 
-\bibitem{lee2011chinese}
-{\sc Lee, H., and Renganathan, H.}
+\bibitem[Lee and Renganathan, 2011]{lee2011chinese}
+Lee, H. and Renganathan, H. (2011).
 \newblock Chinese sentiment analysis using maximum entropy.
-\newblock {\em Sentiment Analysis where AI meets Psychology (SAAIP)\/} (2011),
-  89.
+\newblock {\em Sentiment Analysis where AI meets Psychology (SAAIP)}, page~89.
 
-\bibitem{leskovec2006sampling}
-{\sc Leskovec, J., and Faloutsos, C.}
+\bibitem[Lee, 2012]{WashingtonPostSina}
+Lee, M. (2012).
+\newblock {China} shuts down microblog accounts amid rumors of coup attemps.
+\newblock
+  \url{http://www.washingtonpost.com/business/china-shuts-down-microblog-accounts-amid-rumors-of-coup-attemps/2012/04/28/gIQAxYTJoT_story.html}.
+
+\bibitem[Leskovec and Faloutsos, 2006]{leskovec2006sampling}
+Leskovec, J. and Faloutsos, C. (2006).
 \newblock Sampling from large graphs.
 \newblock In {\em Proceedings of the 12th ACM SIGKDD international conference
-  on Knowledge discovery and data mining\/} (2006), ACM, pp.~631--636.
+  on Knowledge discovery and data mining}, pages 631--636. ACM.
 
-\bibitem{wang2011understanding}
-{\sc Wang, T., Chen, Y., Zhang, Z., Xu, T., Jin, L., Hui, P., Deng, B., and Li,
-  X.}
+\bibitem[Meinshausen and B{\"u}hlmann, 2006]{meinshausen2006high}
+Meinshausen, N. and B{\"u}hlmann, P. (2006).
+\newblock High-dimensional graphs and variable selection with the lasso.
+\newblock {\em The Annals of Statistics}, 34(3):1436--1462.
+
+\bibitem[Nigam et~al., 1999]{nigam1999using}
+Nigam, K., Lafferty, J., and McCallum, A. (1999).
+\newblock Using maximum entropy for text classification.
+\newblock In {\em IJCAI-99 workshop on machine learning for information
+  filtering}, volume~1, pages 61--67.
+
+\bibitem[Tibshirani, 1996]{tibshirani1996regression}
+Tibshirani, R. (1996).
+\newblock Regression shrinkage and selection via the lasso.
+\newblock {\em Journal of the Royal Statistical Society. Series B
+  (Methodological)}, pages 267--288.
+
+\bibitem[Wainwright and Jordan, 2008]{wainwright2008graphical}
+Wainwright, M. and Jordan, M. (2008).
+\newblock Graphical models, exponential families, and variational inference.
+\newblock {\em Foundations and Trends{\textregistered} in Machine Learning},
+  1(1-2):1--305.
+
+\bibitem[Wang et~al., 2011]{wang2011understanding}
+Wang, T., Chen, Y., Zhang, Z., Xu, T., Jin, L., Hui, P., Deng, B., and Li, X.
+  (2011).
 \newblock Understanding graph sampling algorithms for social network analysis.
 \newblock In {\em Distributed Computing Systems Workshops (ICDCSW), 2011 31st
-  International Conference on\/} (2011), IEEE, pp.~123--128.
+  International Conference on}, pages 123--128. IEEE.
 
-\bibitem{wong2009introduction}
-{\sc Wong, K., Li, W., Xu, R., and Zhang, Z.}
+\bibitem[Wong et~al., 2009]{wong2009introduction}
+Wong, K., Li, W., Xu, R., and Zhang, Z. (2009).
 \newblock Introduction to chinese natural language processing.
-\newblock {\em Synthesis Lectures on Human Language Technologies 2}, 1 (2009),
-  1--148.
+\newblock {\em Synthesis Lectures on Human Language Technologies}, 2(1):1--148.
 
-\bibitem{Laurent}
-{\sc LAURENT EL GHAOUI, GUAN-CHENG LI, VIET-AN DUONG, VU PHAM,
-ASHOK SRIVASTAVA, and KANISHKA BHADURI. }
-\newblock Sparse machine learning methods for understanding large text corpora
-\newblock {\em Proc.\ Conference on Intelligent Data Understanding}, 1 (2011).
+\bibitem[Zhu et~al., 2004]{zhu20041}
+Zhu, J., Rosset, S., Hastie, T., and Tibshirani, R. (2004).
+\newblock 1-norm support vector machines.
+\newblock {\em Advances in neural information processing systems},
+  16(1):49--56.
 
-\bibitem{ZouSpca}
-{\sc Hui Zou, Trevor Hastie, Robert Tibshirani.}
-\newblock Sparse Principal Component Analysis
-\newblock {\em Journal of computational statistics and graphics}, (2006).
+\bibitem[Zou et~al., 2006]{zou2006sparse}
+Zou, H., Hastie, T., and Tibshirani, R. (2006).
+\newblock Sparse principal component analysis.
+\newblock {\em Journal of computational and graphical statistics},
+  15(2):265--286.
 
-\bibitem{WainJordan}
-{\sc Wainright M and Jordan M.}
-\newblock Graphical Models, Variational Methods and Message-Passing. 
-\newblock {\em Foundations and Trends in Machine Learning}, (2003).
-
-\bibitem{Banerjee}
-{\sc O.Banerjee and L. {El Ghaoui} and A. {d'Aspremont}}
-\newblock Model Selection Through Sparse Maximum Likelihood Estimation for Multivariate Gaussian or Binary Data.
-\newblock {\em Journal of Machine Learning Research}, (2008).
-
-\bibitem{MeiBuh}
-{\sc Meinshausen N. and Bühlmann P.}
-\newblock High-dimensional graphs and variable selection with the Lasso
-\newblock {\em Annals of Statistics}. (2006).
-
-\bibitem{HastieSVM}
-{\sc Trevor Hastie and Robert Tibshirani and Saharon Rosset and Ji Zhu.}
-\newblock The Entire Regularization Path for the Support Vector Machine.
-\newblock {\em The Journal of Machine Learning Research}. (2004).
-
-\bibitem{ZhuSVM}
-{\sc Ji Zhu, Saharon Rosset, Trevor Hastie, Rob Tibshirani.}
-\newblock 1-norm Support Vector Machines.
-\newblock {\em NIPS}. (2003).
-
-\bibitem{Fung}
-{\sc G. Fung and O. L. Mangasarian. }
-\newblock A Feature Selection Newton Method for Support Vector Machine Classification
-\newblock {\em Data Mining Institute, Computer Sciences Department, University of Wisconsin}. (2002)
-
-\bibitem{Tibs}
-{\sc Tibshirani R.}
-\newblock Regression shrinkage and selection via the lasso. 
-\newblock {\em J. Royal. Statist. Soc B.} (1996)
 \end{thebibliography}

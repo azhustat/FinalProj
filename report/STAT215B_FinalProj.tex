@@ -20,7 +20,7 @@
 
 % 设置中文字体
 % ==========================================================
-\setCJKmainfont[BoldFont=STHeiti,ItalicFont=STKaiti]{STSong}
+\setCJKmainfont[BoldFont=STHeiti]{STSong}
 \setCJKsansfont{STHeiti}
 \setCJKmonofont{STFangsong}
  
@@ -37,6 +37,8 @@
 
 %%%%%%%%%%
 % the following are user defined commands
+\usepackage{color}
+\newcommand{\note}[1]{{\em \color{red} #1}}
 
 \newcommand{\pr}[1]{{\mathbb P}\left(#1\right)}        % probability
 \newcommand{\E}[1]{{\mathbb E}\left[#1\right]}        % expectation 
@@ -58,7 +60,8 @@
 %%%%%%%%%%%
 %%%%%%%%%%%
 
-\title{\scshape STAT 215B Final Project, Spring 2012}
+\title{\scshape Sina Weibo as a Corpus for Studying Public Opinions
+	\\{\Large STAT 215B Final Project, Spring 2012} }
 \author{Christine Kuang, Siqi Wu, and Angie Zhu}
 \date{\today} % delete this line to display the current date
 
@@ -109,28 +112,137 @@ columns=flexible%,
 \section{Introduction}
 
 Due to the restriction on overseas websites such as Facebook or Twitter, domestic substitutes have become the major platforms for the internet citizens to express their opinions towards various social or political issues. Studying posts on those website thus provides interesting insights into the public opinion. For example, some events in the recent years, such as the tragic Wenzhou train collision on July 23 2011
-%\footnote{For details, see \url{http://en.wikipedia.org/wiki/Wenzhou_train_collision}. }
+\footnote{For details, see \url{http://en.wikipedia.org/wiki/Wenzhou_train_collision}. }
   and the more recent Wang Lijun incident,
-%\footnote{For details, see \url{http://en.wikipedia.org/wiki/Wang_Lijun_incident}.}  
+\footnote{For details, see \url{http://en.wikipedia.org/wiki/Wang_Lijun_incident}.}  
 have split the public into two major groups among which one considers the government's way of dealing with those incidences is good and one does not. 
 In principle, we can draw text data from those websites identifying whether a particular post is related to the event of interest, and which group the post should be classified into.
 
 Sina Weibo 新浪微博 is the largest microblogging website and one of the most popular social network website in China. It had more than 300 million registered users as of February 2012 (\cite{bloombergSina})
 and accounted for 65\% of China's microblog market by pageviews as of December 2011(\cite{WashingtonPostSina}).
-In this project, we develop a framework for for studying public opinions using Sina Weibo as a corpus for a given topic. Posts are sampled from Weibo and then processed taking the characteristics of both Chinese language and Weibo posts into consideration.
+In this project, we develop a framework for for studying public opinions using Sina Weibo as a corpus for a given topic. Posts are sampled from Weibo and then processed taking the characteristics of both Chinese language and Weibo posts into consideration. Then feature analysis and classification are performed. 
 
 
-related works here 
+%related works here 
 
-
-%%%%%%%%%%%%%%%%%%
-\section{Methods}
 
 
 
 %%%%%%%
-\subsection{Data Collection}
+\section{Data Collection}\label{subsec:datacol}
 
+A Weibo  application programming interface (API) is set up to collect posts.
+For a given topic, the ideal way to collect sample post are taking a random sample. \cite{boyd2004fastest, leskovec2006sampling, wang2011understanding} have presented sampling algorithms from large graphs. However, our preliminary results shows that the sample contains a large proportion of spams and posts which do not relate to the chosen topic. Therefore, the topic searching functionality of the Weibo API is utilized to collect posts. 
+
+There are certain technical restrictions on API. Regarding topic searching, only the latest search results are returned. The number of posts is up to 30 and usually around 18 per search. There is waiting between consecutive searches. Overlapping among sets of search results is examined. Clearly the sample is time-sensitive. Relative short collecting time is preferred in order to obtain a cross-sectional sample. Hence, the chosen topic for testing should have active discussion on Weibo. 
+
+It is well-known that China has strict Internet censorship comparing to other countries. Even though the downfall of Bo Xilai
+\footnote{For more information on Bo Xilai, see \url{http://en.wikipedia.org/wiki/Bo_Xilai}.}
+was a hot topic at the time of our data collection, there was no meaningful posts on Weibo. 
+The topic finally chosen is Han Han 韩寒, 
+\footnote{For more information on Han Han, see \url{http://en.wikipedia.org/wiki/Han_Han} and {\em Han Han: China's Literary Bad Boy} by Simon Elegant Monday, published on November 02, 2009, {em Time Magazine}, \url{http://www.time.com/time/magazine/article/0,9171,1931619,00.html}.}
+born September 23, 1982,
+who is a Chinese best-selling author, professional rally driver, and  wildly  popular blogger. He published his first novel {\em Triple Gate 三重门} at age of 17 and later dropped out of high school. Even though Han Han is famous for his criticism on social issues, he has not been heavily censored yet. There is a ghostwriting allegation against Han Han starting from January 2012. Fang Zhouzi 方舟子,
+\footnote{For more information on Fang Zhouzi, see \url{http://en.wikipedia.org/wiki/Fang_Zhouzi}.}
+ a scientific author and anti-fraud crusader, created widespread debate with Han Han on the Internet. In response to the allegation, Han Han published a photocopied manuscripts set {\em Light and Upright 光明与磊落} in April 2012, including the manuscript of his first novel {\em Triple Gate}. 
+ 
+Han Han received a death threat online on April 15, 2012. A set of 22,398 posts  was collected on April 16 and 17, 2012. The above proper nouns and words related to the death threat appear frequently in our data set. 
+
+
+
+
+%%%%%%%
+\section{Processing}
+
+%%%
+
+\subsubsection{Encoding}
+Chinese documents use various encoding standards (\cite{wong2009introduction}). {\em GB 国标}, abbreviation for ``National Standard'' in Chinese, is the standard used in mainland China, Singapore, and Malaysia. Since GB is unable to cover traiditional Chinese characters, {\em GBK 国标扩展}, ``Extension of National Standard,'' is developed to support both simplified and traditional characters. Meanwhile, {\em Big5} is the encoding standard used by Taiwan, Hong Kong, and Macau. {\em Unicode} is an industry standard for the consistent encoding of text expressed in most of the world's writing systems. {\em UTF-8} is the most commonly used encoding implementation of Unicode. All our data and related files are using UTF-8 encoding for processing purpose.
+
+%%
+\subsection{Characteristics of Chinese Language}\label{subsubsec:Chinese}
+
+There has been quite a bit of research done on natural language processing in the English language, but not much on the Chinese language.  This is due to the fact that the Chinese language contains unique characteristics that makes it difficult to do natural language processing on it well. 
+ 
+First, the Chinese language, unlike the English language, has no explicit delimiter between words. In the English language, spaces separate words and so to segment a sentence into its appropriate components is not too difficult since one could just separate based on spaces.  The Chinese language however has no such delimiter between words.
+ 
+An additional difficulty in segmenting a sentence into its appropriate components and words is that the Chinese language is made of separate characters where each character has a meaning of its own, but if you combine two or more characters together into a phrase, the meaning can be completely different. These types of ambiguities are typically easily resolved by humans reading the sentence and realizing what would make most sense in terms of the context of the
+sentence, but it is not so easy for a computer to perform those types of automatic word/phrase segmentations. For example, 他好吃 -- this sentence could be separated in two ways. The first character means ``he.'' The other two words can be taken as two different phrases: ``tastes delicious'' or ``loves to eat.''  It is obvious that the phrase should be taken as "he loves to eat" because ``he tastes delicious'' does not make sense but it is difficult to have a computer
+automatically recognize which sentence makes more sense. Some words also have more than one meaning. For example, 打 can be used in different ways with different meanings. It can be used in the contexts of playing a sport, hitting a person or object, or playing a game. 
+
+Second, the Chinese language has many out-of-vocabulary (OOV) words .  These are new phrases that are not found in dictionaries.  These phrases typically result from cultural references, current hot topics, acronyms, abbreviations, names/nicknames, or informal and slang words.  Specifically to the posts that we looked into, out of vocabulary words typically occurred in the case of cultural references.  Many of these social media posts would contain nicknames created for some hot topic issue, person, or event of the week or simply popular slang or informal words and phrases used to convey an emotion.  Since social media posts are more popular with the young adult generation, many of the words used in the posts are popular informal phrases that would not normally be found in established dictionaries. Knowledge of these types of OOV words comes out of knowing the current trends in Asian countries and being up to date with the typical language used by the younger generation.  
+
+Third, the Chinese language has two forms - traditional and simplified and it is not a one to one correspondence between the two languages which makes it difficult to convert between the two languages for translation or natural language processing. 
+
+
+\begin{center}
+\begin{figure}[!h]
+   \centering
+   \includegraphics[width=0.9\textwidth]{./slides/weiboEg.png} 
+      \caption{An example of Weibo posting. The picture showed Han Han met with Ma Ying-jeou, the President of the Republic of China (Taiwan), on May 3, 2012.}
+   \label{fig:weiboex}
+\end{figure}
+\end{center}
+
+%%
+\subsection{Characteristics of Sina Weibo Posts}\label{subsubsec:Weibo}
+
+Our analysis takes not only the characteristics of Chinese language, but also the characteristics of Sina Weibo posts into consideration.
+The writing of Weibo posts are generally informal. The users may not use standard punctuation marks for separation of sentences and parts of sentences. The most important features are described as follows:
+\begin{description}
+\item[Multiple Forms] A post can be text, picture, and/or multimedia as shown in Figure~\ref{fig:weiboex}. Weibo API is only able to return posts in text. For instance, we record a post in the following format:
+\begin{quote}
+1714080953 2012-04-16 10:01:59 //@風笑巨石: 那尊神容不得别人质疑？//@伯林2011: 
+质疑派人士遭到人肉，人身攻击，甚至死亡威胁的时候，从来没有污名化整个挺韩派，也没有引起什么媒体关注，相比之下，韩寒如此炒作，太无良了，挺韩和批韩的双方本不至于如此撕裂
+\end{quote}
+The post starts with the user identification number and time stamp. We ignore pictures and videos at this stage. 
+
+\item[Reposting] A user may repost other post. Reposting does not automatically imply agreement or liking. This type of post usually consists of two parts: the reposting user's comment and the post being reposted. The user's comment may be empty or set as default text ``Repost'' or ``转发微博'' (``Repost Weibo''). The reposted post itself may include multiple reposting. The reposting part usually starts with  ``//\MVAt'' followed by a user name as demonstrated in above example and Figure~\ref{fig:weiboex}. The topic of keeping track of reposting and identifying agreement or disagreement can be a project itself. In our analysis, only the reposting user's comment is kept.  
+
+\item[Spams] There are a fair amount of spams on Weibo. Some spam posts are identical except for the URL. Hence, URLs are removed and then we check for duplication in the pre-tagging processing step.
+
+\item[Mentioning] A user may mention other users whose usernames are preceded by the \MVAt\  symbol. The mentioned usernames may be an integrated part of the post. We define a set of topic-related usernames and substitute the mentioning of these usernames by the corresponding proper nouns. The other mentioned usernames are removed.
+
+\item[Emotion Symbols] Sina Weibo provides the users a set of emotion symbols, which are corresponding words surrounded by square brackets in text. The users may use other emotion symbols, such as ``:)'' for smile and ``T\_T'' for crying. 
+The two classes of graphic characters in CJK (Chinese, Japanese and Korean) computing,
+\footnote{For more details, see \url{http://en.wikipedia.org/wiki/Halfwidth_and_fullwidth_forms}.}
+ namely fullwidth and halfwidth, make emotion symbols more complicated. The punctuation marks in the emotion symbols can be in either fullwidth or halfwidth, such as fullwidth ``。'' and halfwidth ``.'' for period. Thus, there are various combinations even for a limited set of commonly used emotion symbols. A dictionary for emotion symbols is constructed manually by the authors.
+ 
+\item[Internet Slangs] 
+Internet slangs are a large part of Out-of-Vocabulary (OOV) word. Some substitute the characters in a word with the characters which have similar pronunciation, such as ``蜀黍'' (Shu3 Shu2) for ``叔叔'' (Shu1 Shu1, means ``uncle'') and ``围脖'' (wei2 bo2, means ``scarf'') for ``微博'' Weibo (wei1 bo2). Some are Internet popular interjections, such as ``喵了个咪'' (喵: ``meow,'' 了: past tense marker, 个: universal measure word, 咪: ``mew'') which means ``dog my cats.'' Again, a dictionary for commonly used Internet slangs is constructed manually by the authors.
+
+
+\item[Topic] Topic words are surrounded by the pound signs {\ttfamily \#} since Chinese language has no explicit delimiter between words. The topic word can be an integrated part of the post. 
+
+\end{description}
+
+ 
+
+
+
+
+%%
+\subsection{Pre-tagging Processing}
+
+Our data set contains 22,398 posts. 
+%In order to obtain labeled messages for training and testing purpose, the authors manually provided tags to a set of randomly selected 3500 posts, among which 3000 are used for training and 500 for testing. The four types of tags used here are positive, negative, noninformative.
+Due to the fair amount of spam posts and the issue of tracking down reposting described in Section~\ref{subsubsec:Weibo}, the data need to be cleaned before the constructing of the training and testing sets.
+A typical post looks like:
+\begin{quote}
+1165303315 2012-04-16 09:55:40  《韩寒收到网友死亡威胁》 (来自 @新浪娱乐) \\ 
+http://t.cn/zOprKap
+
+1165303315 2012-04-16 09:55:40  《Han Han received death threat online》 (from @新浪娱乐) http://t.cn/zOprKap
+\end{quote} 
+The pre-tagging processing consists of the following steps:
+\begin{enumerate}
+\item The user identification number and time stamp are removed.
+\item Only the reposting user's comment is kept. The reposted part is removed from further analysis. If the resulting string is empty, it will be eliminated as well.
+\item URLs are removed.
+\item Duplicates are removed.
+\end{enumerate}
+
+The resulting file consists of 13,070 unique posts. A set of randomly selected 3500 posts, among which 3000 are for training and 500 for testing, will be manually tagged.
 
 
 
@@ -139,94 +251,20 @@ related works here
 
 %Tagging Limitations
 
-In all, we tagged a total of 4000 Weibo posts.  We made a search for the topic we were looking into and did this over time to get a total of 10,000 Weibo posts, from which we picked out 3000 posts as our training set.  We each tagged 1000 posts.  The final 1000 posts were for our test set and we tagged these together. We had a total of four different categories that we tagged the posts as - neutral, positive, negative, and irrelevant (spam).  
+In all, we tagged a total of 3500 Weibo posts.  We made a search for the topic we were looking into and did this over time to get a total of 22,398 Weibo posts, with 13,070 posts left after pre-processing, from which we randomly picked out 3000 posts as our training set.  We split up the posts to tag by hand.  The final 500 posts were for our test set. We had a total of four different categories that we tagged the posts as -- neutral/unidentifiable, positive, negative, and irrelevant (spam).  
 
-As we each tagged the posts, we encountered and realized a few of the limitations involved. One limitation was in the fact that tagging these posts produced subjective responses.  What one of us read as a negative response to the topic we chose, another may have read as a positive response.  For example, the English phrase 'that wasn't too bad' could be taken as positive or negative.  Positive - the experience was better than expected; negative - the experience wasn't great. Hence, it is difficult sometimes to truly know whether the original author of the post had in mind a negative or positive reaction to the topic he was posting about.  
+As we each tagged the posts, we encountered and realized some of the limitations involved. One limitation was in the fact that tagging these posts produced subjective responses.  What one of us read as a negative response to the topic we chose, another may have read as a positive response.  For example, the English phrase ``that wasn't too bad'' could be taken as positive or negative.  Positive -- the experience was better than expected; negative -- the experience wasn't great. Hence, it is difficult sometimes to truly know whether the original author of the post had in mind a negative or positive reaction to the topic he was posting about.  
 
-Another limitation was that some posts we were not sure how to tag. Many posts consisted of just a quote by the author we were looking into.  These could have been seen as positive posts since the writer may have liked the quote and so posted it. But at the same time, the author could have been neutral and was just merely using the quote to apply to a specific circumstance in his life at the time. We were not entirely sure of how to tag each of the posts that fell into this category, and so again, the subjectiveness of tagging the posts by hand comes into play as a limitation in the forming of our model.  Another uncertainty that occurred in trying to manually tag the posts was that some of the posts didn't talk about our chosen topic specifically, but a related topic.  With our chosen topic, people who had negative responses towards 韩寒 (Hanhan), were usually on the side of the opposing author who was discrediting him.  Some of the posts did not directly mention 韩寒, but would instead show support for the opposing side. With these posts, we typically labeled as a negative response.  However, an argument could be made for just throwing out those posts since they do not directly say anything about 韩寒, and they could possibly just be supporting the opposing author in his own literary works and not necessarily in his stance against 韩寒.  Another uncertainty in tagging is what to tag posts that have no subject.  There were a few posts that had nothing to do with the chosen topic at all, but there were also posts that had no subject but contained phrases such as "Keep it up!", "always a supporter!", etc. that could very well be taken as positive posts since our search is for our specific topic. But because there is no subject in the posts, this cannot be taken with 100\% certainty. In these instances, where there is no subject in the posts, we marked them as irrelevant to be on the conservative side in our predictions. 
+Another limitation was that some posts we were not sure how to tag. Many posts consisted of just a quote by the author we were looking into.  These could have been seen as positive posts since the writer may have liked the quote and so posted it. But at the same time, the author could have been neutral and was just merely using the quote to apply to a specific circumstance in his life at the time. We were not entirely sure of how to tag each of the posts that fell into this category, and so again, the subjectiveness of tagging the posts by hand comes into play as a limitation in the forming of our model.  Another uncertainty that occurred in trying to manually tag the posts was that some of the posts didn't talk about our chosen topic specifically, but a related topic.  With our chosen topic, people who had negative responses towards 韓寒 (Hanhan), were usually on the side of the opposing author who was discrediting him.  Some of the posts did not directly mention 韓寒, but would instead show support for the opposing side. With these posts, we typically labeled as a negative response.  However, an argument could be made for just throwing out those posts since they do not directly say anything about 韓寒, and they could possibly just be supporting the opposing author in his own literary works and not necessarily in his stance against 韓寒.  Another uncertainty in tagging is what to tag posts that have no subject.  There were a few posts that had nothing to do with the chosen topic at all, but there were also posts that had no subject but contained phrases such as ``Keep it up!'' and ``always a supporter!'' that could very well be taken as positive posts since our search is for our specific topic. But because there is no subject in the posts, this cannot be taken with 100\% certainty. In these instances, where there is no subject in the posts, we marked them as irrelevant to be on the conservative side in our predictions. 
 
-These limitations in tagging will affect our model's accuracy in predicting whether a post contains a positive or negative response to the topic at hand.  These limitations also indicate to us that in general, models for predicting whether or not a post is negative or positive towards a chosen topic is limited greatly by the subjectiveness of the sentence's meaning/interpretation which affects the training set used to form the model. This limitation could present a potential future question to look into on how we can improve tagging - whether we should just remove posts that have too subjective of an interpretation to tag or if by studying these types of ambiguous posts, we can create certain priors to help in the tagging process. 
-
-%%%%%%%
-\subsection{Processing}
-
-
-
-UTF-8 encoding, GBK, Unicode, Big5
-
-%%
-\subsubsection{Characteristics of Chinese Language}\label{subsec:Chinese}
-
-
-
-%\cite{wong2009introduction}
-
-
-There has been quite a bit of research done into natural language processing in the English language, but not much on the Chinese language.  This is due to the fact that the Chinese language contains unique characteristics that makes it difficult to do natural language processing well. 
- 
-First, the Chinese language, unlike the English language, has no explicit delimiter between words. In the English language, spaces separate words and so to segment a sentence into its appropriate components is not too difficult since one could just separate based on spaces.  The Chinese language however has no such delimiter between words.
- 
-An additional difficulty in segmenting a sentence into its appropriate components and words is that the Chinese languages made of separate characters where each character has a meaning of its own, but if you combine two or more characters together into a phrase, the meaning can be completely different. These types of ambiguities are typically easily resolved by humans reading the sentence and realizing what would make most sense in terms of the context of the
-sentence, but it is not so easy for a computer to preform those types of automatic word/phrase segmentations. For example, 他好吃 - this sentence could be separated in two ways. The first character means 'he'. The other two words can be taken as two different phrases: 'tastes delicious' or 'loves to eat'.  It is obvious that the phrase should be taken as "he loves to eat" because "he tastes delicious" does not make sense but it is difficult to have a computer
-automatically recognize which sentence makes more sense. Some words also have more than one meaning. For example, 打 can be used in different ways with different meanings. It can be used in the contexts of playing a sport, hitting a person or object, or playing a game. 
-
-Second, the Chinese language has many OOV words (out of vocabulary).  These are new phrases that are not in dictionaries.  These phrases typically come out of cultural references, current hot topics, acronyms, abbreviations, names/nicknames, or just plain slang words.  Specifically to the posts that we looked into, out of vocabulary words typically occurred in the case of cultural references, where there are nicknames created for some hot topic issue/person/event of the week just popular slang or informal words and phrases used to 
-convey an emotion.  Especially since social media posts are more popular with the young adult generation, many of the words used in the posts are popular informal phrases that would not normally be found in dictionaries. Knowledge of these types of OOV words comes out of knowing the current trends in Asian countries and being up to date with the typical language used by the younger generation.  
-
-Third, the Chinese language has two forms - traditional and simplified and it is not a 1-1 correspondence between the two languages which makes it difficult to convert between the two languages for translation or natural language processing. 
+These limitations in tagging will affect our model's accuracy in predicting whether a post contains a positive or negative response to the topic at hand.  These limitations also indicate to us that in general, models for predicting whether or not a social media post is negative or positive towards a chosen topic is limited greatly by the subjectiveness of the sentence's meaning and interpretation which affects the training set used to form the model. This limitation could present a potential future question to look into on how we can improve tagging -- whether we should just remove posts that have too subjective of an interpretation to tag or if by studying these types of ambiguous posts, we can create certain priors or statistical models to help in the tagging process. 
 
 
 
 %%
-\subsubsection{Characteristics of Sina Weibo Posts}\label{subsec:Weibo}
+\subsection{Pre-segmentation Processing}
 
-Our analysis takes not only the characteristics of Chinese language, but also the characteristics of Sina Weibo posts into consideration.
-
-The writing of Weibo posts are generally informal. The users may not use standard punctuation marks for separation of sentences and parts of sentences. The most important features are described as follows:
-
-\begin{description}
-\item[Reposting] A user may repost other post. Reposting does not automatically imply agreement or liking. This type of post usually consists of two parts: the reposting user's comment and the post being reposted. The user's comment may be empty or set as default text ``Repost'' or ``转发微博'' (``Repost Weibo''). The reposted post itself may include multiple reposting. The topic of keeping track of reposting and identifying agreement or disagreement can be a project itself. In our analysis, only the reposting user's comment is kept.  
-
-\item[Spams] There are a fair amount of spams on Weibo. Some spam posts are identical except for the URL. Hence, URLs are removed and then we check for duplication in the pre-tagging processing step.
-
-\item[Mentioning] A user may mention other users whose usernames are preceded by the \MVAt\  symbol. The mentioned usernames may be an integrated part of the post. We define a set of topic-related usernames and substitute the mentioning of these usernames by the corresponding proper nouns. The other mentioned usernames are removed.
-
-\item[Emotion Symbols and Internet Slangs] Sina Weibo provides the users a set of emotion symbols, which are corresponding words surrounded by square brackets in text. The users may use other emotion symbols, such as {\ttfamily :)} for smile and {\ttfamily T\_T} for crying. Internet slangs are a large part of Out-of-Vocabulary (OOV). Some substitute the characters in a word with the characters which have similar pronunciation, such as ``蜀黍'' (Shu3 Shu2) for ``叔叔'' (Shu1 Shu1, means ``uncle''). Some are Internet popular interjections, such as ``喵了个咪'' (喵: ``meow,'' 了: past tense marker, 个: universal measure word, 咪: ``mew'') which means ``dog my cats.'' 
-
-\item[Topic] Topic words are surrounded by the pound signs {\ttfamily \#} since Chinese language has no explicit delimiter between words. The topic word can be an integrated part of the post. 
-
-\end{description}
-
-
-
-%%
-\subsubsection{Pre-tagging Processing}
-
-The data set {\ttfamily Han.txt} contains 22,398 posts.
-
-In order to obtain labeled messages for training and testing purpose, the authors manually provided sentiment tags to a data set containing 3000 messages. The three types of sentiment tags used here are positive, negative, and noninformative.
-
-The data need to be cleaned before manual labeling.
-A typical post looks like:
-\begin{verbatim}
-1165303315 2012-04-16 09:55:40  《韩寒收到网友死亡威胁》 (来自 @新浪娱乐) http://t.cn/zOprKap
-\end{verbatim}
-
-\begin{enumerate}
-\item The user identification number and time stamp are removed.
-\item Only the reposting user's comment is kept. The reposted part is removed from further analysis. If the resulting string is empty, it will be eliminated as well.
-\item URLs are removed.
-\item Duplicates are removed.
-\end{enumerate}
-
-The output file {\ttfamily hanhanweibo.txt} consists of 13,070 unique posts. 3000 posts are chosen from this data set and will be manually tagged.
-
-
-
-%%
-\subsubsection{Pre-segmentation Processing}
-
-As discussed in Section~\ref{subsec:Chinese}, sentences in Chinese are normally strings of Chinese characters without spaces between words. Hence, word segmentation is crucial for our word-based analysis. According to the characteristics of Weibo posts described in Setion~\ref{subsec:Weibo}, the following processing is preformed:
+As discussed in Section~\ref{subsubsec:Chinese}, sentences in Chinese are normally strings of Chinese characters without spaces between words. Hence, word segmentation is crucial for our word-based analysis. According to the characteristics of Weibo posts described in Setion~\ref{subsubsec:Weibo}, the following processing is preformed:
 \begin{enumerate}
 \item A set of topic-related usernames are defined.  Then the mentioning of these usernames are substituted by the corresponding proper nouns. The other mentioned usernames are removed.
 \item A set of emotional symbols and Internet slangs are defined.  Then they are substituted by the corresponding word surrounded by square brackets.
@@ -235,19 +273,21 @@ As discussed in Section~\ref{subsec:Chinese}, sentences in Chinese are normally 
 	
 
 %%
-\subsubsection{Segmentation}
+\subsection{Segmentation}
 
-汉语词法分析系统ICTCLAS (Institute of Computing Technology, Chinese Lexical Analysis System) is a well known Chinese word segmentation system developed by Institute of Computing Technology, Chinese Academy of Sciences \cite{ICTCLAS}. It offers the functionality of  Chinese word segmentation, lexical tagging, named entity recognition, unknown words detection, and the user-defined dictionary. 
+汉语词法分析系统ICTCLAS (Institute of Computing Technology, Chinese Lexical Analysis System) is a well known Chinese word segmentation system developed by 
+%Institute of Computing Technology, Chinese Academy of Sciences 
+\\ \cite{ICTCLAS}. It offers the functionality of  Chinese word segmentation, lexical tagging, named entity recognition, unknown words detection, and the user-defined dictionary. 
 The current version is ICTCLAS 2011, which supports GB2312, GBK, UTF8 and several encodings and has precision rate of 98.45\%. 
 
-The Java version of ICTCLAS 2011 preforms word segmentation and lexical tagging on a Linux 32-bit machine. A user-defined dictionary is provided. The entries in this dictionary contains proper nouns and some common Internet slangs. For instance, 微博 (Weibo, wei1 bo2) can be written as 围脖 (wei2 bo2, means ``scarf''). Some users refer Han Han as 韩少 (韩: Han Han's surname, 少: abbreviation of 少爷, which means ``young master of the house''). 
-
+The Java version of ICTCLAS 2011 preforms word segmentation and lexical tagging on a Linux 32-bit machine. A user-defined dictionary is provided. The entries in this dictionary contains proper nouns and Internet specific word. For instance, some users refer Han Han as 韩少 (韩: Han Han's surname, 少: abbreviation of 少爷, which means ``young master of the house''). 
 Even with the user-defined dictionary, some appearance of Han Han's name 韩寒 can not be segmented and tagged correctly. This is corrected directly using regular expression.
 
 %%	
-\subsubsection{Conjunction Rules}
+\subsection{Conjunction Rules}
 
-Lee and Renganathan \cite{lee2011chinese} presented that special consideration should be given to the sentences whose parts are linked by contrasting transitional expressions. In particular, if a sentence contains conjunctions such as ``although'' and  ``but,'' only the part being emphasized will be kept and used to infer the sentiment polarity of this sentence. There are three cases:
+%Lee and Renganathan 
+\cite{lee2011chinese} presented that special consideration should be given to the sentences whose parts are linked by contrasting transitional expressions. In particular, if a sentence contains conjunctions such as ``although'' and  ``but,'' only the part being emphasized will be kept and used to infer the sentiment polarity of this sentence. There are three cases:
 \begin{enumerate}
 \item Although (part A), (part B).
 \item (Part A), but (part B).
@@ -260,7 +300,7 @@ The four words for ``although'' are 虽然, 虽说, 虽, and 尽管. The words f
 
 
 %%
-\subsubsection{Stop Words and Punctuation Elimination}
+\subsection{Stop Words and Punctuation Elimination}
 Moreover, stop words, non-text strings, and punctuation marks are eliminated. The detailed process is as follows: 
 \begin{enumerate}
 \item  Remove prepositions, punctuation marks, English character strings, interjections, modal particles, onomatopoeia, and auxiliary words.
@@ -269,8 +309,112 @@ Moreover, stop words, non-text strings, and punctuation marks are eliminated. Th
 Note that the pre-defined stop words do not contain the following six negation words:  不, 不是, 没有, 没, 无, and 别. These negation words will be used in sentiment score assignment.
 
 
+%%%%%%%
+
+
+\begin{center}
+\begin{figure}[tb]
+   \centering
+   \includegraphics[width=\textwidth]{../wordFreqMat.png} 
+      \caption{Plot the transpose of the frequency matrix.}
+   \label{fig:freqmat}
+\end{figure}
+\end{center}
+
+\begin{center}
+\begin{figure}[tb]
+   \centering
+   \includegraphics[width=\textwidth]{../coocurResults/cooccurNetwork.png} 
+      \caption{Network plot of the top 50 most frequent phrases.}
+   \label{fig:coocur}
+\end{figure}
+\end{center}
+
+
+\section{Feature Analysis}
+It is of interest to study the relation between words or phrases in the posts. In what follows, we will base our analysis on the frequency matrix $X\in R^{n\times p}$, where the entry $x_{ij}$ stores the frequency of occurrences of the $j$-th word(or phrase) in the $i$-th post. We include only words or phrases that have total occurrence of at least 10 times over all 3000 posts. Analyzing feature relation can help us better understand word usage and identify possible cluster in the feature space. 
+
+
+
+One way to study the word usage relation is to look at the concurrence between any two pair of words. Denote by $C$ the concurrence matrix, where the entry $c_{ij}$ records the number of concurrencies of the $i$-th and the $j$-th word in the same post. Figure~\ref{fig:freqmat} and \ref{fig:coocur} give the matrix plot and the network plot of the top 50 most frequent phrases. 
+
 %%
-\subsubsection{Sentiment Score Assignment}
+\note{ 
+To Christine: in the notes below the frequency matrix, comment on the sparsity of the data. then point out the need to use high dimension tools in the later-on section.
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Sparse Principal Component Analysis (SPCA)}
+Principal component analysis (PCA) is a standard approach for feature extraction and dimension reduction. In high dimensional setting, \cite{zou2006sparse} suggest the following variant of the traditional PCA:
+\begin{align}
+(A,B) & = \arg \min_{A,B} \left \{ \sum_{i=1}^n||x_i-AB^Tx_i||_2^2 + \lambda \sum_{j=1}^k||\beta_j||^2 + \sum_{j=1}^k\lambda_{1,j}||\beta_j||_1 \right\} \\ 
+\text{subject to } & A^TA = I_{k}. \nonumber
+\end{align}
+In the above formulation, only the first $k$ leading principal components are kept, with the corresponding loading matrix $B = (\beta_1,...,\beta_k) \in R^{p\times k}$. The feature vector $x_i$'s are required to be demeaned. The same $\lambda$ is used to penalized the square $l_2$ norm of the all the loading coefficients whereas different regularization parameters $\lambda_{1,j}$ are used for the $l_1$ norm of the loadings. To solve the SPCA problem, we use the efficient algorithm proposed by \cite{zou2006sparse}. 
+
+By doing a sparse PCA on the frequency matrix, we hope to find possible principal components that can summarized the 3000 posts we targeted. For simplicity, we set the number of principal component $k=3$ and tune for the regularization parameters. The results are summarized in Table~\ref{tb:spca}.
+
+\begin{table}[htb]
+\caption{Sparse PCA results on the frequency matrix.}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+1st PC top abs.coef.  &  2nd PC top abs.coef   & 3rd PC top abs.coef \\ \hline
+     韩寒 (Han Han)      &       方舟子 (Fang Zhouzi)    &   死亡 (death)\\ \hline
+     韩少 (Master Han)   &        够 (enough)        &        韩 (Han)\\ \hline
+     写 (write)         &       质疑 (suspect)        &     威胁 (Threat)\\ \hline
+     真 (truth)         &         韩 (Han)         &         倒 (oppose)\\ \hline
+     死亡 (death)         &       事 (event)      &         网友 (netizen)\\ \hline
+\end{tabular}
+\end{center}
+\label{tb:spca}
+\end{table}%
+
+
+
+It is easy to see that the first principal seems to be about the writing of Han Han; the second column is related to the fact that the fraud-crusader Fang Zhouzi suspects the authorship of HanHan's works; the third is about the death threat to Han Han. These three components correspond to three major aspects of Han Han that are known to us as discussed in Section~\ref{subsec:datacol}.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Sparse Graphical Models}
+Graphical models are commonly used in machine learning to study the relation between random variables (\cite{wainwright2008graphical}). Here we consider undirected graphical representation of random variables. Each node of the graph represents a random variable. An edge connecting two nodes represents the conditional dependency between the two random variables given all other random variables (The missing of an edge indicates conditional independency). If, in addition, the joint distribution of the random variables is a multivariate normal with mean $\mu$ and covariance matrix $\Sigma$, then the $i$-th node and $j$-th node are conditionally independent (or, equivalently, missing an edge) if and only if $(\Sigma^{-1})_{ij} = 0$. Therefore, given data $x_1,x_2,...,x_n\in R^p$, to explore the relation between features, we can estimate the inverse covariance matrix by computing the MLE:   
+\begin{align}
+\label{eq:mle}
+\max_S \left\{  \log \det \lp S\rp - \textbf{Tr}( \hat{\Sigma}S)  \right\}
+\end{align}
+If the number of features $p$ is large, certain regularization is needed to control the number of edges. Banerjee et al. (\cite{banerjee2008model}) propose the following optimization problem to recover the sparse structure in a gaussian graphical model
+\begin{align}
+\label{eq:gLasso}
+\max_S \left\{ \log \det S - \textbf{Tr} \lp \hat{\Sigma}S \rp - \lambda ||S||_1 \right\}
+\end{align}
+where $\Sigma$ is the covariance matrix of the data/design matrix $X$ and $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$. To solve for $S$,  Banerjee et al. (\cite{banerjee2008model}) propose a block coordinate ascent method (COVSEL) (updating one row and one column of $S$ at one time). Their approach is exact but is time consuming. Meinshausen and Buhlmann (\cite{meinshausen2006high}) uses an approximation approach that is substantially faster. In our study, we adopt the fast and accurate graphical LASSO procedure ({\sffamily R} package {\sffamily glasso}, \cite{Rglasso}). Figure~\ref{fig:glasso1} shows the word usage network by fitting a sparse graphical model. Due to space limit, only the top 50 most frequent words are shown.
+
+%\note{lambda = 0.01 plot here.}
+
+\begin{center}
+\begin{figure}[tb]
+   \centering
+   \includegraphics[width=0.7\textwidth]{../gLassoResults/glasso1.png} 
+      \caption{The word usage network by fitting a sparse graphical model with $\lambda = 0.01$.}
+   \label{fig:glasso1}
+\end{figure}
+\end{center}
+
+
+The network plot of the estimated inverse covariance matrix $S$. As discussed, an edge (i.e. $S_{ij}\neq 0$) represents conditional dependency between two nodes given all the other nodes. Red edges indicate positive correlated occurence $S_{ij}<0$ (Given all other words, word $i$ is more likely to occur if word $j$ is observed) and black edges indicate negative correlated occurrence $S_{ij}>0$. Edge width is proportional to $|S_{ij}|$, representing the strength of the tie.
+
+
+A comparison of the concurrence network and sparse graphical model: the concurrence network is heavily influenced by usage frequency of words. For example, ``不'' (the negation word) and ``韩寒''(Han Han) are strongly connected in the concurrence network, but this might not imply that there is an nontrivial relation between these two words. Sparse graphical models, on the other hand, give more interpretable results. For example,  ``不''(the negation word) and ``韩寒''(Han Han) are not longer heavily connected. In addition, some interesting word combinations are revealed: the word ``光明'' (light) and ``磊落'' (upright) are words that constitute the name of the Han Han's new book {Light and Upright} as mentioned in Section~\ref{subsec:datacol}; and the clique form by ``方舟子'' (Fang Zhouzi),''怀疑'' (suspect) and  ``韩寒'' (Han Han) seems to reveal the fact that Fang suspects Han Han has a team of ghost writers. Other obvious relation revealed include ``死亡'' (death) and ``威胁'' (threat), ``买'' (buy) and ``书'' (book), ``写'' (write) and ``文章'' (article),  and so forth.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%
+\section{Classification}
+We are also interested in classifying the posts into different categories. Let $x_i\in R^{p}$ be the $i$-th row of the frequency matrix $X$ and $y_i$ the corresponding category. For simplicity, let's assume that $y_i\in\{-1,+1\}$ is binary, where the ``+1'' can be used to label the following four categories: 1) positive opinion towards Han Han; 2) negative opinion towards Han Han; 3) neutral or unidentifiable opinion; 4) spam and we use ``-1'' to label the complement of the individual category (e.g., if ``+1'' means positive, ``-1'' would mean anything but positive. Note that the complement of positive is not negative, but rather, the union of negative, neutral and spam). For each of the above four cases, we apply LASSO and $l_1$-norm support vector machine to classify the data points into ``-1'' and ``+1.''  
+
+
+%%
+\subsection{Sentiment Score Assignment}
 Dictionary-based sentiment score can provide us some intuitive understanding of the sentiment polarity of the posts. 
 The dictionaries are obtained from HowNet \cite{HowNet}. HowNet is an online extralinguistic common-sense knowledge system for the computation of meaning in human language technology.
 
@@ -279,102 +423,57 @@ Each post is examined and the numbers of positive and negative words are recorde
 
 Also topic-related positive/negative words are added to the dictionaries. For instance, the users who refer Han Han as 韩少 (韩: Han Han's surname, 少: abbreviation of 少爷, which means ``young master of the house'') clearly have positive feelings about him. 
 
-Another interesting quantities are the numbers of positive and negative words in a neighborhood of a particular person. The neighborhood used in our analysis is three words before and after the person's name.
+%Another interesting quantities are the numbers of positive and negative words in a neighborhood of a particular person. The neighborhood used in our analysis is three words before and after the person's name.
 
+This sentiment score can be used for classification purpose. Positive/negative score of a post indicates the corresponding category. But neutral and spam categories cannot be identified. 
 
-%%%%%%%
-\subsection{Feature analysis}
-It is of interest to study the relation between words or phrases in the posts. In what follows, we will base our analysis on the frequency matrix $X\in R^{n\times p}$, where the entry $x_{ij}$ stores the frequency of occurencies of the $j$-th word(or phrase) in the $i$-th post. We include only words or phrases that have total occurence of at least 10 times over all 3000 posts. Analyzing feature relation can help us better understand word usage and identify possible cluster in the feature space. 
-
-%\note{ To Angie:plot the transpose of the frequency matrix here. 
-%
-%Also to Christine: in the notes below the frequency matrix, comment on the sparsity of the data. then point out the need to use high dimension tools in the later-on section.
-%}
-
-One way to study the word usage relation is to look at the cooccurence between any two pair of words. Denote by $C$ the cooccurence matrix, where the entry $c_{ij}$ records the number of cooccurences of the $i$-th and the $j$-th word in the same post. Figure XX and XX give the matrix plot and the network plot of the top 50 most frequent phrases. 
-
-%\note{
-%To Angie: include plots of the comatrix, both matrixplot and the network plot; 
-%To Christine: comment on sparsity and the network structure} 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Sparse principal component analysis (SPCA)}
-Principal component analysis (PCA) is a standard approach for feature extraction and dimension reduction. In high dimensional setting, Zou et al (2006) \cite{ZouSpca} suggest the following variant of the traditional PCA:
-\begin{align}
-(A,B) & = \arg \min_{A,B} \left \{ \sum_{i=1}^n||x_i-AB^Tx_i||_2^2 + \lambda \sum_{j=1}^k||\beta_j||^2 + \sum_{j=1}^k\lambda_{1,j}||\beta_j||_1 \right\} \\ 
-\text{subject to } & A^TA = I_{k}. \nonumber
-\end{align}
-In the above formulation, only the first $k$ leading principal components are kept, with the corresponding loading matirx $B = (\beta_1,...,\beta_k) \in R^{p\times k}$. The feature vector $x_i$'s are required to be demeaned. The same $\lambda$ is used to penalized the square $l_2$ norm of the all the loading coefficients whereas different regularization parameters $\lambda_{1,j}$ are used for the $l_1$ norm of the loadings. To solve the SPCA problem, we use the efficient algorithm proposed by Zou et al (2006). 
-
-By doing a sparse PCA on the frequency matrix, we hope to find possible principal components that can summarized the 3000 posts we targeted. For simplicity, we set the number of principal component $k=3$ and tune for the regularization parameters. The results are summarized in Table XX.
-
-
-1st PC top abs.coef.   2nd PC top abs.coef    3rd PC top abs.coef
-     韩寒(Han Han)           方舟子(Fang Zhouzi)     死亡(death)
-     韩少(Master Han)         够(enough)              韩(Han)
-     写 (write)              质疑(suspect)           威胁(Threat)
-     真 (truth)                韩(Han)                倒(oppose)
-     死亡 (death)              事(event)             网友(netizen)
-Table XX: Sparse PCA results on the frequency matrix.
-
-It is easy to see that the first principal seems to be about the writing of Han Han; the second column is related to the fact that the fraud-crusader Fang Zhouzi suspects the authorship of HanHan's works; the third is about the death threat to Han Han. These three components correspond to three major aspects of Han Han that are known to us. 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Sparse graphical models}
-Graphical models are commonly used in machine learning to study the relation between random variables (See, for example, \cite{WainJordan}). Here we consider undirected graphical representation of random variables. Each node of the graph represents a random variable. An edge connecting two nodes represents the conditional dependency between the two random variables given all other random variables (The missing of an edge indicates conditional independency). If, in addition, the joint distribution of the random variables is a multivarite normal with mean $\mu$ and covariance matrix $\Sigma$, then the $i$-th node and $j$-th node are conditionally independent (or, equivalently, missing an edge) if and only if $(\Sigma^{-1})_{ij} = 0$. Therefore, given data $x_1,x_2,...,x_n\in R^p$, to explore the relation between features, we can estimate the inverse covariance matrix by computing the MLE:   
-\begin{align}
-\label{eq:mle}
-\max_S \left\{  \log \det \lp S\rp - \textbf{Tr}( \hat{\Sigma}S)  \right\}
-\end{align}
-If the number of features $p$ is large, certain regularization is needed to control the number of edges. Banerjee et al. \cite{Banerjee} propose the following optimization problem to recover the sparse structure in a gaussian graphical model
-\begin{align}
-\label{eq:gLasso}
-\max_S \left\{ \log \det S - \textbf{Tr} \lp \hat{\Sigma}S \rp - \lambda ||S||_1 \right\}
-\end{align}
-where $\Sigma$ is the covariance matrix of the data/design matrix $X$ and $||S||_1 = \sum_{i=1}\sum_{j=1} |s_{ij}|$. To solve for $S$, Banerjee et al (2007) propose a block coordinate ascent method (COVSEL) (updating one row and one column of $S$ at one time). Their approach is exact but is time consuming. Meinshausen and Buhlmann (2006) uses an approximation approach that is substantially faster. In our study, we adopt the fast and accurate graphical LASSO procedure (R package glasso) by Friedman et al (2007). Figure XX shows the word usage network by fitting a sparse graphical model. Due to space limit, only the top 50 most frequent words are shown.
-
-%\note{lambda = 0.01 plot here.}
-The network plot of the estimated inverse covariance matrix $S$. As discussed, an edge (i.e. $S_{ij}\neq 0$) represents conditional dependency between two nodes given all the other nodes. Red edges indicate positive correlated occurence $S_{ij}<0$ (Given all other words, word $i$ is more likely to occur if word $j$ is observed) and black edges indicate negative correlated occurence $S_{ij}>0$. Edge width is proportional to $|S_{ij}|$, representing the strength of the tie.
-
-
-A comparison of the cooccurence network and sparse graphical model: the cooccurence network is heavily influenced by usage frequency of words. For example, "bu''(the negation word) and "Han han''(Han Han) are strongly connected in the cooccurence network, but this might not imply that there is an nontrivial relation between these two words. Sparse graphical models, on the other hand, give more interpretable results. For example, ``bu'' and "han han'' are not longer heavily connected; in addition, some interesting word combinations are revealed: the word "GuangMing'' and ``LeiLuo'' are words that constitute the name of the Han Han's new book Light and Upright; and the clique form by ``FangZhouZi'',''suspect'' and  ``HanHan'' seems to reveal the fact that Fang suspects Hanhan has a ghost writer. Other obvious relation revealed include "death'' and ``threat''; ``buy'' and ``book''; ``write'' and ``article'' etc.
-
-%%%%%
-\subsection{Classification}
-We are also interested in classifying the posts into different categories. Let $x_i\in R^{p}$ be the $i$-th row of the frequency matrix $X$ and $y_i$ the corresponding category. For simplicity, let us assume that $y_i\in\{-1,+1\}$ is binary, where the ``+1'' can be used to label the following four categories: 1) positive opinion towards Han Han; 2) negative opinion towards Han Han; 3) netural or unidentifiable opinion; 4) spam and we use ``-1'' to label the complement of the inividual category (e.g. if ``+1'' means positive, ``-1'' would mean anything but positive. Note that the complement of positive is not negative, but rather, the union of negative, neutral and spam). For each of the above four cases, we apply LASSO and $l_1$-norm support vector machine to classify the data points into ``-1'' and ``+1''.  
   
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{Sparse regression with the LASSO}
-The LASSO (Tibshirani, 1996 \cite{Tibs}) is a sparse regression method which adds a $l_1$-norm penalty to the linear least squares objetive to promote sparsity in the regression coefficients:
+\subsection{Sparse Regression with LASSO}
+
+LASSO (\cite{tibshirani1996regression}) is a sparse regression method which adds a $l_1$-norm penalty to the linear least squares objective to promote sparsity in the regression coefficients:
 \begin{align}
 \label{eq:Lasso}
 \hat{\beta}(\lambda) = \arg \min_\beta \frac{1}{2}||y-(\beta_0+X\beta)||_2^2 + \lambda ||\beta||_1
 \end{align}
 In our study, we regress the class label vector $y$ onto the word frequency matrix $X$, yielding the intercept $\hat{\beta_0}$ and the sparse regression vector $\hat{\beta}(\lambda)$. The classifier can be determined to be $f(x) = \textbf{sign}(\hat{\beta_0}+\hat{\beta}^Tx)\in\{-1,+1\}$, where the resulting coefficient regression coefficient $\hat{\beta}$ has the following explanation: for each feature/word $j$, given all other feature/word variable fixed, the increase of the $j$-th word frequency by one lead to increase in regression function $\beta_0+\beta^Tx$ by an amount of $\beta_i$ (if $\beta_i$ turns out to be positive, this means the chance of classifying the data point into the $+1$ category is increased).
 
-To look at which words were most relevant to each category we modeled (positive, negative, neutral and spam), we looked at three sets of 20 words based on, respectively, the highest absolute beta values, most positive coefficient values and most negative coefficient values. The top 30 words based on the top 50 highest absolute beta values tells us in general which words were most relevant to predicting that particular category.  The top 50 words based on the top 50 highest positive beta values tells us which words typically were common in posts that fell into the category observed while the top 50 words based on the top 50 highest negative beta values tells us which words typically were not in posts that fell into the category observed but were rather more common in the categories outside of the one we were modeling.
+To look at which words were most relevant to each category we modeled (positive, negative, neutral and spam), we looked at three sets of 20 words based on, respectively, the highest absolute $\beta$ values, most positive coefficient values and most negative coefficient values. The top 30 words based on the top 50 highest absolute $\beta$ values tells us in general which words were most relevant to predicting that particular category.  The top 50 words based on the top 50 highest positive $\beta$ values tells us which words typically were common in posts that fell into the category observed while the top 50 words based on the top 50 highest negative $\beta$ values tells us which words typically were not in posts that fell into the category observed but were rather more common in the categories outside of the one we were modeling.
 
-Since the estimated $\beta$ depend on the regularization parameter, we are left with the issue of choose the ``best'' $\lambda$. A commonly used approach is to do a grid search for $\lambda$: for each value of $\lambda$, do a 10-fold cross validation; then choose the $\lambda$ that yields the smallest cross validation testint sample error. For this purpose, we used the approach least-angle regression (LARS) by Efron et al (2007) to do the model selection. Their R package lars efficiently fits an entire lasso sequence with the least squares loss function. The results are summarized in Table XX-XX.
+Since the estimated $\beta$ depend on the regularization parameter, we are left with the issue of choose the ``best'' $\lambda$. A commonly used approach is to do a grid search for $\lambda$: for each value of $\lambda$, do a 10-fold cross validation; then choose the $\lambda$ that yields the smallest cross validation testing sample error. For this purpose, we used the approach least-angle regression (LARS) by \cite{efron2004least} to do the model selection. Their {\sffamily R} package {\sffamily lars} efficiently fits an entire lasso sequence with the least squares loss function (\cite{Rlars}). Figure~\ref{fig:cvplotpos} shows the cross-validation error plot for the positive v.s. nonpositive classification and the other plots are in Appendix~\ref{asec:cverror}.
 
-%\note{
-%To Angie: include the one of the CV plot here(the positive case); and include the others in the appendix.
-%
-%To Christine: shorten the following paragraphs...just give some examples for the positive and negative part.
-%change 20 to 5, and say the complete lists of words can be found in the appendix
-%}
 
-For the positive responses, the top 20 most relevant words (based on taking the absolute values of the betas) returned by our model are shown in the table. As can be seen, the top 20 relevant words have an assortment of fairly neutral or positive words. The top 20 most relevant words for just the positive betas resulted in words that were very positive in nature. For example, words such as 'mature', 'support', and 'keep going' are very positive in nature and would certainly indicate a positive reaction to 韩寒. The top 20 most relevant words for just the negative betas resulted in words that showed a great dislike for 韩寒.  Words such as 'liar' indicate a negative response to the author. 
+%%%
+\note{
+To Angie: include the one of the CV plot here(the positive case); and include the others in the appendix.
 
-For the negative responses, the top 20 most relevant words (based on taking the absolute values of the betas) returned by our model are shown in the table. As can be seen, the words are typically negative or neutral.  The top 20 most relevant words for just the positive betas are very telling in the posts sentiment towards 韩寒. Words such as 'disgusting, 'hate', 'liar' and 'annoying' demonstrates easily that the post has a negative sentiment towards the author. The top 20 most relevant words for just the negative betas are hence typically more positive towards the author. With words such as 'support', 'good', and 'like', the posts would not have a negative sentiment. What is interesting to note with these betas is the fact that these betas are all close to zero except the highest phrase. 
+To Christine: shorten the following paragraphs...just give some examples for the positive and negative part.
+change 20 to 5, and say the complete lists of words can be found in the appendix
+}
 
-For the neutral responses, the top 20 most relevant words (based on taking the absolute values of the betas) as well as the top 20 most relevant words based on the positive betas are all neutral words. The top 20 most relevant words based on the negative betas consist mainly of phrases that have some clear emotion attached to them, such as "support", "hate", "agree", and "ghostwriter". For the spam posts, the top 20 most relevant words (based on taking the absolute values of the betas) as well as the top most relevant words based on the positive betas are words/phrases that have no relation whatsoever with the author we picked to look into.  As expected, the top 20 most relevant words based on the negative betas are words/phrases that do have to do with the topic, such as the author's name. 
 
-for the spam responses...
+\begin{center}
+\begin{figure}[tb]
+   \centering
+   \includegraphics[width=0.8\textwidth]{../lassoResults/CVPosErr.pdf} 
+      \caption{Cross-validation error plot for the positive v.s. nonpositive classification. }
+   \label{fig:cvplotpos}
+\end{figure}
+\end{center}
+
+The lists of top 5 most relevant words for positive and negative classification are in Table~\ref{tb:lassopos}--\ref{tb:lassoneg}.
+The complete list of top 20 most relevant words for each classification is in Appendix~\ref{asec:lassowordimages} (Table~\ref{tb:lassofullpos}--\ref{tb:lassofullspam}).
+
+
+For the positive responses, the top 20 most relevant words (based on taking the absolute values of the betas) returned by our model are shown in Table~\ref{tb:lassopos}. As can be seen, the top 20 relevant words have an assortment of fairly neutral or positive words. The top 20 most relevant words for the positive betas resulted in words that were very positive in nature. For example, words such as ``mature,'' ``support,'' and ``keep up the good work'' are very positive in nature and would certainly indicate a positive reaction to 韓寒. The top 20 most relevant words for just the negative betas resulted in words that showed a great dislike for 韓寒.  Words such as ``liar'' indicate a negative response to the author. 
+
+For the negative responses, the top 20 most relevant words (based on taking the absolute values of the betas) returned by our model are shown in Table~\ref{tb:lassoneg}. As can be seen, the words are typically negative or neutral.  The top 20 most relevant words for just the positive betas are very telling in the post's sentiment towards 韓寒. Words such as ``disgusting,'' ``hate,'' ``liar,'' and ``annoying'' easily suggest that the post exudes a negative sentiment towards the author. The top 20 most relevant words for just the negative betas are hence typically more positive towards the author. With words such as ``support,'' ``good,'' and ``like,'' the posts would not have a negative sentiment. What is interesting to note with these betas is the fact that these betas are all pretty much zero except for the phrase with the highest negative coefficient (in terms of magnitude). 
+
+For the neutral responses, the top 20 most relevant words (based on taking the absolute values of the betas) as well as the top 20 most relevant words based on the positive betas are all neutral words. The top 20 most relevant words based on the negative betas consist mainly of phrases that have some clear emotion attached to them, such as ``support,'' ``hate,'' ``agree,'' and ``ghostwriter.'' For the spam posts, the top 20 most relevant words (based on taking the absolute values of the betas) as well as the top most relevant words based on the positive betas are words/phrases that have no relation whatsoever to the author we picked to look into.  As expected, the top 20 most relevant words based on the negative betas are words/phrases that do have to do with the topic, such as the author's name. 
+
 
 \begin{table}
-\caption{Positive category}
+\caption{LASSO word images for the positive v.s. nonpositive classification.}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -390,13 +489,14 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 宽容 & 0.518 & 宽容 & 0.518 & 利益 & -0.335\\
 (tolerant) & & (tolerant) & & (benefit) & \\\hline
 \end{tabular}
+\label{tb:lassopos}
 \end{center}
 \end{table}
 
 
 
 \begin{table}
-\caption{Negative category}
+\caption{LASSO word images for the negative v.s. nonnegative classification.}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -412,75 +512,82 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 扁 & 0.353 & 扁 & 0.353 & 方舟子 & 0.000\\
 (beat up) & & (beat up) & & (FangZhouZi) & \\\hline
 \end{tabular}
+\label{tb:lassoneg}
 \end{center}
 \end{table}
 
-
-\begin{table}
-\caption{Neutral category}
-\begin{center}
-\begin{tabular}{|c|c||c|c||c|c|}
-\hline
-Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline
-上调 & 0.586 & 上调 & 0.586 & 加油 & -0.491\\
-(increase) & & (increase) & & (keep going) & \\\hline
-道理 & 0.566 & 道理 & 0.566 & 韩少 & -0.358\\
-(rational) & & (rational) & & (Master Han) & \\\hline
-账号 & 0.534 & 账号 & 0.534 & 苦肉计 & -0.327\\
-(account) & & (account) & & (the ruse of  & \\
-& &  & &  self-injury to win & \\
-& &  & &  somebody's & \\
-& &  & &   confidence) & \\\hline
-加油 & 0.491 & 铁证 & 0.459 & 支持 & -0.290\\
-(keep going) & & (clear evidence) & & (support) & \\\hline
-铁证 & 0.459 & 称 & 0.453 & 善良 & -0.268\\
-(clear evidence) & & (refer) & & (kind) & \\\hline
-\end{tabular}
-\end{center}
-\end{table}
-
-
-\begin{table}
-\caption{Spam category}
-\begin{center}
-\begin{tabular}{|c|c||c|c||c|c|}
-\hline
-Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline
-查看 & 3.777 & 查看 & 3.777 & 韩少 & -1.033\\
-(examine) & & (examine) & & (Master Hanhan) & \\\hline
-抽 & 1.998 & 抽 & 1.998 & 韩寒 & -0.716\\
-(win) & & (win) & & (Master Hanhan) & \\\hline
-每天 & 1.251 & 每天 & 1.251 & 别 & -0.232\\
-(everyday) & & (everyday) & & (don't) & \\\hline
-往往 & 1.208 & 往往 & 1.208 & 支持 & -0.217\\
-(often) & & (often) & & (support) & \\\hline
-外 & 1.043 & 外 & 1.043 & 这种 & -0.202\\
-(outside) & & (outside) & & (this kind) & \\\hline
-\end{tabular}
-\end{center}
-\end{table}
+%
+%\begin{table}
+%\caption{LASSO word images for the neutral  v.s. nonneutral classification.}
+%\begin{center}
+%\begin{tabular}{|c|c||c|c||c|c|}
+%\hline
+%Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline
+%上调 & 0.586 & 上调 & 0.586 & 加油 & -0.491\\
+%(increase) & & (increase) & & (keep going) & \\\hline
+%道理 & 0.566 & 道理 & 0.566 & 韩少 & -0.358\\
+%(rational) & & (rational) & & (Master Han) & \\\hline
+%账号 & 0.534 & 账号 & 0.534 & 苦肉计 & -0.327\\
+%(account) & & (account) & & (the ruse of  & \\
+%& &  & &  self-injury to win & \\
+%& &  & &  somebody's & \\
+%& &  & &   confidence) & \\\hline
+%加油 & 0.491 & 铁证 & 0.459 & 支持 & -0.290\\
+%(keep going) & & (clear evidence) & & (support) & \\\hline
+%铁证 & 0.459 & 称 & 0.453 & 善良 & -0.268\\
+%(clear evidence) & & (refer) & & (kind) & \\\hline
+%\end{tabular}
+%\label{tb:lassoneu}
+%\end{center}
+%\end{table}
+%
+%
+%\begin{table}
+%\caption{LASSO word images for the spam  v.s. nonspam classification.}
+%\begin{center}
+%\begin{tabular}{|c|c||c|c||c|c|}
+%\hline
+%Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline
+%查看 & 3.777 & 查看 & 3.777 & 韩少 & -1.033\\
+%(examine) & & (examine) & & (Master Hanhan) & \\\hline
+%抽 & 1.998 & 抽 & 1.998 & 韩寒 & -0.716\\
+%(win) & & (win) & & (Master Hanhan) & \\\hline
+%每天 & 1.251 & 每天 & 1.251 & 别 & -0.232\\
+%(everyday) & & (everyday) & & (don't) & \\\hline
+%往往 & 1.208 & 往往 & 1.208 & 支持 & -0.217\\
+%(often) & & (often) & & (support) & \\\hline
+%外 & 1.043 & 外 & 1.043 & 这种 & -0.202\\
+%(outside) & & (outside) & & (this kind) & \\\hline
+%\end{tabular}
+%\label{tb:lassospam}
+%\end{center}
+%\end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsubsection{$l_1$-norm support vector machine}
-The support vector machine (SVM) is another commonly used machine learning method to classify data points into two categories. Consider again the linear decision function $f(x) = \beta_0 + \beta^T x$ and the sign classifier $\text{class}(x) = \textbf{sign} (f(x))$. The SVM minimizes the training misclassification rate and the margin of the decision boundary. Following the notations in \cite{HastieSVM}:
+\subsection{$l_1$-Norm Support Vector Machine}
+
+The support vector machine (SVM) is another commonly used machine learning method to classify data points into two categories. Consider again the linear decision function $f(x) = \beta_0 + \beta^T x$ and the sign classifier $\text{class}(x) = \textbf{sign} (f(x))$. The SVM minimizes the training misclassification rate and the margin of the decision boundary. Following the notations in \cite{hastie2004entire}:
 \begin{align}
 \label{eq:l2svm}
 \min_{\beta_0,\beta} \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \frac{\lambda}{2} ||\beta||_2,
 \end{align}
-where $z_+ = \max(0,z)$ (the function $h(z) = (1-z)_+$ is also known as the hinge loss function). Similarly, the sparse version of SVM simply replaces the $l_2$-norm by $l_1$-norm (see, e.g. \cite{ZhuSVM}):
+where $z_+ = \max(0,z)$ (the function $h(z) = (1-z)_+$ is also known as the hinge loss function). Similarly, the sparse version of SVM simply replaces the $l_2$-norm by $l_1$-norm (see, e.g. \cite{zhu20041}):
 \begin{align*}
 \label{eq:l1svm}
 \min_{\beta_0,\beta} \left\{ \sum_{i=1}^n(1-y_i(\beta_0+\beta^Tx_i))_+ + \lambda ||\beta||_1\right\}. 
 \end{align*}
-We repeat the same data analysis for the text data using $l_1$-norm SVM as we did for the LASSO classification. The results are summarized in Table XX. To fit the sparse SVM, we use the matlab package {\tt lpsvm} by Fung and Mangasarian (2004) \cite{Fung}. Again, 10-fold cross validations are performed in order to select the regularization parameter $\lambda$. Again the model seems to produce plausible results. Also, the top coefficients obtained by $l_1$-norm SVM seems to be consistent with those obtained by fitting a LASSO.  
+We repeat the same data analysis for the text data using $l_1$-norm SVM as we did for the LASSO classification. The results are summarized in Table XX. To fit the sparse SVM, we use the matlab package {\tt lpsvm} by \cite{fung2004feature}. Again, 10-fold cross validations are performed in order to select the regularization parameter $\lambda$. Again the model seems to produce plausible results. Also, the top coefficients obtained by $l_1$-norm SVM seems to be consistent with those obtained by fitting a LASSO.  
 %
 %\note{
 %To Angie:
 %include the four tables here(each of top five words)... and rest in the appendix
 %}
 
-\begin{table}[h!]
-\caption{$l_1$-norm support vector machine results: positive category}
+The lists of top 5 most relevant words for positive and negative classification are in Table~\ref{tb:svmpos}--\ref{tb:svmneg}.
+The complete list of top 20 most relevant words for each classification is in Appendix~\ref{asec:svmwordimages} (Table~\ref{tb:svmfullpos}--\ref{tb:svmfullspam}).
+
+\begin{table}[!h]
+\caption{$l_1$-norm SVM word images for the positive v.s. nonpositive classification.}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -496,13 +603,14 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 韩少 & 1.969 & 顶 & 1.803 & 四娘 & 1.762\\
 (Master Han) & & (support) & & (GUO Jingming) & \\\hline
 \end{tabular}
+\label{tb:svmpos}
 \end{center}
 \end{table}
 
 
 
 \begin{table}
-\caption{$l_1$-norm support vector machine results: negative category}
+\caption{$l_1$-norm SVM word images for the negative v.s. nonnegative classification.}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -521,108 +629,104 @@ somebody's & & somebody's  &  & &  \\
 骗子 & 1.301 & 公开 & 1.220 & 热点 & 1.101\\
 (liar) & & (open) & & (hot interest) & \\\hline
 \end{tabular}
+\label{tb:svmneg}
 \end{center}
 \end{table}
 
 
-\begin{table}
-\caption{$l_1$-norm support vector machine results: neutral category}
+%\begin{table}
+%\caption{$l_1$-norm support vector machine results: neutral category}
+%\begin{center}
+%\begin{tabular}{|c|c||c|c||c|c|}
+%\hline
+%Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline\hline
+%加油 & 2.233 & 铁证 & 2.054 & 加油 & 2.233\\
+%(keep going) & & (clear evidence) & & (keep going) & \\\hline
+%铁证 & 2.054 & 片 & 1.896 & 成熟 & 1.756\\
+%(clear evidence) & & (piece) & & (mature) & \\\hline
+%片 & 1.896 & 至今 & 1.884 & 同意 & 1.725\\
+%(piece) & & (so far) & & (agree) & \\\hline
+%至今 & 1.884 & 战 & 1.845 & 水 & 1.661\\
+%(so far) & & (fight) & & (water) & \\\hline
+%战 & 1.845 & 意思 & 1.824 & 昨天 & 1.611\\
+%(fight) & & (meaning) & & (yesterday) & \\\hline
+%\end{tabular}
+%\end{center}
+%\end{table}
+%
+%
+%
+%
+%\begin{table}
+%\caption{$l_1$-norm support vector machine results: spam category}
+%\begin{center}
+%\begin{tabular}{|c|c||c|c||c|c|}
+%\hline
+%Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline\hline
+%票子 & 1.000 & 票子 & 1.000 & 书 & 0.000\\
+%(ticket) & & (ticket) & & (book) & \\\hline
+%书 & 0.000 & 每天 & 0.000 & 围观 & 0.000\\
+%(book) & & (everyday) & & (surround to watch) & \\\hline
+%围观 & 0.000 & 抽 & 0.000 & 写 & 0.000\\
+%(surround to watch) & & (win) & & (write) & \\\hline
+%写 & 0.000 & 性 & 0.000 & 骂 & 0.000\\
+%(write) & & (sex) & & (curse) & \\\hline
+%每天 & 0.000 & 网 & 0.000 & 粉丝 & 0.000\\
+%(everyday) & & (Internet) & & (fans) & \\\hline
+%\end{tabular}
+%\end{center}
+%\end{table}
+
+
+%%%%%%%
+\section{Test Set Misclassification Rates}
+
+To compare the classification performance, we use the best fitted models discussed above to classify the a test set of 500 posts. Recall that the best models are selected to minimize the 10-fold cross validation error. Table~\ref{tb:testcounts} shows the frequency count of each category in the 500 posts and Table~\ref{tb:testmis} summarizes the test results. 
+
+\begin{table}[!h]
+\caption{Counts of posts in each of the four categories in the 500 test posts.}
 \begin{center}
-\begin{tabular}{|c|c||c|c||c|c|}
+\begin{tabular}{|c|c|c|c|}
 \hline
-Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline\hline
-加油 & 2.233 & 铁证 & 2.054 & 加油 & 2.233\\
-(keep going) & & (clear evidence) & & (keep going) & \\\hline
-铁证 & 2.054 & 片 & 1.896 & 成熟 & 1.756\\
-(clear evidence) & & (piece) & & (mature) & \\\hline
-片 & 1.896 & 至今 & 1.884 & 同意 & 1.725\\
-(piece) & & (so far) & & (agree) & \\\hline
-至今 & 1.884 & 战 & 1.845 & 水 & 1.661\\
-(so far) & & (fight) & & (water) & \\\hline
-战 & 1.845 & 意思 & 1.824 & 昨天 & 1.611\\
-(fight) & & (meaning) & & (yesterday) & \\\hline
+Positive & Negative & Neutral & Spam \\ \hline
+ 172      & 36   &   287   &  5 \\ \hline
 \end{tabular}
 \end{center}
-\end{table}
+\label{tb:testcounts}
+\end{table}%
 
 
-
-
-\begin{table}
-\caption{$l_1$-norm support vector machine results: spam category}
+\begin{table}[!h]
+\caption{Misclassification rates of the three methods for each of the four categories.}
 \begin{center}
-\begin{tabular}{|c|c||c|c||c|c|}
+\begin{tabular}{|c|c|c|c|c|}
 \hline
-Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline\hline
-票子 & 1.000 & 票子 & 1.000 & 书 & 0.000\\
-(ticket) & & (ticket) & & (book) & \\\hline
-书 & 0.000 & 每天 & 0.000 & 围观 & 0.000\\
-(book) & & (everyday) & & (surround to watch) & \\\hline
-围观 & 0.000 & 抽 & 0.000 & 写 & 0.000\\
-(surround to watch) & & (win) & & (write) & \\\hline
-写 & 0.000 & 性 & 0.000 & 骂 & 0.000\\
-(write) & & (sex) & & (curse) & \\\hline
-每天 & 0.000 & 网 & 0.000 & 粉丝 & 0.000\\
-(everyday) & & (Internet) & & (fans) & \\\hline
+              &  			Positive & Negative & Neutral & Spam  \\ \hline
+Sentiment score assignment & 	78.6\%		&	97.2\%	&  	NA	& NA  \\ \hline
+LASSO               & 	22.6\%   &   7\%   &   33.6\%    &    1\% \\ \hline
+$l_1$-norm SVM       &       22.6\%  &    8\%    &  33.4\%   &     1\% \\ \hline
 \end{tabular}
 \end{center}
-\end{table}
-
-\subsubsection{Test set misclassification rates}
-To compare the classification performance, we use the best fitted models discussed above to classify the a test set of 500 posts. Recall that the best models are selected to minimize the 10-fold cross validation error. Table XX shows the frequency count of each category in the 500 posts and Table XX summarizes the test results. 
+\label{tb:testmis}
+\end{table}%
 
 
-positive negative neutral spam
- 172       36      287     5
-Table XX: counts of posts in each of the four categories in the 500 test posts.
-
-                postive  negative   neutral      spam
-sentiment score
-assignment
-LASSO               22.6\%      7\%      33.6\%        1\%
-l1-svm              22.6\%      8\%      33.4\%        1\%
-Table XX: misclassification rates of the three methods for each of the four categories
 
 It can be seen that the two standard machine learning methods produce very similar results. Also notice the low misclassification rates in the negative and spam categories, which might due to the fact that it is not common to see the posts that belong to those two categories in our test set.
+
+
 %%%%%%%%%%%%%%%%%%
 \section{Discussion}
-
-ROC curve
-precision and recall curve
-
-%%
-\subsection{Limitations}
-
-sampling \cite{boyd2004fastest} \cite{leskovec2006sampling}  \cite{wang2011understanding}
-
-reposting
-
-other language, such as English
-
-simplified Chinese and traditional Chinese: no simple one-to-one correspondence; word segmentation and then substitute words
+In this project, we developed a framework for for studying public opinions using Sina Weibo as a corpus for a given topic. Posts are sampled from Weibo and then processed taking the characteristics of both Chinese language and Weibo posts into consideration. Then feature analysis and classification are performed. 
+In future work, we would like to compare our LASSO and $l_1$-norm SVM methods with the popular maximum entropy approach \cite{lee2011chinese, nigam1999using}. As discussed in Section~\ref{subsec:datacol}, one topic of interest is to track reposting using graphical model. Identification of OOV need more statistical work as well. Then we would like to study random samples by sampling from large graphs as discussed in Section~\ref{subsec:datacol} after spams, OOV, and reposting can be handled properly.
 
 
-
-%%%%%%%%%%%%%%%%%%
-\section{Conclusion}
-
-
-
-%
-%\begin{center}
-%\begin{figure}[tb]
-%   \centering
-%   \includegraphics[width=\textwidth]{.png} 
-%      \caption{}
-%   \label{fig:}
-%\end{figure}
-%\end{center}
 
 
 \newpage
 %%%%%%%%%%%%%
 % bibliography
-\bibliographystyle{acm}
+\bibliographystyle{apalike}
 \bibliography{215B_FinalProjRef}
 
 
@@ -633,9 +737,43 @@ simplified Chinese and traditional Chinese: no simple one-to-one correspondence;
 %%%%%
 \section{LASSO Results}
 
+%%%
+\subsection{Cross-Validation Error Plot}\label{asec:cverror}
 
-\begin{table}[hb]
-\caption{LASSO results: positive category}
+\begin{center}
+\begin{figure}[!h]
+   \centering
+   \includegraphics[width=0.7\textwidth]{../lassoResults/CVNegErr.pdf} 
+      \caption{Cross-validation error plot for the negative v.s. nonnegative classification. }
+   \label{fig:cvplotneg}
+\end{figure}
+\end{center}
+
+\begin{center}
+\begin{figure}[!h]
+   \centering
+   \includegraphics[width=0.7\textwidth]{../lassoResults/CVNeuErr.pdf} 
+      \caption{Cross-validation error plot for the neutral v.s. nonneutral classification. }
+   \label{fig:cvplotneu}
+\end{figure}
+\end{center}
+
+\begin{center}
+\begin{figure}[!h]
+   \centering
+   \includegraphics[width=0.7\textwidth]{../lassoResults/CVSpamErr.pdf} 
+      \caption{Cross-validation error plot for the spam v.s. nonspam classification. }
+   \label{fig:cvplotspam}
+\end{figure}
+\end{center}
+
+\newpage
+\newpage
+%%
+\subsection{LASSO Word Images}\label{asec:lassowordimages}
+
+\begin{table}[!h]
+\caption{LASSO word images for the positive v.s. nonpositive classification.}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -666,13 +804,14 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 遭受 & 0.323 & 蛋 & 0.244 & 网 & -0.204\\ \hline
 媒体 & 0.319 & 纠缠 & 0.244 & 底 & -0.196\\ \hline
 \end{tabular}
+\label{tb:lassofullpos}
 \end{center}
 \end{table}
 
 
 
-\begin{table}
-\caption{LASSO results: negative category}
+\begin{table}[!h]
+\caption{LASSO word images for the negative v.s. nonnegative classification.}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -703,12 +842,13 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 下去 & 0.141 & 下去 & 0.141 & 没有 & 0.000\\ \hline
 公开 & 0.141 & 公开 & 0.141 & 看到 & 0.000\\ \hline
 \end{tabular}
+\label{tb:lassofullneg}
 \end{center}
 \end{table}
 
 
-\begin{table}
-\caption{LASSO results: neutral category}
+\begin{table}[!h]
+\caption{LASSO word images for the neutral v.s. nonneutral classification.}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -742,12 +882,13 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline
 变成 & 0.265 & 郭敬明 & 0.237 & 欣赏 & -0.181\\ \hline
 成熟 & 0.263 & 久 & 0.226 & 无耻 & -0.180\\ \hline
 \end{tabular}
+\label{tb:lassofullneu}
 \end{center}
 \end{table}
 
 
-\begin{table}
-\caption{LASSO results: spam category}
+\begin{table}[!h]
+\caption{LASSO word images for the spam v.s. nonspam classification.}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -778,18 +919,16 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline
 法律 & 0.388 & 公知 & 0.357 & 挺 & -0.072\\ \hline
 机会 & 0.376 & 中 & 0.357 & 不 & -0.068\\ \hline
 \end{tabular}
+\label{tb:lassofullspam}
 \end{center}
 \end{table}
 
 
 %%%%%%%%%
 %%%%%%%%%
-\newpage
-\section{$l_1$-Norm Support Vector Machine Results}
-
-\begin{table}[h!]
-\caption{$l_1$-norm support vector machine results: positive category}
-\begin{center}
+\begin{table}[!h]
+\caption{$l_1$-norm SVM word images for the positive v.s. nonpositive classification.}
+\centering
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
 Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \hline
@@ -819,13 +958,13 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline \
 变成 & 1.411 & 终于 & 0.914 & 底 & 1.050\\ \hline
 欢乐 & 1.315 & 咬 & 0.884 & 套 & 1.044\\ \hline
 \end{tabular}
-\end{center}
+\label{tb:svmfullpos}
 \end{table}
 
 
 
-\begin{table}
-\caption{$l_1$-norm support vector machine results: negative category}
+\begin{table}[!h]
+\caption{$l_1$-norm SVM word images for the negative v.s. nonnegative classification}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -859,12 +998,13 @@ somebody's & & somebody's  &  & &  \\
 清楚 & 0.921 & 选项 & 0.596 & 来自 & 0.705\\ \hline
 愿意 & 0.920 & 喝 & 0.559 & 精彩 & 0.685\\ \hline
 \end{tabular}
+\label{tb:svmfullneg}
 \end{center}
 \end{table}
 
 
-\begin{table}
-\caption{$l_1$-norm support vector machine results: neutral category}
+\begin{table}[!h]
+\caption{$l_1$-norm SVM word images for the neutral v.s. nonneutral classification.}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -895,14 +1035,16 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline\h
 路 & 1.568 & 加 & 1.293 & 一直 & 1.213\\ \hline
 接受 & 1.567 & 上调 & 1.267 & 自由 & 1.198\\ \hline
 \end{tabular}
+\label{tb:svmfullneu}
 \end{center}
 \end{table}
 
 
 
 
-\begin{table}
-\caption{$l_1$-norm support vector machine results: spam category}
+
+\begin{table}[!h]
+\caption{$l_1$-norm SVM word images for the spam v.s. nonspam classification.}
 \begin{center}
 \begin{tabular}{|c|c||c|c||c|c|}
 \hline
@@ -933,14 +1075,33 @@ Word & Absolute Coef. & Word & Positive Coef. & Word & Negative Coef.\\ \hline\h
 韩寒 & 0.000 & 事 & 0.000 & 娱乐 & 0.000\\ \hline
 总 & 0.000 & 看到 & 0.000 & 新 & 0.000\\ \hline
 \end{tabular}
+\label{tb:svmfullspam}
 \end{center}
 \end{table}
 
 
-%%%%%
-%\appendix
-%The complete source code is as follows:
-%\lstinputlisting{}
+\newpage
+\section{$l_1$-Norm Support Vector Machine Results}
 
+
+%%
+\subsection{$l_1$-Norm SVM Word Images}\label{asec:svmwordimages}
+
+
+%%%%%
+
+
+
+
+
+
+%\begin{center}
+%\begin{figure}[tb]
+%   \centering
+%   \includegraphics[width=\textwidth]{.png} 
+%      \caption{}
+%   \label{fig:}
+%\end{figure}
+%\end{center}
 
 \end{document}
